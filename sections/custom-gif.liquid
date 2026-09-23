@@ -1,0 +1,72 @@
+<section class="custom-gif-section">
+  <div class="page-width">
+    
+    {% if section.settings.heading != blank %}
+      <h2 class="custom-gif-heading">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.gif_url != blank %}
+      <div class="custom-gif-wrapper">
+        <img
+          src="{{ section.settings.gif_url }}"
+          alt="{{ section.settings.heading | escape }}"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+.custom-gif-section {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.custom-gif-heading {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.custom-gif-wrapper img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+@media screen and (max-width: 749px) {
+  .custom-gif-heading {
+    font-size: 24px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Custom GIF Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Animated GIF"
+    },
+    {
+      "type": "text",
+      "id": "gif_url",
+      "label": "GIF URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom GIF Section"
+    }
+  ]
+}
+{% endschema %}

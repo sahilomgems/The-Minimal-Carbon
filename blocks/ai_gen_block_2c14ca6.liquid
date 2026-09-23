@@ -1,0 +1,655 @@
+{% doc %}
+  @prompt
+    Section 3: Valentine Collections (4 Clickable Collections)
+    Purpose
+    
+    Highlight curated Valentine collections and drive category-level shopping.
+    
+    Layout
+    
+    Grid: 4 collection cards
+    
+    Equal spacing
+    
+    Hover animation (zoom / glow)
+    
+    Collection Behavior
+    
+    Each card:
+    
+    Clickable
+    
+    Linked to selected Shopify collection
+    
+    Fully editable by admin
+    
+    Suggested Collection Names
+    
+    Her Heart Collection
+    
+    Forever Promise Rings
+    
+    Sweet Valentine Gifts
+    
+    Love Sparkle Edition
+    
+    Shopify Settings (Editable)
+    
+    Select collection (collection picker)
+    
+    Upload / replace image
+    
+    Collection title override
+    
+    Button label
+    
+    Valentine Image Concepts (Ready to Generate)
+    
+    You can generate or upload images based on these concepts:
+    
+    Romantic pink background, heart petals floating, diamond ring in center
+    
+    Rose-red silk fabric background with soft lighting and ring box
+    
+    Minimal white & blush background with heart-shaped shadow and ring
+    
+    Luxury velvet red background with golden light and engagement ring
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-valentine-collections-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-valentine-collections__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-valentine-collections__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-valentine-collections__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+
+  .ai-valentine-collections__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+  }
+
+  .ai-valentine-collections__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-valentine-collection-card-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    background-color: {{ block.settings.card_background }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    text-decoration: none;
+  }
+
+  .ai-valentine-collection-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-valentine-collection-card__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: {{ block.settings.image_aspect_ratio }}%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+  }
+
+  .ai-valentine-collection-card__image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .ai-valentine-collection-card-{{ ai_gen_id }}:hover .ai-valentine-collection-card__image-{{ ai_gen_id }} {
+    transform: scale(1.1);
+  }
+
+  .ai-valentine-collection-card__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-valentine-collection-card-{{ ai_gen_id }}:hover .ai-valentine-collection-card__overlay-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-valentine-collection-card__content-{{ ai_gen_id }} {
+    padding: {{ block.settings.card_padding }}px;
+    text-align: center;
+  }
+
+  .ai-valentine-collection-card__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    color: {{ block.settings.card_title_color }};
+    margin: 0 0 8px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  .ai-valentine-collection-card-{{ ai_gen_id }}:hover .ai-valentine-collection-card__title-{{ ai_gen_id }} {
+    color: {{ block.settings.card_title_hover_color }};
+  }
+
+  .ai-valentine-collection-card__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 10px 24px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid {{ block.settings.button_background }};
+  }
+
+  .ai-valentine-collection-card-{{ ai_gen_id }}:hover .ai-valentine-collection-card__button-{{ ai_gen_id }} {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_background }};
+  }
+
+  .ai-valentine-collection-card__placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+  }
+
+  .ai-valentine-collection-card__placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-valentine-collection-card__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-valentine-collections__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ai-valentine-collections__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-valentine-collection-card__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_title_size | times: 0.9 }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-valentine-collections__grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.grid_gap | times: 0.7 }}px;
+    }
+
+    .ai-valentine-collections-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.6 }}px 16px {{ block.settings.section_padding_bottom | times: 0.6 }}px;
+    }
+
+    .ai-valentine-collections__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.7 }}px;
+    }
+
+    .ai-valentine-collection-card__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_title_size | times: 0.85 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-valentine-collections-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-valentine-collections__container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank or block.settings.section_subtitle != blank %}
+      <div class="ai-valentine-collections__header-{{ ai_gen_id }}">
+        {% if block.settings.section_title != blank %}
+          <h2 class="ai-valentine-collections__title-{{ ai_gen_id }}">
+            {{ block.settings.section_title }}
+          </h2>
+        {% endif %}
+        {% if block.settings.section_subtitle != blank %}
+          <p class="ai-valentine-collections__subtitle-{{ ai_gen_id }}">
+            {{ block.settings.section_subtitle }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-valentine-collections__grid-{{ ai_gen_id }}">
+      {% for i in (1..4) %}
+        {% liquid
+          assign collection_key = 'collection_' | append: i
+          assign title_key = 'collection_' | append: i | append: '_title'
+          assign button_key = 'collection_' | append: i | append: '_button_label'
+          
+          assign collection = block.settings[collection_key]
+          assign custom_title = block.settings[title_key]
+          assign button_label = block.settings[button_key]
+        %}
+
+        {% if collection != blank %}
+          <a 
+            href="{{ collection.url }}" 
+            class="ai-valentine-collection-card-{{ ai_gen_id }}"
+            aria-label="View {{ collection.title }} collection"
+          >
+            <div class="ai-valentine-collection-card__image-wrapper-{{ ai_gen_id }}">
+              {% if collection.featured_image %}
+                <img
+                  src="{{ collection.featured_image | image_url: width: 800 }}"
+                  alt="{{ collection.featured_image.alt | escape }}"
+                  class="ai-valentine-collection-card__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="800"
+                  height="{{ 800 | times: block.settings.image_aspect_ratio | divided_by: 100 }}"
+                >
+              {% else %}
+                <div class="ai-valentine-collection-card__placeholder-{{ ai_gen_id }}">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+              <div class="ai-valentine-collection-card__overlay-{{ ai_gen_id }}"></div>
+            </div>
+            <div class="ai-valentine-collection-card__content-{{ ai_gen_id }}">
+              <h3 class="ai-valentine-collection-card__title-{{ ai_gen_id }}">
+                {% if custom_title != blank %}
+                  {{ custom_title }}
+                {% else %}
+                  {{ collection.title }}
+                {% endif %}
+              </h3>
+              <span class="ai-valentine-collection-card__button-{{ ai_gen_id }}">
+                {{ button_label }}
+              </span>
+            </div>
+          </a>
+        {% else %}
+          <div class="ai-valentine-collection-card-{{ ai_gen_id }}" style="cursor: default; pointer-events: none;">
+            <div class="ai-valentine-collection-card__image-wrapper-{{ ai_gen_id }}">
+              <div class="ai-valentine-collection-card__placeholder-{{ ai_gen_id }}">
+                {{ 'collection-1' | placeholder_svg_tag }}
+                <div class="ai-valentine-collection-card__empty-state-{{ ai_gen_id }}">
+                  Select a collection
+                </div>
+              </div>
+            </div>
+            <div class="ai-valentine-collection-card__content-{{ ai_gen_id }}">
+              <h3 class="ai-valentine-collection-card__title-{{ ai_gen_id }}">
+                {% if custom_title != blank %}
+                  {{ custom_title }}
+                {% else %}
+                  Collection {{ i }}
+                {% endif %}
+              </h3>
+              <span class="ai-valentine-collection-card__button-{{ ai_gen_id }}">
+                {{ button_label }}
+              </span>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Valentine collections",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Valentine Collections"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_subtitle",
+      "label": "Subtitle",
+      "default": "Discover our curated Valentine's Day collections"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Collection 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_1_title",
+      "label": "Custom title",
+      "default": "Her Heart Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_1_button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_2_title",
+      "label": "Custom title",
+      "default": "Forever Promise Rings"
+    },
+    {
+      "type": "text",
+      "id": "collection_2_button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 3"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_3_title",
+      "label": "Custom title",
+      "default": "Sweet Valentine Gifts"
+    },
+    {
+      "type": "text",
+      "id": "collection_3_button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 4"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_4_title",
+      "label": "Custom title",
+      "default": "Love Sparkle Edition"
+    },
+    {
+      "type": "text",
+      "id": "collection_4_button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "min": 75,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Image aspect ratio",
+      "default": 125
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Title size",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_title_hover_color",
+      "label": "Title hover color",
+      "default": "#cb8161"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background color",
+      "default": "#cb8161"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Valentine collections"
+    }
+  ]
+}
+{% endschema %}

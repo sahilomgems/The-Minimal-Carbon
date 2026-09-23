@@ -1,0 +1,138 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "page-breadcrumb",
+      "settings": {
+        "enable": false,
+        "bgimage": false
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "enable": false,
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "map": {
+      "type": "map",
+      "custom_css": [],
+      "settings": {
+        "max_width": "",
+        "fullwidth": true,
+        "padding": "",
+        "margin": "0 0 50px",
+        "api_key": "",
+        "html_map": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.4197957670913!2d-0.14534630734278528!3d51.52385973684062!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b2823a318bd%3A0x30ef384a115a7556!2s45%20Fitzroy%20St%2C%20London%20W1T%206EB%2C%20UK!5e0!3m2!1sen!2sin!4v1763530282344!5m2!1sen!2sin\" width=\"100%\" height=\"550\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
+      }
+    },
+    "contact": {
+      "type": "contact-info",
+      "blocks": {
+        "contact_9B7xez": {
+          "type": "contact",
+          "disabled": true,
+          "settings": {
+            "title": "Address",
+            "desc": "<b>Sangeeta Sangani [Owner]</b> <a href=\"tel:+91%207096297252%20\">+91 7096297252  </a>\n<br><br>\n25, Indralok Bunglows, Mota Varachha - 394101\nSurat, \nIndia\n<b></b>"
+          }
+        },
+        "2d30cb30-b344-4e0b-8ac8-fcaf0c06314f": {
+          "type": "contact",
+          "disabled": true,
+          "settings": {
+            "title": "Address",
+            "desc": "<b>Dharmik Patel [Sales Manager] </b> <a href=\"tel:+1%20(224)%20381-1548\">+1 (224) 381-1548</a>\n<br><br>\n36119 North New Bridge Court \nGurnee \nIllinois 60031 \nUnited States"
+          }
+        },
+        "contact_iDBiee": {
+          "type": "contact",
+          "disabled": true,
+          "settings": {
+            "title": "Address",
+            "desc": "<b>Piyush Bhai [Sales Manager] </b> <a href=\"tel:+44%7442%105975%E2%80%AC\"> +44 (7442) -105975</a>\n <br><br>\n133 carlyon avenue SOUTH HARROW HA2 8SN"
+          }
+        },
+        "contact_y3E8dB": {
+          "type": "contact",
+          "disabled": true,
+          "settings": {
+            "title": "Address",
+            "desc": "<b>Jigar shah [Director]</b> <a href=\"tel:+44%7570%276548\"> +44 7570 276548 </a>\n<b></b>\n4th Floor Silverstream House, 45 Fitzroy Street, London, England, W1T 6EB\n<b></b>"
+          }
+        },
+        "contact_TEXFV9": {
+          "type": "contact",
+          "settings": {
+            "title": "Address",
+            "desc": "<b>Piyush nakarani  [Director]</b><a href=\"tel:+44%7442%105975\"> 📞 +44 7442 105975</a>\n<br><br>\n4th Floor Silverstream House, 45 Fitzroy Street, London, England, W1T 6EB\n<b></b>"
+          }
+        },
+        "contact_YzXQJ8": {
+          "type": "contact",
+          "settings": {
+            "title": "Address",
+            "desc": "<b>Jigar shah [Director]</b><a href=\"tel:+44%7570%276548\"> 📞 +44 7570 276548</a>\n<br><br>\n4th Floor Silverstream House, 45 Fitzroy Street, London, England, W1T 6EB\n<b></b>"
+          }
+        },
+        "contact_cGMrnz": {
+          "type": "contact",
+          "settings": {
+            "title": "Address",
+            "desc": "<b>Mamta nakarani [Operation manager]</b><a href=\"tel:+44%7833%819831\"> 📞 +44 7833 819831</a>\n<br><br>\n4th Floor Silverstream House, 45 Fitzroy Street, London, England, W1T 6EB\n<b></b>"
+          }
+        },
+        "e2e5831e-9da9-4c6d-873b-9bcc5333dfd0": {
+          "type": "contact",
+          "settings": {
+            "title": "By E-mail:",
+            "desc": "<a href=\"mailto:hello@theminimalcarbon.com\">hello@theminimalcarbon.com</a>"
+          }
+        },
+        "db09c0da-2d35-4727-b190-262e4c3a49b0": {
+          "type": "contact",
+          "disabled": true,
+          "settings": {
+            "title": "Opening Time",
+            "desc": "8:00Am – 10:00Pm, Sunday Close"
+          }
+        }
+      },
+      "block_order": [
+        "contact_9B7xez",
+        "2d30cb30-b344-4e0b-8ac8-fcaf0c06314f",
+        "contact_iDBiee",
+        "contact_y3E8dB",
+        "contact_TEXFV9",
+        "contact_YzXQJ8",
+        "contact_cGMrnz",
+        "e2e5831e-9da9-4c6d-873b-9bcc5333dfd0",
+        "db09c0da-2d35-4727-b190-262e4c3a49b0"
+      ],
+      "settings": {
+        "max_width": "",
+        "fullwidth": false,
+        "padding": "",
+        "margin": "0px 0px 30px",
+        "contact_form": true,
+        "heading": "Get In Touch"
+      }
+    }
+  },
+  "order": [
+    "breadcrumb",
+    "main",
+    "map",
+    "contact"
+  ]
+}

@@ -1,0 +1,240 @@
+{% schema %}
+{
+  "name": "Halloween Products",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Halloween Bestsellers"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "View All"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Halloween Products",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}
+
+<section
+  id="halloween-product-section"
+  class="halloween-product-section"
+  style="
+    {% if section.settings.background_image != blank %}
+      background-image: url({{ section.settings.background_image | image_url: width: 2000 }});
+      background-size: cover;
+      background-position: center;
+    {% endif %}
+  "
+>
+  <div class="most-selling-jewelry-container">
+    <!-- Heading -->
+    {% if section.settings.heading != blank %}
+      <div class="most-selling-heading-main">
+        <h2 class="most-selling-heading">{{ section.settings.heading }}</h2>
+      </div>
+    {% endif %}
+
+    <!-- Products -->
+    {% if section.settings.collection != blank %}
+      {% assign collection = collections[section.settings.collection] %}
+      {% if collection.products_count > 0 %}
+        <div class="swiper halloween-swiper">
+          <div class="swiper-wrapper">
+            {% for product in collection.products %}
+              <div class="swiper-slide">
+                <a href="{{ product.url }}" class="product-card">
+                  <div class="product-image">
+                    <img src="{{ product.featured_image | image_url: width: 500 }}" alt="{{ product.title | escape }}" loading="lazy">
+                  </div>
+                  <h3 class="product-title">{{ product.title }}</h3>
+                  <span class="product-price">
+                    {{ product.price | money }}
+                  </span>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- Navigation Arrows -->
+          <div class="most-selling-button-prev">
+            <svg width="12" height="24" viewBox="0 0 12 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M1.84306 12.7106L7.50006 18.3676L8.91406 16.9536L3.96406 12.0036L8.91406 7.05365L7.50006 5.63965L1.84306 11.2966C1.65559 11.4842 1.55028 11.7385 1.55028 12.0036C1.55028 12.2688 1.65559 12.5231 1.84306 12.7106Z"
+                fill="white"></path>
+            </svg>
+          </div>
+          <div class="most-selling-button-next">
+            <svg width="12" height="24" viewBox="0 0 12 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M10.1569 12.7106L4.49994 18.3676L3.08594 16.9536L8.03594 12.0036L3.08594 7.05365L4.49994 5.63965L10.1569 11.2966C10.3444 11.4842 10.4497 11.7385 10.4497 12.0036C10.4497 12.2688 10.3444 12.5231 10.1569 12.7106Z"
+                fill="white"></path>
+            </svg>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-center text-white">No products found in this collection.</p>
+      {% endif %}
+    {% endif %}
+
+    <!-- View All Button -->
+    {% if section.settings.collection != blank %}
+      <div class="most-selling-bottom-button">
+        <a
+          class="most-selling-button"
+          href="{{ collections[section.settings.collection].url }}"
+        >
+          {{ section.settings.button_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Swiper JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const swiper = new Swiper(".halloween-swiper", {
+        loop: true,
+        spaceBetween: 20,
+        autoplay: { delay: 2500, disableOnInteraction: false },
+        navigation: {
+          nextEl: ".most-selling-button-next",
+          prevEl: ".most-selling-button-prev",
+        },
+        breakpoints: {
+          0: { slidesPerView: 1.2 },
+          480: { slidesPerView: 2 },
+          768: { slidesPerView: 3 },
+          1024: { slidesPerView: 4 },
+          1280: { slidesPerView: 5 },
+        },
+      });
+    });
+  </script>
+
+  <style>
+    .halloween-product-section {
+      position: relative;
+      background-color: #000;
+      color: #fff;
+      padding: 60px 20px;
+      overflow: hidden;
+    }
+    .halloween-product-section .most-selling-heading {
+      font-family: 'Creepster', cursive;
+      font-size: 2.5rem;
+      text-align: center;
+      color: #ff6a00;
+      text-shadow: 0 0 15px #ff3c00;
+      margin-bottom: 40px;
+    }
+    .halloween-product-section .product-card {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+      {% comment %} background: rgba(255, 255, 255, 0.05); {% endcomment %}
+      border-radius: 12px;
+      padding: 15px;
+      transition: all 0.3s ease;
+      Background-color: #000;
+    }
+    .halloween-product-section .product-card:hover {
+      {% comment %} transform: scale(1.01); {% endcomment %}
+      {% comment %} box-shadow: 0 0 20px rgba(255, 106, 0, 0.4); {% endcomment %}
+    }
+    .halloween-product-section .product-image img {
+      width: 100%;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+    .halloween-product-section .product-card:hover img {
+      {% comment %} transform: scale(1.1); {% endcomment %}
+    }
+    .halloween-product-section .product-title {
+      font-size: 14px;
+      margin-top: 10px;
+      color: #f3f3f3;
+    }
+    .halloween-product-section .product-price {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #ff6a00;
+    }
+    .halloween-product-section .most-selling-bottom-button {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .halloween-product-section .most-selling-button {
+      display: inline-block;
+      background: #ff6a00;
+      color: #000;
+      padding: 12px 30px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-family: 'Vampliers', serif;
+      transition: all 0.3s ease;
+    }
+    .halloween-product-section .most-selling-button:hover {
+      background: #000;
+      color: #ff6a00;
+      box-shadow: 0 0 10px #ff6a00;
+    }
+    .swiper.halloween-swiper.swiper-initialized.swiper-horizontal {
+        padding-top: 100px;
+    }
+    .most-selling-button-next {
+      color: #fff;
+      width: 50px;
+      height: 50px;
+      border-radius: 999px;
+      background: #111;
+      /* border: 1px solid rgba(255, 255, 255, .15); */
+      position: absolute;
+      top: 45%;
+      left: 94%;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .most-selling-button-prev {
+      color: #fff;
+      width: 50px;
+      height: 50px;
+      border-radius: 999px;
+      background: #111;
+      /* border: 1px solid rgba(255, 255, 255, .15); */
+      position: absolute;
+      top: 45%;
+      left: 2%;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  </style>
+</section>

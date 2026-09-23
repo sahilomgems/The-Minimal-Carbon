@@ -1,0 +1,542 @@
+{% doc %}
+  @prompt
+    Section 5: Valentine Review Highlight (Single Center Review)
+    Purpose
+    
+    Build trust and emotional validation during Valentine purchase decision.
+    
+    Layout
+    
+    Center-aligned
+    
+    One featured review
+    
+    Minimal, elegant design
+    
+    Review Content
+    
+    Customer photo or heart icon
+    
+    5-star rating ⭐⭐⭐⭐⭐
+    
+    Review text
+    
+    Customer name (optional)
+    
+    Example Review
+    
+    “I bought this ring for Valentine’s Day, and she absolutely loved it. The quality and sparkle were beyond expectations.” ❤️
+    
+    Shopify Settings (Editable)
+    
+    Review text
+    
+    Reviewer name
+    
+    Star rating
+    
+    Background color / image
+    
+    Design Style Guidelines
+    Color Palette
+    
+    Blush Pink
+    
+    Valentine Red
+    
+    Soft White
+    
+    Rose Gold accents
+    
+    Typography
+    
+    Heading font: Elegant serif or premium sans-serif
+    
+    Body font: Clean & readable
+    
+    Animations
+    
+    Soft fade-in
+    
+    Slow heart floating effects
+    
+    Smooth hover transitions
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-valentine-review-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.padding_top }}px 20px {{ block.settings.padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-valentine-review-{{ ai_gen_id }} {
+      width: {{ block.settings.desktop_width_percent }}%;
+      margin: 0 auto;
+    }
+  }
+
+  .ai-valentine-review-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-valentine-review-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    margin: 0 auto {{ block.settings.icon_spacing }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: ai-valentine-fade-in-{{ ai_gen_id }} 0.8s ease forwards;
+  }
+
+  .ai-valentine-review-icon-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .ai-valentine-review-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    fill: {{ block.settings.heart_color }};
+  }
+
+  .ai-valentine-review-stars-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: {{ block.settings.stars_spacing }}px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: ai-valentine-fade-in-{{ ai_gen_id }} 0.8s ease 0.2s forwards;
+  }
+
+  .ai-valentine-review-star-{{ ai_gen_id }} {
+    width: {{ block.settings.star_size }}px;
+    height: {{ block.settings.star_size }}px;
+  }
+
+  .ai-valentine-review-star-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    fill: {{ block.settings.star_color }};
+  }
+
+  .ai-valentine-review-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.6;
+    color: {{ block.settings.text_color }};
+    margin-bottom: {{ block.settings.text_spacing }}px;
+    font-style: italic;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: ai-valentine-fade-in-{{ ai_gen_id }} 0.8s ease 0.4s forwards;
+  }
+
+  .ai-valentine-review-name-{{ ai_gen_id }} {
+    font-size: {{ block.settings.name_size }}px;
+    color: {{ block.settings.name_color }};
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: ai-valentine-fade-in-{{ ai_gen_id }} 0.8s ease 0.6s forwards;
+  }
+
+  .ai-valentine-heart-float-{{ ai_gen_id }} {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ai-valentine-heart-float-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    fill: {{ block.settings.floating_heart_color }};
+  }
+
+  {% if block.settings.enable_floating_hearts %}
+    .ai-valentine-heart-float-{{ ai_gen_id }}:nth-child(1) {
+      left: 10%;
+      animation: ai-valentine-float-{{ ai_gen_id }} 6s ease-in-out infinite;
+    }
+
+    .ai-valentine-heart-float-{{ ai_gen_id }}:nth-child(2) {
+      left: 25%;
+      animation: ai-valentine-float-{{ ai_gen_id }} 7s ease-in-out 1s infinite;
+    }
+
+    .ai-valentine-heart-float-{{ ai_gen_id }}:nth-child(3) {
+      right: 25%;
+      animation: ai-valentine-float-{{ ai_gen_id }} 8s ease-in-out 2s infinite;
+    }
+
+    .ai-valentine-heart-float-{{ ai_gen_id }}:nth-child(4) {
+      right: 10%;
+      animation: ai-valentine-float-{{ ai_gen_id }} 7s ease-in-out 1.5s infinite;
+    }
+  {% endif %}
+
+  @keyframes ai-valentine-fade-in-{{ ai_gen_id }} {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ai-valentine-float-{{ ai_gen_id }} {
+    0% {
+      bottom: -30px;
+      opacity: 0;
+      transform: translateX(0) rotate(0deg);
+    }
+    10% {
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateX(20px) rotate(180deg);
+    }
+    90% {
+      opacity: 0.6;
+    }
+    100% {
+      bottom: 100%;
+      opacity: 0;
+      transform: translateX(-20px) rotate(360deg);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-valentine-review-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+
+    .ai-valentine-review-icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.8 }}px;
+      height: {{ block.settings.icon_size | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<valentine-review-{{ ai_gen_id }} class="ai-valentine-review-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-valentine-review-container-{{ ai_gen_id }}">
+    <div class="ai-valentine-review-icon-{{ ai_gen_id }}">
+      {% if block.settings.customer_image %}
+        <img
+          src="{{ block.settings.customer_image | image_url: width: 200 }}"
+          alt="{{ block.settings.reviewer_name | escape }}"
+          loading="lazy"
+          width="200"
+          height="200"
+        >
+      {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      {% endif %}
+    </div>
+
+    <div class="ai-valentine-review-stars-{{ ai_gen_id }}">
+      {% for i in (1..block.settings.star_rating) %}
+        <div class="ai-valentine-review-star-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if block.settings.review_text != blank %}
+      <div class="ai-valentine-review-text-{{ ai_gen_id }}">
+        {{ block.settings.review_text }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.reviewer_name != blank %}
+      <div class="ai-valentine-review-name-{{ ai_gen_id }}">
+        {{ block.settings.reviewer_name }}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if block.settings.enable_floating_hearts %}
+    <div class="ai-valentine-heart-float-{{ ai_gen_id }}">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+    <div class="ai-valentine-heart-float-{{ ai_gen_id }}">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+    <div class="ai-valentine-heart-float-{{ ai_gen_id }}">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+    <div class="ai-valentine-heart-float-{{ ai_gen_id }}">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+  {% endif %}
+</valentine-review-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ValentineReview{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.initFloatingHearts();
+      }
+
+      initFloatingHearts() {
+        const hearts = this.querySelectorAll('.ai-valentine-heart-float-{{ ai_gen_id }}');
+        hearts.forEach((heart, index) => {
+          setTimeout(() => {
+            heart.style.opacity = '1';
+          }, index * 500);
+        });
+      }
+    }
+
+    customElements.define('valentine-review-{{ ai_gen_id }}', ValentineReview{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Valentine review",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Review content"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_image",
+      "label": "Customer photo"
+    },
+    {
+      "type": "range",
+      "id": "star_rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Star rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_text",
+      "label": "Review text",
+      "default": "I bought this ring for Valentine's Day, and she absolutely loved it. The quality and sparkle were beyond expectations. ❤️"
+    },
+    {
+      "type": "text",
+      "id": "reviewer_name",
+      "label": "Reviewer name"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum content width",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Icon style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 60,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon bottom spacing",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "heart_color",
+      "label": "Heart icon color",
+      "default": "#ff6b9d"
+    },
+    {
+      "type": "header",
+      "content": "Stars style"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Star size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "stars_spacing",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Stars bottom spacing",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#ffd700"
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Review text size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "text_spacing",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Text bottom spacing",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Review text color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Name text size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Name text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fff5f8"
+    },
+    {
+      "type": "header",
+      "content": "Floating hearts"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_floating_hearts",
+      "label": "Enable floating hearts",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "floating_heart_color",
+      "label": "Floating heart color",
+      "default": "#ffb3d1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Valentine review"
+    }
+  ]
+}
+{% endschema %}

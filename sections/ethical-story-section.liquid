@@ -1,0 +1,212 @@
+{% schema %}
+{
+  "name": "Ethical Story Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "section_image",
+      "label": "Left Image"
+    },
+    {
+      "type": "video",
+      "id": "section_video",
+      "label": "Left Video"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Crafted with ethics, designed for forever."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Every piece is thoughtfully created with responsibly sourced stones, exceptional craftsmanship, and timeless design — made to celebrate life's most meaningful moments."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Read Our Story"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ethical Story Section"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="ethical-story-section">
+  <div class="ethical-story-wrapper">
+
+    <!-- Left Media -->
+    <div class="ethical-media">
+      {% if section.settings.section_video != blank %}
+        {{
+          section.settings.section_video
+          | video_tag:
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            playsinline: true,
+            class: 'ethical-video'
+        }}
+      {% elsif section.settings.section_image != blank %}
+        <img 
+          src="{{ section.settings.section_image | image_url: width: 1200 }}"
+          alt="{{ section.settings.heading | escape }}"
+          loading="lazy"
+          width="{{ section.settings.section_image.width }}"
+          height="{{ section.settings.section_image.height }}"
+        >
+      {% endif %}
+    </div>
+
+    <!-- Right Content -->
+    <div class="ethical-content">
+      <h2>{{ section.settings.heading }}</h2>
+      <p>{{ section.settings.description }}</p>
+
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="ethical-btn">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+.ethical-story-section {
+  width: 100%;
+  background: #f8f5f3;
+  padding-top: 1px;
+}
+
+.ethical-story-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 550px;
+  align-items: stretch;
+}
+
+/* Left Media */
+.ethical-media {
+  width: 100%;
+  height: 700px;
+  overflow: hidden;
+}
+
+.ethical-media img,
+.ethical-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Right Content */
+.ethical-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px;
+  background: #f9f9f9;
+}
+
+.ethical-content h2 {
+  font-size: 64px;
+  line-height: 1.1;
+  font-family: serif;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 30px;
+  max-width: 600px;
+}
+
+.ethical-content p {
+  font-size: 22px;
+  line-height: 1.8;
+  color: #444;
+  max-width: 620px;
+  margin-bottom: 40px;
+}
+
+.ethical-btn {
+  display: inline-block;
+  padding: 18px 48px;
+  border: 2px solid #c99b7b;
+  border-radius: 50px;
+  color: #c99b7b;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.ethical-btn:hover {
+  background: #c99b7b;
+  color: #fff;
+}
+
+/* Tablet */
+@media screen and (max-width: 991px) {
+  .ethical-story-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .ethical-media {
+    height: 500px;
+  }
+
+  .ethical-content {
+    padding: 60px 40px;
+  }
+
+  .ethical-content h2 {
+    font-size: 48px;
+  }
+
+  .ethical-content p {
+    font-size: 18px;
+  }
+}
+
+/* Mobile */
+@media screen and (max-width: 767px) {
+  .ethical-media {
+    height: 350px;
+  }
+
+  .ethical-content {
+    padding: 40px 20px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .ethical-content h2 {
+    font-size: 36px;
+  }
+
+  .ethical-content p {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .ethical-btn {
+    font-size: 18px;
+    padding: 14px 36px;
+  }
+}
+</style>

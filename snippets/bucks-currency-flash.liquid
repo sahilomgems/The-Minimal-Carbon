@@ -1,0 +1,469 @@
+<style id="bucks-currency-flash-css">
+	html:not(.bucks-price-ready) sale-price,
+	html:not(.bucks-price-ready) compare-at-price,
+	html:not(.bucks-price-ready) unit-price,
+	html:not(.bucks-price-ready) .money,
+	html:not(.bucks-price-ready) .sale-price,
+	html:not(.bucks-price-ready) .compare-at-price,
+	html:not(.bucks-price-ready) .unit-price,
+	html:not(.bucks-price-ready) .product-price,
+	html:not(.bucks-price-ready) .price-sale,
+	html:not(.bucks-price-ready) .product-single__price,
+	html:not(.bucks-price-ready) .product-single__price--compare-at,
+	html:not(.bucks-price-ready) .product-unit-price,
+	html:not(.bucks-price-ready) [data-unit-price],
+	html:not(.bucks-price-ready) .cart__unit-price,
+	html:not(.bucks-price-ready) .ajaxcart__price,
+	html:not(.bucks-price-ready) .ajaxcart__subtotal,
+	html:not(.bucks-price-ready) .cart-total__subtotal-price,
+	html:not(.bucks-price-ready) .cart__price,
+	html:not(.bucks-price-ready) .cart-modal-totalprice span,
+	html:not(.bucks-price-ready) .modalcart__line_price .price,
+	html:not(.bucks-price-ready) .buy-together-price,
+	html:not(.bucks-price-ready) .total-price-html span,
+	html:not(.bucks-price-ready) [data-cart-cost],
+	html.bucks-price-pending-cart .ajaxcart__price,
+	html.bucks-price-pending-cart .ajaxcart__subtotal,
+	html.bucks-price-pending-cart .ajaxcart .money,
+	html.bucks-price-pending-cart .modalcart__line_price .price,
+	html.bucks-price-pending-cart .cart-modal-totalprice span {
+		visibility: hidden !important;
+	}
+
+	html:not(.bucks-price-ready) .price-list,
+	html:not(.bucks-price-ready) .product-group-price,
+	html:not(.bucks-price-ready) .price-container,
+	html:not(.bucks-price-ready) .ajaxcart__product-price-wrapper,
+	html:not(.bucks-price-ready) .ajaxcart__footer-price,
+	html:not(.bucks-price-ready) .modalcart__line_price,
+	html.bucks-price-pending-cart .ajaxcart__product-price-wrapper,
+	html.bucks-price-pending-cart .ajaxcart__footer-price,
+	html.bucks-price-pending-cart .modalcart__line_price {
+		position: relative;
+		min-height: 1.15em;
+	}
+
+	html:not(.bucks-price-ready) .price-list::after,
+	html:not(.bucks-price-ready) .product-group-price::after,
+	html:not(.bucks-price-ready) .price-container::after,
+	html:not(.bucks-price-ready) .ajaxcart__product-price-wrapper::after,
+	html:not(.bucks-price-ready) .ajaxcart__footer-price::after,
+	html:not(.bucks-price-ready) .modalcart__line_price::after,
+	html.bucks-price-pending-cart .ajaxcart__product-price-wrapper::after,
+	html.bucks-price-pending-cart .ajaxcart__footer-price::after,
+	html.bucks-price-pending-cart .modalcart__line_price::after {
+		content: "Loading price...";
+		position: absolute;
+		left: 0;
+		top: 0;
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 1.3;
+		letter-spacing: 0.01em;
+		color: inherit;
+		opacity: 0.72;
+		white-space: nowrap;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	html:not(.bucks-price-ready) .product-group-price::after {
+		left: 0;
+		right: 0;
+		text-align: center;
+	}
+
+	html:not(.bucks-price-ready) .ajaxcart__footer-price::after,
+	html.bucks-price-pending-cart .ajaxcart__footer-price::after {
+		left: auto;
+		right: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html:not(.bucks-price-ready) .price-list,
+		html:not(.bucks-price-ready) .product-group-price,
+		html:not(.bucks-price-ready) .price-container,
+		html:not(.bucks-price-ready) .product-price,
+		html:not(.bucks-price-ready) .money,
+		html:not(.bucks-price-ready) .product-single__price,
+		html:not(.bucks-price-ready) .ajaxcart__price,
+		html:not(.bucks-price-ready) .ajaxcart__subtotal,
+		html.bucks-price-pending-cart .ajaxcart__price,
+		html.bucks-price-pending-cart .ajaxcart__subtotal,
+		html:not(.bucks-price-ready) .price-list::after,
+		html:not(.bucks-price-ready) .product-group-price::after,
+		html:not(.bucks-price-ready) .price-container::after,
+		html:not(.bucks-price-ready) .ajaxcart__product-price-wrapper::after,
+		html:not(.bucks-price-ready) .ajaxcart__footer-price::after {
+			transition: none !important;
+			animation: none !important;
+		}
+	}
+</style>
+<script>
+(function () {
+	var SHOP = {{ shop.currency | json }} || 'USD';
+	var STORE_KEY = 'bucksSelectedCurrency';
+	var COOKIE = 'bucks_selected_currency';
+	var WIDGET_SEL = '#header-currency-switcher, [data-header-currency-slot], .header-currency-slot, .header-mobile [data-header-currency-slot], .buckscc-currency-box, .hxoSelectTheme';
+	var PRICE_SEL = [
+		'sale-price',
+		'compare-at-price',
+		'unit-price',
+		'.money',
+		'.sale-price',
+		'.product-price',
+		'.product-single__price',
+		'.product-single__price--compare-at',
+		'.product-unit-price',
+		'[data-unit-price]',
+		'.ajaxcart__price',
+		'.ajaxcart__subtotal',
+		'.cart-total__subtotal-price',
+		'.cart__price',
+		'.cart-modal-totalprice span',
+		'.modalcart__line_price .price',
+		'.buy-together-price',
+		'.total-price-html span'
+	].join(',');
+	var ISO = /(?:USD|AUD|CAD|HKD|NZD|SGD|GBP|EUR|JPY|CNY|INR|CHF|SEK|NOK|DKK|MXN|BRL|ZAR|KRW|AED|SAR|THB|MYR|PHP|IDR|TWD|PLN|CZK|HUF|ILS|TRY|QAR|KWD|BHD|OMR|EGP|PKR|BDT|VND|COP|CLP|ARS|PEN|RON|BGN|UAH|NGN|KES|GHS)/i;
+	var PREFIX_DOLLAR = /(?:A|AU|C|CA|HK|NZ|S|SG|MX|NT|R|Z)\$/i;
+	var MARKERS = {
+		USD: ['US$', 'USD'],
+		AUD: ['A$', 'AU$', 'AUD'],
+		CAD: ['C$', 'CA$', 'CAD'],
+		HKD: ['HK$', 'HKD'],
+		NZD: ['NZ$', 'NZD'],
+		SGD: ['S$', 'SG$', 'SGD'],
+		GBP: ['£', 'GBP', '&pound;'],
+		EUR: ['€', 'EUR', '&euro;'],
+		JPY: ['JP¥', '¥', '￥', 'JPY', '&yen;'],
+		CNY: ['CN¥', 'CNY', 'RMB', '¥', '￥'],
+		INR: ['₹', 'INR'],
+		CHF: ['CHF'],
+		KRW: ['₩', 'KRW'],
+		BRL: ['R$', 'BRL'],
+		MXN: ['MX$', 'MXN'],
+		SEK: ['SEK', 'kr'],
+		NOK: ['NOK', 'kr'],
+		DKK: ['DKK', 'kr'],
+		ZAR: ['R', 'ZAR'],
+		AED: ['AED', 'د.إ'],
+		THB: ['฿', 'THB'],
+		PLN: ['zł', 'PLN'],
+		TRY: ['₺', 'TRY'],
+		ILS: ['₪', 'ILS']
+	};
+	var html = document.documentElement;
+	var lastKnown = '';
+	var waitStart = 0;
+	var retried = false;
+	var pollTimer = 0;
+	var waiting = false;
+	var cartWaiting = false;
+	var cartWaitStart = 0;
+	var cartRetried = false;
+
+	function normalize(raw) {
+		if (raw == null) return '';
+		if (typeof raw === 'object') {
+			raw = raw.currency || raw.code || raw.iso || raw.isoCode || raw.selectedCurrency || '';
+		}
+		raw = String(raw).toUpperCase();
+		var m = raw.match(ISO);
+		return m ? m[0].toUpperCase() : '';
+	}
+
+	function readCookie(name) {
+		var parts = ('; ' + document.cookie).split('; ' + name + '=');
+		if (parts.length < 2) return '';
+		return decodeURIComponent(parts.pop().split(';').shift() || '');
+	}
+
+	function writeCookie(name, value) {
+		document.cookie = name + '=' + encodeURIComponent(value) + '; path=/; max-age=31536000; SameSite=Lax';
+	}
+
+	function readStorage() {
+		var keys = [STORE_KEY, 'bucks_selected_currency', 'bucks-currency', 'buckscc_currency', 'selected_currency'];
+		try {
+			for (var i = 0; i < keys.length; i++) {
+				var v = normalize(window.localStorage.getItem(keys[i]));
+				if (v) return v;
+			}
+		} catch (e) {}
+		for (var c = 0; c < keys.length; c++) {
+			var cv = normalize(readCookie(keys[c]));
+			if (cv) return cv;
+		}
+		return '';
+	}
+
+	function persist(code) {
+		code = normalize(code);
+		if (!code) return;
+		lastKnown = code;
+		try { window.localStorage.setItem(STORE_KEY, code); } catch (e) {}
+		writeCookie(COOKIE, code);
+		writeCookie(STORE_KEY, code);
+	}
+
+	function fromBucksCC() {
+		var b = window.bucksCC;
+		if (!b) return '';
+		var raw = b.selectedCurrency || b.currentCurrency || b.currency || b.selected || '';
+		if (typeof b.getSelectedCurrency === 'function') {
+			try { raw = raw || b.getSelectedCurrency(); } catch (e) {}
+		}
+		if (typeof b.getCurrency === 'function') {
+			try { raw = raw || b.getCurrency(); } catch (e) {}
+		}
+		return normalize(raw);
+	}
+
+	function fromWidget() {
+		var nodes = document.querySelectorAll(
+			'.buckscc-select-styled, .hxoSelectTheme .buckscc-select-styled, #header-currency-switcher, .buckscc-currency-box [aria-current], .buckscc-currency-box .active'
+		);
+		for (var i = 0; i < nodes.length; i++) {
+			var code = normalize(nodes[i].getAttribute('data-currency') || nodes[i].getAttribute('data-code') || nodes[i].textContent);
+			if (code) return code;
+		}
+		var boxes = document.querySelectorAll('.buckscc-currency-box, .hxoSelectTheme, #header-currency-switcher');
+		for (var j = 0; j < boxes.length; j++) {
+			var code2 = normalize(boxes[j].textContent);
+			if (code2) return code2;
+		}
+		return '';
+	}
+
+	function getSelectedCurrency() {
+		return fromBucksCC() || fromWidget() || readStorage() || lastKnown || '';
+	}
+
+	function priceMatchesSelected(visiblePrice, selectedCurrency) {
+		var text = String(visiblePrice || '').replace(/\u00a0/g, ' ').replace(/&nbsp;/gi, ' ');
+		var code = normalize(selectedCurrency);
+		if (!text || !code) return false;
+		if (new RegExp('\\b' + code + '\\b', 'i').test(text)) return true;
+		var tokens = MARKERS[code];
+		if (tokens) {
+			for (var i = 0; i < tokens.length; i++) {
+				if (text.indexOf(tokens[i]) !== -1) return true;
+			}
+		}
+		if (code === 'USD') {
+			if (PREFIX_DOLLAR.test(text)) return false;
+			if (text.indexOf('$') !== -1) return true;
+		}
+		return false;
+	}
+
+	function visiblePriceText(el) {
+		if (!el) return '';
+		if (el.closest && el.closest('script, style, noscript, .sr-only, .d-none, [hidden]')) return '';
+		var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+		if (!text || !/\d/.test(text)) return '';
+		return text;
+	}
+
+	function collectPriceNodes(root) {
+		return (root || document).querySelectorAll(PRICE_SEL);
+	}
+
+	function pricesMatch(selected, root) {
+		var nodes = collectPriceNodes(root);
+		var checked = 0;
+		for (var i = 0; i < nodes.length; i++) {
+			var text = visiblePriceText(nodes[i]);
+			if (!text) continue;
+			checked += 1;
+			if (!priceMatchesSelected(text, selected)) return false;
+		}
+		if (checked === 0) return selected === SHOP || !selected;
+		return true;
+	}
+
+	function restoreShopMoney(root) {
+		var nodes = (root || document).querySelectorAll('[data-shop-money]');
+		for (var i = 0; i < nodes.length; i++) {
+			var original = nodes[i].getAttribute('data-shop-money');
+			if (original) nodes[i].innerHTML = original;
+		}
+	}
+
+	function reConvert() {
+		try {
+			if (window.bucksCC && typeof window.bucksCC.reConvert === 'function') {
+				window.bucksCC.reConvert();
+			}
+		} catch (e) {}
+	}
+
+	function markReady() {
+		waiting = false;
+		if (pollTimer) {
+			clearTimeout(pollTimer);
+			pollTimer = 0;
+		}
+		html.classList.add('bucks-price-ready');
+		html.classList.remove('bucks-price-pending-cart');
+	}
+
+	function poll() {
+		var selected = getSelectedCurrency() || SHOP;
+		if (selected) persist(selected);
+
+		if (selected === SHOP || pricesMatch(selected)) {
+			markReady();
+			return;
+		}
+
+		var elapsed = Date.now() - waitStart;
+		if (!retried && elapsed >= 2000) {
+			retried = true;
+			restoreShopMoney();
+			reConvert();
+		}
+		if (elapsed >= 4000) {
+			markReady();
+			return;
+		}
+		pollTimer = setTimeout(poll, 50);
+	}
+
+	function hideUntilReady(opts) {
+		var doReconvert = !!(opts && opts.reconvert);
+		html.classList.remove('bucks-price-ready');
+		if (doReconvert) {
+			restoreShopMoney();
+			reConvert();
+		}
+		waitStart = Date.now();
+		retried = false;
+		waiting = true;
+		if (pollTimer) clearTimeout(pollTimer);
+		poll();
+	}
+
+	function pollCart() {
+		var selected = getSelectedCurrency() || SHOP;
+		var cartRoot = document.querySelector('.ajaxcart, .ajaxcart-container, [data-cart-container], .cart-modal');
+		if (!cartRoot || pricesMatch(selected, cartRoot) || selected === SHOP) {
+			cartWaiting = false;
+			html.classList.remove('bucks-price-pending-cart');
+			return;
+		}
+		var elapsed = Date.now() - cartWaitStart;
+		if (!cartRetried && elapsed >= 2000) {
+			cartRetried = true;
+			reConvert();
+		}
+		if (elapsed >= 4000) {
+			cartWaiting = false;
+			html.classList.remove('bucks-price-pending-cart');
+			return;
+		}
+		setTimeout(pollCart, 50);
+	}
+
+	function hideCartUntilReady() {
+		var selected = getSelectedCurrency();
+		if (!selected || selected === SHOP) return;
+		var cartRoot = document.querySelector('.ajaxcart, .ajaxcart-container, [data-cart-container], .cart-modal');
+		if (!cartRoot || pricesMatch(selected, cartRoot)) return;
+		html.classList.add('bucks-price-pending-cart');
+		reConvert();
+		cartWaitStart = Date.now();
+		cartRetried = false;
+		if (!cartWaiting) {
+			cartWaiting = true;
+			pollCart();
+		}
+	}
+
+	function onSelected(code, reconvert) {
+		code = normalize(code);
+		if (!code) return;
+		var changed = code !== lastKnown;
+		persist(code);
+		if (!changed && (html.classList.contains('bucks-price-ready') || waiting)) return;
+		hideUntilReady({ reconvert: reconvert !== false });
+	}
+
+	function onBucksEvent(e) {
+		onSelected(e && e.detail, true);
+	}
+
+	var stored = readStorage();
+	lastKnown = stored;
+	if (stored && stored !== SHOP) {
+		html.classList.remove('bucks-price-ready');
+		waitStart = Date.now();
+		waiting = true;
+		poll();
+	} else {
+		html.classList.add('bucks-price-ready');
+	}
+
+	document.addEventListener('BUCKS_SELECTED_CURRENCY', onBucksEvent);
+	window.addEventListener('BUCKS_SELECTED_CURRENCY', onBucksEvent);
+
+	document.addEventListener('click', function (e) {
+		var item = e.target && e.target.closest && e.target.closest(
+			'.buckscc-currency-box li, .buckscc-currency-box [data-currency], .buckscc-currency-box [data-code], .hxoSelectTheme li, #header-currency-switcher li, #header-currency-switcher option'
+		);
+		if (!item) return;
+		var code = normalize(item.getAttribute('data-currency') || item.getAttribute('data-code') || item.getAttribute('value') || item.textContent);
+		if (code) onSelected(code, true);
+	}, true);
+
+	function nodeInWidget(node) {
+		if (!node || node.nodeType !== 1) return false;
+		if (node.matches && node.matches(WIDGET_SEL)) return true;
+		if (node.closest && node.closest(WIDGET_SEL)) return true;
+		return !!(node.querySelector && node.querySelector(WIDGET_SEL));
+	}
+
+	function nodeInCart(node) {
+		if (!node || node.nodeType !== 1) return false;
+		if (node.closest && node.closest('.ajaxcart, .ajaxcart-container, [data-cart-container], .cart-modal, .header-cart__content')) return true;
+		return !!(node.classList && (node.classList.contains('ajaxcart') || node.classList.contains('ajaxcart-container')));
+	}
+
+	function startObservers() {
+		if (!window.MutationObserver || !document.body) return;
+		new MutationObserver(function (mutations) {
+			var widgetChanged = false;
+			var cartChanged = false;
+			for (var i = 0; i < mutations.length; i++) {
+				var m = mutations[i];
+				if (m.type === 'characterData' && m.target && m.target.parentElement && nodeInWidget(m.target.parentElement)) {
+					widgetChanged = true;
+				}
+				var check = m.target;
+				if (check && nodeInWidget(check)) widgetChanged = true;
+				var added = m.addedNodes;
+				if (added) {
+					for (var n = 0; n < added.length; n++) {
+						if (nodeInWidget(added[n])) widgetChanged = true;
+						if (nodeInCart(added[n])) cartChanged = true;
+					}
+				}
+			}
+			if (widgetChanged) {
+				var next = getSelectedCurrency();
+				if (next && next !== lastKnown) onSelected(next, true);
+			}
+			if (cartChanged) hideCartUntilReady();
+		}).observe(document.body, {
+			childList: true,
+			subtree: true,
+			characterData: true
+		});
+	}
+
+	if (document.body) startObservers();
+	else document.addEventListener('DOMContentLoaded', startObservers);
+})();
+</script>

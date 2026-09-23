@@ -1,0 +1,555 @@
+{% doc %}
+  @prompt
+    I want to create a custom Shopify section called "Halloween Shop Products" that displays up to 4-5 selected products in a festive Halloween style.  
+    
+    Requirements:
+    
+    1. Section should have a main heading (editable via settings) called "Shop Halloween Favorites" by default.
+    2. The section should display a fixed number of product blocks (4-5 max):
+       - Each block should allow the merchant to select a **specific product** via Shopify's product picker.
+       - Each product block should automatically show:
+         - Product image
+         - Product title
+         - Product price
+         - Link to the product page
+    3. Styling:
+       - Background color: black (#000)
+       - Main text color and highlights: Halloween orange (#ff7518)
+       - Cards should have a hover effect with background turning orange, text color black, slight upward movement, and glow.
+       - Images should slightly scale on hover.
+       - Text should be centered.
+    4. Grid layout:
+       - Responsive
+       - Auto-fit columns with minimum width 150px
+    5. Schema:
+       - Allow section title to be editable.
+       - Allow 4-5 product blocks with product selector.
+       - Provide default preset products if possible (optional).
+    
+    Output format: A complete Shopify Liquid section file including:
+    - HTML/Liquid code
+    - CSS styling within a `<style>` tag
+    - JSON schema for settings and blocks using product picker
+    
+    Please generate the full code for this Shopify section, ready to paste into a `.liquid` file.
+    , also add a background image
+{% enddoc %}
+{% assign ai_gen_id = section.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-halloween-section-{{ ai_gen_id }} {
+    background-color: #000000;
+    {% if section.settings.background_image %}
+      background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    {% endif %}
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  {% if section.settings.background_image %}
+    .ai-halloween-section-{{ ai_gen_id }}::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, {{ section.settings.background_overlay_opacity | divided_by: 100.0 }});
+      z-index: 1;
+    }
+  {% endif %}
+
+  .ai-halloween-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-halloween-heading-{{ ai_gen_id }} {
+    color: #ff7518;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  .ai-halloween-products-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .ai-halloween-product-card-{{ ai_gen_id }} {
+    background-color: rgba(17, 17, 17, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+  }
+
+  .ai-halloween-product-card-{{ ai_gen_id }}:hover {
+    background-color: rgba(255, 117, 24, 0.95);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(255, 117, 24, 0.4);
+    border-color: #ff7518;
+  }
+
+  .ai-halloween-product-card-{{ ai_gen_id }}:hover .ai-halloween-product-title-{{ ai_gen_id }},
+  .ai-halloween-product-card-{{ ai_gen_id }}:hover .ai-halloween-product-price-{{ ai_gen_id }} {
+    color: #000000;
+  }
+
+  .ai-halloween-product-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .ai-halloween-product-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    border-radius: 8px;
+  }
+
+  .ai-halloween-product-card-{{ ai_gen_id }}:hover .ai-halloween-product-image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .ai-halloween-product-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 200px;
+    background-color: #222222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 2px dashed #ff7518;
+  }
+
+  .ai-halloween-product-placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60px;
+    color: #ff7518;
+  }
+
+  .ai-halloween-product-title-{{ ai_gen_id }} {
+    color: #ff7518;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+    line-height: 1.4;
+  }
+
+  .ai-halloween-product-price-{{ ai_gen_id }} {
+    color: #ff7518;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+  }
+
+  .ai-halloween-product-link-{{ ai_gen_id }} {
+    display: inline-block;
+    background-color: #ff7518;
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .ai-halloween-product-card-{{ ai_gen_id }}:hover .ai-halloween-product-link-{{ ai_gen_id }} {
+    background-color: #000000;
+    color: #ff7518;
+  }
+
+  .ai-halloween-empty-state-{{ ai_gen_id }} {
+    color: #666666;
+    font-style: italic;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-halloween-section-{{ ai_gen_id }} {
+      padding: 40px 15px;
+    }
+
+    .ai-halloween-heading-{{ ai_gen_id }} {
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+
+    .ai-halloween-products-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .ai-halloween-product-card-{{ ai_gen_id }} {
+      padding: 15px;
+    }
+
+    .ai-halloween-product-image-{{ ai_gen_id }} {
+      height: 180px;
+    }
+
+    .ai-halloween-product-placeholder-{{ ai_gen_id }} {
+      height: 180px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .ai-halloween-products-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<section class="ai-halloween-section-{{ ai_gen_id }}" {{ section.shopify_attributes }}>
+  <div class="ai-halloween-container-{{ ai_gen_id }}">
+    {% if section.settings.section_title != blank %}
+      <h2 class="ai-halloween-heading-{{ ai_gen_id }}">{{ section.settings.section_title }}</h2>
+    {% endif %}
+
+    <div class="ai-halloween-products-grid-{{ ai_gen_id }}">
+      {% if section.settings.product_1 != blank %}
+        {% assign product = section.settings.product_1 %}
+        <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+          <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-halloween-product-image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            {% else %}
+              <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <h3 class="ai-halloween-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+          
+          <div class="ai-halloween-product-price-{{ ai_gen_id }}">
+            {% if product.compare_at_price > product.price %}
+              <span style="text-decoration: line-through; opacity: 0.7;">{{ product.compare_at_price | money }}</span>
+              {{ product.price | money }}
+            {% else %}
+              {{ product.price | money }}
+            {% endif %}
+          </div>
+
+          <a href="{{ product.url }}" class="ai-halloween-product-link-{{ ai_gen_id }}">
+            Shop Now
+          </a>
+        </div>
+      {% else %}
+        <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+          <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+            <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+          <div class="ai-halloween-empty-state-{{ ai_gen_id }}">
+            Select product 1 for this Halloween showcase
+          </div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.product_2 != blank %}
+        {% assign product = section.settings.product_2 %}
+        <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+          <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-halloween-product-image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            {% else %}
+              <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <h3 class="ai-halloween-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+          
+          <div class="ai-halloween-product-price-{{ ai_gen_id }}">
+            {% if product.compare_at_price > product.price %}
+              <span style="text-decoration: line-through; opacity: 0.7;">{{ product.compare_at_price | money }}</span>
+              {{ product.price | money }}
+            {% else %}
+              {{ product.price | money }}
+            {% endif %}
+          </div>
+
+          <a href="{{ product.url }}" class="ai-halloween-product-link-{{ ai_gen_id }}">
+            Shop Now
+          </a>
+        </div>
+      {% else %}
+        <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+          <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+            <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+          <div class="ai-halloween-empty-state-{{ ai_gen_id }}">
+            Select product 2 for this Halloween showcase
+          </div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.product_3 != blank %}
+        {% assign product = section.settings.product_3 %}
+        <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+          <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-halloween-product-image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            {% else %}
+              <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <h3 class="ai-halloween-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+          
+          <div class="ai-halloween-product-price-{{ ai_gen_id }}">
+            {% if product.compare_at_price > product.price %}
+              <span style="text-decoration: line-through; opacity: 0.7;">{{ product.compare_at_price | money }}</span>
+              {{ product.price | money }}
+            {% else %}
+              {{ product.price | money }}
+            {% endif %}
+          </div>
+
+          <a href="{{ product.url }}" class="ai-halloween-product-link-{{ ai_gen_id }}">
+            Shop Now
+          </a>
+        </div>
+      {% else %}
+        <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+          <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+            <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+          <div class="ai-halloween-empty-state-{{ ai_gen_id }}">
+            Select product 3 for this Halloween showcase
+          </div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.product_4 != blank %}
+        {% assign product = section.settings.product_4 %}
+        <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+          <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-halloween-product-image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            {% else %}
+              <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <h3 class="ai-halloween-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+          
+          <div class="ai-halloween-product-price-{{ ai_gen_id }}">
+            {% if product.compare_at_price > product.price %}
+              <span style="text-decoration: line-through; opacity: 0.7;">{{ product.compare_at_price | money }}</span>
+              {{ product.price | money }}
+            {% else %}
+              {{ product.price | money }}
+            {% endif %}
+          </div>
+
+          <a href="{{ product.url }}" class="ai-halloween-product-link-{{ ai_gen_id }}">
+            Shop Now
+          </a>
+        </div>
+      {% else %}
+        <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+          <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+            <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+          <div class="ai-halloween-empty-state-{{ ai_gen_id }}">
+            Select product 4 for this Halloween showcase
+          </div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_fifth_product %}
+        {% if section.settings.product_5 != blank %}
+          {% assign product = section.settings.product_5 %}
+          <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+            <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="ai-halloween-product-image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              {% else %}
+                <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+
+            <h3 class="ai-halloween-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+            
+            <div class="ai-halloween-product-price-{{ ai_gen_id }}">
+              {% if product.compare_at_price > product.price %}
+                <span style="text-decoration: line-through; opacity: 0.7;">{{ product.compare_at_price | money }}</span>
+                {{ product.price | money }}
+              {% else %}
+                {{ product.price | money }}
+              {% endif %}
+            </div>
+
+            <a href="{{ product.url }}" class="ai-halloween-product-link-{{ ai_gen_id }}">
+              Shop Now
+            </a>
+          </div>
+        {% else %}
+          <div class="ai-halloween-product-card-{{ ai_gen_id }}">
+            <div class="ai-halloween-product-image-wrapper-{{ ai_gen_id }}">
+              <div class="ai-halloween-product-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            </div>
+            <div class="ai-halloween-empty-state-{{ ai_gen_id }}">
+              Select product 5 for this Halloween showcase
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Halloween Shop Products",
+  "tag": "section",
+  "class": "halloween-products-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section settings"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Shop Halloween Favorites"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "background_overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 10,
+      "unit": "%",
+      "label": "Background overlay opacity",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product 3"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Product 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_fifth_product",
+      "label": "Show fifth product",
+      "default": false
+    },
+    {
+      "type": "product",
+      "id": "product_5",
+      "label": "Product 5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Halloween Shop Products"
+    }
+  ]
+}
+{% endschema %}

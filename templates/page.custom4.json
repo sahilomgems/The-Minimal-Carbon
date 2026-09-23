@@ -1,0 +1,82 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "page-breadcrumb",
+      "settings": {
+        "enable": true,
+        "bgimage": false
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "enable": true,
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "featured_products_3VqTBB": {
+      "type": "featured-products",
+      "name": "Wpbingo products list",
+      "settings": {
+        "max_width": "",
+        "fullwidth": false,
+        "padding": "",
+        "margin": "",
+        "title": "",
+        "featured_products": "custom-design",
+        "limit": 8,
+        "navigation": true,
+        "infinite": true,
+        "autoplay": false,
+        "autoplay_speed": "10000",
+        "columns": 4,
+        "column1440": 4,
+        "column1": 4,
+        "column2": 3,
+        "column3": 1,
+        "column4": 1
+      }
+    },
+    "17253643171a15802a": {
+      "type": "apps",
+      "settings": {}
+    },
+    "1725510648e69b2676": {
+      "type": "apps",
+      "blocks": {
+        "sk_advanced_form_builder_form_WjU6c4": {
+          "type": "shopify://apps/sk-contact-form-builder/blocks/form/f3e35b58-5874-4ef2-8e03-c92cda6e49eb",
+          "settings": {
+            "show_form": true,
+            "form_token": "7870634e37706441"
+          }
+        }
+      },
+      "block_order": [
+        "sk_advanced_form_builder_form_WjU6c4"
+      ],
+      "custom_css": [
+        ".sk-form-header {display: none;}"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "breadcrumb",
+    "main",
+    "featured_products_3VqTBB",
+    "17253643171a15802a",
+    "1725510648e69b2676"
+  ]
+}

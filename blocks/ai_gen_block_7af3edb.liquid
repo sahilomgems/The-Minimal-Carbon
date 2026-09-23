@@ -1,0 +1,703 @@
+{% doc %}
+  @prompt
+    
+    ⭐ 5. Customer Reviews Carousel Prompt
+    
+    Create a customer reviews carousel in luxury style.
+    Each card includes:
+    
+    Customer photo
+    
+    Name
+    
+    Review text (2–3 lines max)
+    
+    Subtle gold border and rounded corners.
+    Use slider arrows or auto-scroll effect.
+    Section title: “Customer Reviews” in white text with gold underline.
+    Background: solid black.
+    Add 4–5 cards horizontally scrolling with small shadow.
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-reviews-carousel-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px 20px;
+    overflow: hidden;
+  }
+
+  .ai-reviews-carousel__container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-reviews-carousel__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .ai-reviews-carousel__title-{{ ai_gen_id }} {
+    color: {{ block.settings.title_color }};
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0 0 15px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .ai-reviews-carousel__underline-{{ ai_gen_id }} {
+    width: 80px;
+    height: 2px;
+    background-color: {{ block.settings.accent_color }};
+    margin: 0 auto;
+  }
+
+  .ai-reviews-carousel__wrapper-{{ ai_gen_id }} {
+    position: relative;
+    padding: 0 60px;
+  }
+
+  .ai-reviews-carousel__track-{{ ai_gen_id }} {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 20px 0;
+  }
+
+  .ai-reviews-carousel__track-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-reviews-carousel__card-{{ ai_gen_id }} {
+    flex: 0 0 calc(33.333% - 20px);
+    min-width: 300px;
+    background-color: {{ block.settings.card_background }};
+    border: 1px solid {{ block.settings.accent_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-reviews-carousel__card-{{ ai_gen_id }}:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-reviews-carousel__customer-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .ai-reviews-carousel__photo-{{ ai_gen_id }} {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid {{ block.settings.accent_color }};
+  }
+
+  .ai-reviews-carousel__photo-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-reviews-carousel__photo-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.accent_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ block.settings.card_background }};
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .ai-reviews-carousel__name-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+
+  .ai-reviews-carousel__stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 15px;
+  }
+
+  .ai-reviews-carousel__star-{{ ai_gen_id }} {
+    color: {{ block.settings.accent_color }};
+    font-size: 16px;
+  }
+
+  .ai-reviews-carousel__text-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-style: italic;
+  }
+
+  .ai-reviews-carousel__arrow-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: {{ block.settings.accent_color }};
+    color: {{ block.settings.card_background }};
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0.9;
+  }
+
+  .ai-reviews-carousel__arrow-{{ ai_gen_id }}:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .ai-reviews-carousel__arrow-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-reviews-carousel__arrow--prev-{{ ai_gen_id }} {
+    left: 0;
+  }
+
+  .ai-reviews-carousel__arrow--next-{{ ai_gen_id }} {
+    right: 0;
+  }
+
+  .ai-reviews-carousel__arrow-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-reviews-carousel__card-{{ ai_gen_id }} {
+      flex: 0 0 calc(50% - 15px);
+      min-width: 280px;
+    }
+
+    .ai-reviews-carousel__wrapper-{{ ai_gen_id }} {
+      padding: 0 50px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-reviews-carousel__card-{{ ai_gen_id }} {
+      flex: 0 0 calc(100% - 10px);
+      min-width: 260px;
+    }
+
+    .ai-reviews-carousel__wrapper-{{ ai_gen_id }} {
+      padding: 0 40px;
+    }
+
+    .ai-reviews-carousel__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-reviews-carousel__arrow-{{ ai_gen_id }} {
+      width: 35px;
+      height: 35px;
+    }
+  }
+{% endstyle %}
+
+<customer-reviews-carousel-{{ ai_gen_id }}
+  class="ai-reviews-carousel-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-reviews-carousel__container-{{ ai_gen_id }}">
+    <div class="ai-reviews-carousel__header-{{ ai_gen_id }}">
+      <h2 class="ai-reviews-carousel__title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+      <div class="ai-reviews-carousel__underline-{{ ai_gen_id }}"></div>
+    </div>
+
+    <div class="ai-reviews-carousel__wrapper-{{ ai_gen_id }}">
+      <button
+        class="ai-reviews-carousel__arrow-{{ ai_gen_id }} ai-reviews-carousel__arrow--prev-{{ ai_gen_id }}"
+        aria-label="Previous reviews"
+        data-direction="prev"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="ai-reviews-carousel__track-{{ ai_gen_id }}">
+        {% for i in (1..5) %}
+          {% liquid
+            assign review_enabled_key = 'review_' | append: i | append: '_enabled'
+            assign customer_name_key = 'customer_name_' | append: i
+            assign customer_photo_key = 'customer_photo_' | append: i
+            assign review_text_key = 'review_text_' | append: i
+            assign rating_key = 'rating_' | append: i
+
+            assign review_enabled = block.settings[review_enabled_key]
+            assign customer_name = block.settings[customer_name_key]
+            assign customer_photo = block.settings[customer_photo_key]
+            assign review_text = block.settings[review_text_key]
+            assign rating = block.settings[rating_key]
+          %}
+
+          {% if review_enabled %}
+            <div class="ai-reviews-carousel__card-{{ ai_gen_id }}">
+              <div class="ai-reviews-carousel__customer-{{ ai_gen_id }}">
+                <div class="ai-reviews-carousel__photo-{{ ai_gen_id }}">
+                  {% if customer_photo %}
+                    <img
+                      src="{{ customer_photo | image_url: width: 120 }}"
+                      alt="{{ customer_name | escape }}"
+                      loading="lazy"
+                      width="60"
+                      height="60"
+                    >
+                  {% else %}
+                    <div class="ai-reviews-carousel__photo-placeholder-{{ ai_gen_id }}">
+                      {{ customer_name | slice: 0 | upcase }}
+                    </div>
+                  {% endif %}
+                </div>
+                <h3 class="ai-reviews-carousel__name-{{ ai_gen_id }}">{{ customer_name }}</h3>
+              </div>
+
+              <div class="ai-reviews-carousel__stars-{{ ai_gen_id }}">
+                {% for star in (1..rating) %}
+                  <span class="ai-reviews-carousel__star-{{ ai_gen_id }}">★</span>
+                {% endfor %}
+              </div>
+
+              <p class="ai-reviews-carousel__text-{{ ai_gen_id }}">{{ review_text }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <button
+        class="ai-reviews-carousel__arrow-{{ ai_gen_id }} ai-reviews-carousel__arrow--next-{{ ai_gen_id }}"
+        aria-label="Next reviews"
+        data-direction="next"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+</customer-reviews-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CustomerReviewsCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.track = this.querySelector('.ai-reviews-carousel__track-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('.ai-reviews-carousel__arrow--prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-reviews-carousel__arrow--next-{{ ai_gen_id }}');
+        this.scrollAmount = 0;
+        this.autoScrollInterval = null;
+      }
+
+      connectedCallback() {
+        this.setupEventListeners();
+        {% if block.settings.enable_auto_scroll %}
+          this.startAutoScroll();
+        {% endif %}
+        this.updateButtonStates();
+      }
+
+      disconnectedCallback() {
+        if (this.autoScrollInterval) {
+          clearInterval(this.autoScrollInterval);
+        }
+      }
+
+      setupEventListeners() {
+        this.prevButton.addEventListener('click', () => this.scroll('prev'));
+        this.nextButton.addEventListener('click', () => this.scroll('next'));
+        
+        this.track.addEventListener('scroll', () => {
+          this.updateButtonStates();
+        });
+
+        this.track.addEventListener('mouseenter', () => {
+          if (this.autoScrollInterval) {
+            clearInterval(this.autoScrollInterval);
+          }
+        });
+
+        this.track.addEventListener('mouseleave', () => {
+          {% if block.settings.enable_auto_scroll %}
+            this.startAutoScroll();
+          {% endif %}
+        });
+      }
+
+      scroll(direction) {
+        const cardWidth = this.track.querySelector('.ai-reviews-carousel__card-{{ ai_gen_id }}').offsetWidth;
+        const gap = 30;
+        const scrollDistance = cardWidth + gap;
+
+        if (direction === 'next') {
+          this.track.scrollLeft += scrollDistance;
+        } else {
+          this.track.scrollLeft -= scrollDistance;
+        }
+      }
+
+      startAutoScroll() {
+        this.autoScrollInterval = setInterval(() => {
+          const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+          
+          if (this.track.scrollLeft >= maxScroll) {
+            this.track.scrollLeft = 0;
+          } else {
+            this.scroll('next');
+          }
+        }, {{ block.settings.auto_scroll_speed | times: 1000 }});
+      }
+
+      updateButtonStates() {
+        const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+        
+        this.prevButton.disabled = this.track.scrollLeft <= 0;
+        this.nextButton.disabled = this.track.scrollLeft >= maxScroll - 1;
+      }
+    }
+
+    customElements.define('customer-reviews-carousel-{{ ai_gen_id }}', CustomerReviewsCarousel{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Customer reviews carousel",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Customer Reviews"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (gold)",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_auto_scroll",
+      "label": "Enable auto-scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "auto_scroll_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Auto-scroll speed",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Review 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_1_enabled",
+      "label": "Enable review 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customer_name_1",
+      "label": "Customer name",
+      "default": "Sarah Johnson"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_photo_1",
+      "label": "Customer photo"
+    },
+    {
+      "type": "range",
+      "id": "rating_1",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_text_1",
+      "label": "Review text",
+      "default": "Absolutely stunning quality! The craftsmanship is impeccable and exceeded all my expectations. Highly recommend to anyone looking for luxury."
+    },
+    {
+      "type": "header",
+      "content": "Review 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_2_enabled",
+      "label": "Enable review 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customer_name_2",
+      "label": "Customer name",
+      "default": "Michael Chen"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_photo_2",
+      "label": "Customer photo"
+    },
+    {
+      "type": "range",
+      "id": "rating_2",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_text_2",
+      "label": "Review text",
+      "default": "Exceptional service and product quality. The attention to detail is remarkable. This is exactly what I was looking for!"
+    },
+    {
+      "type": "header",
+      "content": "Review 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_3_enabled",
+      "label": "Enable review 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customer_name_3",
+      "label": "Customer name",
+      "default": "Emma Williams"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_photo_3",
+      "label": "Customer photo"
+    },
+    {
+      "type": "range",
+      "id": "rating_3",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_text_3",
+      "label": "Review text",
+      "default": "Worth every penny! The elegance and sophistication of this product is unmatched. I've received so many compliments already."
+    },
+    {
+      "type": "header",
+      "content": "Review 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_4_enabled",
+      "label": "Enable review 4",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customer_name_4",
+      "label": "Customer name",
+      "default": "James Anderson"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_photo_4",
+      "label": "Customer photo"
+    },
+    {
+      "type": "range",
+      "id": "rating_4",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_text_4",
+      "label": "Review text",
+      "default": "Premium quality that speaks for itself. The luxury experience from purchase to delivery was seamless. Truly impressed!"
+    },
+    {
+      "type": "header",
+      "content": "Review 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_5_enabled",
+      "label": "Enable review 5",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customer_name_5",
+      "label": "Customer name",
+      "default": "Olivia Martinez"
+    },
+    {
+      "type": "image_picker",
+      "id": "customer_photo_5",
+      "label": "Customer photo"
+    },
+    {
+      "type": "range",
+      "id": "rating_5",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_text_5",
+      "label": "Review text",
+      "default": "A masterpiece of design and quality. This has become my favorite purchase this year. The luxury is evident in every detail."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer reviews carousel"
+    }
+  ]
+}
+{% endschema %}

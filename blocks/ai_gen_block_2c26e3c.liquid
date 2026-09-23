@@ -1,0 +1,558 @@
+{% doc %}
+  @prompt
+    Prompt:
+    Create a Black Friday sale marquee banner design for a luxury jewelry Shopify store.
+    
+    Design goals:
+    
+    Theme: Black and Gold for an elegant luxury look.
+    
+    Add sparkling diamond jewelry elements softly visible in the background.
+    
+    Include gold gift box icons between each text phrase.
+    
+    The text should scroll continuously in a loop, like a marquee banner.
+    
+    Keep background dark (#000000) and text bright gold or white (#ffffff / #d4af37).
+    
+    Text examples to repeat:
+    
+    “Black Friday Sale”
+    
+    “Old Cut Collection Sale”
+    
+    “Up to 50% OFF”
+    
+    Add small gold shimmer or sparkle effects to make it feel premium.
+    
+    Design it clean, minimal, and elegant for a high-end jewelry brand.
+    
+    Output requirements:
+    
+    Provide 3 static image versions in these sizes:
+    
+    Desktop — 1920x120 px
+    
+    Tablet — 1024x100 px
+    
+    Mobile — 393x80 px
+    
+    Optionally create an animated (loop) version showing the marquee text moving left-to-right with gold gift boxes.
+    
+    Use .webp or .png format for static banners and .mp4 or .gif for animation.
+    
+    Example visual layout:
+    [🎁 Black Friday Sale ✨ | 🎁 Old Cut Collection Sale ✨ | 🎁 Up to 50% OFF ✨]
+    
+    Make it look luxurious, smooth, and modern — like a premium jewelry brand’s homepage banner., You can upload a custom gift box icon from the theme editor (no code change needed).
+    
+    You can adjust the gift box size and text size directly in the editor, text and gift box to move in a smooth infinite loop, like a luxury Black Friday ticker banner that continuously scrolls left to right (or right to left)., text and gift box to move in a smooth infinite loop, like a luxury Black Friday ticker banner that continuously scrolls left to right (or right to left).
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-bf-marquee-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    overflow: hidden;
+    padding: {{ block.settings.padding_vertical }}px 0;
+  }
+
+  .ai-bf-marquee-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .ai-bf-marquee-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    width: fit-content;
+  }
+
+  .ai-bf-marquee-track-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.item_spacing }}px;
+    flex-shrink: 0;
+    padding-right: {{ block.settings.item_spacing }}px;
+    {% if block.settings.scroll_direction == 'left' %}
+      animation: ai-bf-marquee-scroll-left-{{ ai_gen_id }} {{ block.settings.animation_speed }}s linear infinite;
+    {% else %}
+      animation: ai-bf-marquee-scroll-right-{{ ai_gen_id }} {{ block.settings.animation_speed }}s linear infinite;
+    {% endif %}
+  }
+
+  {% if block.settings.pause_on_hover %}
+    .ai-bf-marquee-{{ ai_gen_id }}:hover .ai-bf-marquee-track-{{ ai_gen_id }} {
+      animation-play-state: paused;
+    }
+  {% endif %}
+
+  .ai-bf-marquee-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.item_spacing }}px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .ai-bf-marquee-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    font-weight: {{ block.settings.text_weight }};
+    color: {{ block.settings.text_color }};
+    text-transform: {{ block.settings.text_transform }};
+    letter-spacing: {{ block.settings.letter_spacing }}px;
+    position: relative;
+    display: inline-block;
+  }
+
+  {% if block.settings.enable_text_shadow %}
+    .ai-bf-marquee-text-{{ ai_gen_id }} {
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+  {% endif %}
+
+  .ai-bf-marquee-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-bf-marquee-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    fill: {{ block.settings.icon_color }};
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));
+  }
+
+  .ai-bf-marquee-icon-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));
+  }
+
+  {% if block.settings.enable_sparkle %}
+    .ai-bf-marquee-sparkle-{{ ai_gen_id }} {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: {{ block.settings.sparkle_color }};
+      border-radius: 50%;
+      opacity: 0;
+      animation: ai-bf-sparkle-{{ ai_gen_id }} 2s ease-in-out infinite;
+    }
+
+    .ai-bf-marquee-sparkle-{{ ai_gen_id }}:nth-child(1) {
+      top: 20%;
+      left: 15%;
+      animation-delay: 0s;
+    }
+
+    .ai-bf-marquee-sparkle-{{ ai_gen_id }}:nth-child(2) {
+      top: 60%;
+      left: 35%;
+      animation-delay: 0.5s;
+    }
+
+    .ai-bf-marquee-sparkle-{{ ai_gen_id }}:nth-child(3) {
+      top: 40%;
+      left: 65%;
+      animation-delay: 1s;
+    }
+
+    .ai-bf-marquee-sparkle-{{ ai_gen_id }}:nth-child(4) {
+      top: 75%;
+      left: 85%;
+      animation-delay: 1.5s;
+    }
+
+    @keyframes ai-bf-sparkle-{{ ai_gen_id }} {
+      0%, 100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  {% endif %}
+
+  @keyframes ai-bf-marquee-scroll-left-{{ ai_gen_id }} {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes ai-bf-marquee-scroll-right-{{ ai_gen_id }} {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-bf-marquee-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.7 }}px;
+    }
+
+    .ai-bf-marquee-icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.7 }}px;
+      height: {{ block.settings.icon_size | times: 0.7 }}px;
+    }
+
+    .ai-bf-marquee-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_vertical | times: 0.7 }}px 0;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-bf-marquee-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-bf-marquee-wrapper-{{ ai_gen_id }}">
+    {% for repeat in (1..3) %}
+      <div class="ai-bf-marquee-track-{{ ai_gen_id }}">
+        {% if block.settings.text_1 != blank %}
+          <div class="ai-bf-marquee-item-{{ ai_gen_id }}">
+            <span class="ai-bf-marquee-icon-{{ ai_gen_id }}">
+              {% if block.settings.custom_icon %}
+                <img
+                  src="{{ block.settings.custom_icon | image_url: width: 100 }}"
+                  alt="Gift icon"
+                  loading="lazy"
+                  width="{{ block.settings.icon_size }}"
+                  height="{{ block.settings.icon_size }}"
+                >
+              {% else %}
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z"/>
+                  <path d="M12 11.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"/>
+                  <path d="M7 2h2v3H7zm8 0h2v3h-2z"/>
+                </svg>
+              {% endif %}
+            </span>
+            <span class="ai-bf-marquee-text-{{ ai_gen_id }}">
+              {{ block.settings.text_1 }}
+              {% if block.settings.enable_sparkle %}
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+              {% endif %}
+            </span>
+          </div>
+        {% endif %}
+
+        {% if block.settings.text_2 != blank %}
+          <div class="ai-bf-marquee-item-{{ ai_gen_id }}">
+            <span class="ai-bf-marquee-icon-{{ ai_gen_id }}">
+              {% if block.settings.custom_icon %}
+                <img
+                  src="{{ block.settings.custom_icon | image_url: width: 100 }}"
+                  alt="Gift icon"
+                  loading="lazy"
+                  width="{{ block.settings.icon_size }}"
+                  height="{{ block.settings.icon_size }}"
+                >
+              {% else %}
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z"/>
+                  <path d="M12 11.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"/>
+                  <path d="M7 2h2v3H7zm8 0h2v3h-2z"/>
+                </svg>
+              {% endif %}
+            </span>
+            <span class="ai-bf-marquee-text-{{ ai_gen_id }}">
+              {{ block.settings.text_2 }}
+              {% if block.settings.enable_sparkle %}
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+              {% endif %}
+            </span>
+          </div>
+        {% endif %}
+
+        {% if block.settings.text_3 != blank %}
+          <div class="ai-bf-marquee-item-{{ ai_gen_id }}">
+            <span class="ai-bf-marquee-icon-{{ ai_gen_id }}">
+              {% if block.settings.custom_icon %}
+                <img
+                  src="{{ block.settings.custom_icon | image_url: width: 100 }}"
+                  alt="Gift icon"
+                  loading="lazy"
+                  width="{{ block.settings.icon_size }}"
+                  height="{{ block.settings.icon_size }}"
+                >
+              {% else %}
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z"/>
+                  <path d="M12 11.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"/>
+                  <path d="M7 2h2v3H7zm8 0h2v3h-2z"/>
+                </svg>
+              {% endif %}
+            </span>
+            <span class="ai-bf-marquee-text-{{ ai_gen_id }}">
+              {{ block.settings.text_3 }}
+              {% if block.settings.enable_sparkle %}
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+                <span class="ai-bf-marquee-sparkle-{{ ai_gen_id }}"></span>
+              {% endif %}
+            </span>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Black Friday marquee",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Text 1",
+      "default": "Black Friday Sale"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Text 2",
+      "default": "Old Cut Collection Sale"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "Text 3",
+      "default": "Up to 50% OFF"
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom gift box icon",
+      "info": "Upload your own icon. If empty, default gift box icon will be used"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 16,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#d4af37",
+      "info": "Only applies to default SVG icon"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "sparkle_color",
+      "label": "Sparkle",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Text size",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Item spacing",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "label": "Scroll direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "Right to left"
+        },
+        {
+          "value": "right",
+          "label": "Left to right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Speed",
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sparkle",
+      "label": "Enable sparkle effect",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_text_shadow",
+      "label": "Enable text glow",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Black Friday marquee"
+    }
+  ]
+}
+{% endschema %}

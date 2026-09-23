@@ -1,0 +1,734 @@
+{% doc %}
+  @prompt
+    💠 8. Popular Jewelry Links Prompt
+    
+    Create a final section titled “Popular Jewelry”.
+    Use a 3-column text grid with category links under headings:
+    
+    Engagement Ring Elegance
+    
+    Old Cuts
+    
+    Diamond Cuts
+    
+    Loose Diamonds
+    
+    Color Diamonds
+    Each link should be white text that turns gold on hover.
+    Background: slightly darker black than previous section for contrast.
+    Font size: 14px, spacing comfortable.
+    
+    ⚙ Optional Enhancement Prompts
+    ✨ Glow Background Prompt
+    
+    Add subtle gold sparkle or particle effect animation to the background of the hero section for a premium luxury Black Friday vibe.
+    
+    🎨 Color Palette Prompt
+    
+    Use a consistent color palette:
+    
+    Background: #000000
+    
+    Text: #ffffff
+    
+    Accent (Gold): #d4af37
+    
+    Secondary (Red for discount tags): #ff4c4c
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-popular-jewelry-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  {% if block.settings.enable_sparkle %}
+    .ai-sparkle-canvas-{{ ai_gen_id }} {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  {% endif %}
+
+  .ai-popular-jewelry-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-popular-jewelry-title-{{ ai_gen_id }} {
+    text-align: center;
+    color: {{ block.settings.title_color }};
+    font-size: {{ block.settings.title_size }}px;
+    margin-bottom: {{ block.settings.title_margin }}px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .ai-popular-jewelry-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: {{ block.settings.column_gap }}px;
+  }
+
+  .ai-popular-jewelry-column-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-popular-jewelry-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin-bottom: {{ block.settings.heading_margin }}px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .ai-popular-jewelry-links-{{ ai_gen_id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ai-popular-jewelry-link-item-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.link_spacing }}px;
+  }
+
+  .ai-popular-jewelry-link-{{ ai_gen_id }} {
+    color: {{ block.settings.link_color }};
+    font-size: {{ block.settings.link_size }}px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: inline-block;
+  }
+
+  .ai-popular-jewelry-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.link_hover_color }};
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-popular-jewelry-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .ai-popular-jewelry-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-popular-jewelry-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-popular-jewelry-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.enable_sparkle %}
+    <canvas class="ai-sparkle-canvas-{{ ai_gen_id }}" id="ai-sparkle-{{ ai_gen_id }}"></canvas>
+  {% endif %}
+
+  <div class="ai-popular-jewelry-container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank %}
+      <h2 class="ai-popular-jewelry-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+    {% endif %}
+
+    <div class="ai-popular-jewelry-grid-{{ ai_gen_id }}">
+      <div class="ai-popular-jewelry-column-{{ ai_gen_id }}">
+        {% if block.settings.column_1_heading != blank %}
+          <h3 class="ai-popular-jewelry-heading-{{ ai_gen_id }}">{{ block.settings.column_1_heading }}</h3>
+        {% endif %}
+        <ul class="ai-popular-jewelry-links-{{ ai_gen_id }}">
+          {% if block.settings.column_1_link_1_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_1_link_1_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_1_link_1_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_1_link_2_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_1_link_2_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_1_link_2_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_1_link_3_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_1_link_3_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_1_link_3_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_1_link_4_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_1_link_4_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_1_link_4_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_1_link_5_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_1_link_5_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_1_link_5_text }}
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="ai-popular-jewelry-column-{{ ai_gen_id }}">
+        {% if block.settings.column_2_heading != blank %}
+          <h3 class="ai-popular-jewelry-heading-{{ ai_gen_id }}">{{ block.settings.column_2_heading }}</h3>
+        {% endif %}
+        <ul class="ai-popular-jewelry-links-{{ ai_gen_id }}">
+          {% if block.settings.column_2_link_1_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_2_link_1_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_2_link_1_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_2_link_2_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_2_link_2_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_2_link_2_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_2_link_3_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_2_link_3_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_2_link_3_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_2_link_4_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_2_link_4_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_2_link_4_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_2_link_5_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_2_link_5_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_2_link_5_text }}
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="ai-popular-jewelry-column-{{ ai_gen_id }}">
+        {% if block.settings.column_3_heading != blank %}
+          <h3 class="ai-popular-jewelry-heading-{{ ai_gen_id }}">{{ block.settings.column_3_heading }}</h3>
+        {% endif %}
+        <ul class="ai-popular-jewelry-links-{{ ai_gen_id }}">
+          {% if block.settings.column_3_link_1_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_3_link_1_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_3_link_1_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_3_link_2_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_3_link_2_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_3_link_2_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_3_link_3_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_3_link_3_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_3_link_3_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_3_link_4_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_3_link_4_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_3_link_4_text }}
+              </a>
+            </li>
+          {% endif %}
+          {% if block.settings.column_3_link_5_text != blank %}
+            <li class="ai-popular-jewelry-link-item-{{ ai_gen_id }}">
+              <a href="{{ block.settings.column_3_link_5_url }}" class="ai-popular-jewelry-link-{{ ai_gen_id }}">
+                {{ block.settings.column_3_link_5_text }}
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if block.settings.enable_sparkle %}
+  <script>
+    (function() {
+      class SparkleEffect{{ ai_gen_id }} extends HTMLElement {
+        constructor() {
+          super();
+          this.canvas = document.getElementById('ai-sparkle-{{ ai_gen_id }}');
+          if (!this.canvas) return;
+          
+          this.ctx = this.canvas.getContext('2d');
+          this.particles = [];
+          this.particleCount = {{ block.settings.sparkle_count }};
+          this.init();
+        }
+
+        init() {
+          this.resizeCanvas();
+          this.createParticles();
+          this.animate();
+          
+          window.addEventListener('resize', () => this.resizeCanvas());
+        }
+
+        resizeCanvas() {
+          const container = this.canvas.parentElement;
+          this.canvas.width = container.offsetWidth;
+          this.canvas.height = container.offsetHeight;
+        }
+
+        createParticles() {
+          for (let i = 0; i < this.particleCount; i++) {
+            this.particles.push({
+              x: Math.random() * this.canvas.width,
+              y: Math.random() * this.canvas.height,
+              size: Math.random() * {{ block.settings.sparkle_size }} + 1,
+              speedX: (Math.random() - 0.5) * 0.5,
+              speedY: (Math.random() - 0.5) * 0.5,
+              opacity: Math.random() * 0.5 + 0.3,
+              fadeDirection: Math.random() > 0.5 ? 1 : -1
+            });
+          }
+        }
+
+        animate() {
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          
+          this.particles.forEach(particle => {
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+            
+            particle.opacity += particle.fadeDirection * 0.01;
+            if (particle.opacity <= 0.2 || particle.opacity >= 0.8) {
+              particle.fadeDirection *= -1;
+            }
+            
+            if (particle.x < 0 || particle.x > this.canvas.width) {
+              particle.speedX *= -1;
+            }
+            if (particle.y < 0 || particle.y > this.canvas.height) {
+              particle.speedY *= -1;
+            }
+            
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = '{{ block.settings.sparkle_color }}';
+            this.ctx.globalAlpha = particle.opacity;
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+          });
+          
+          requestAnimationFrame(() => this.animate());
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          new SparkleEffect{{ ai_gen_id }}();
+        });
+      } else {
+        new SparkleEffect{{ ai_gen_id }}();
+      }
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Popular jewelry",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Popular Jewelry"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "header",
+      "content": "Title style"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_margin",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom margin",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Column headings"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "heading_margin",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom margin",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Links"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Hover color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "link_spacing",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Column gap",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "column_1_heading",
+      "label": "Heading",
+      "default": "Engagement Ring Elegance"
+    },
+    {
+      "type": "text",
+      "id": "column_1_link_1_text",
+      "label": "Link 1 text",
+      "default": "Old Cuts"
+    },
+    {
+      "type": "url",
+      "id": "column_1_link_1_url",
+      "label": "Link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_1_link_2_text",
+      "label": "Link 2 text",
+      "default": "Diamond Cuts"
+    },
+    {
+      "type": "url",
+      "id": "column_1_link_2_url",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_1_link_3_text",
+      "label": "Link 3 text",
+      "default": "Loose Diamonds"
+    },
+    {
+      "type": "url",
+      "id": "column_1_link_3_url",
+      "label": "Link 3 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_1_link_4_text",
+      "label": "Link 4 text",
+      "default": "Color Diamonds"
+    },
+    {
+      "type": "url",
+      "id": "column_1_link_4_url",
+      "label": "Link 4 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_1_link_5_text",
+      "label": "Link 5 text"
+    },
+    {
+      "type": "url",
+      "id": "column_1_link_5_url",
+      "label": "Link 5 URL"
+    },
+    {
+      "type": "header",
+      "content": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "column_2_heading",
+      "label": "Heading",
+      "default": "Fine Jewelry"
+    },
+    {
+      "type": "text",
+      "id": "column_2_link_1_text",
+      "label": "Link 1 text",
+      "default": "Necklaces"
+    },
+    {
+      "type": "url",
+      "id": "column_2_link_1_url",
+      "label": "Link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_2_link_2_text",
+      "label": "Link 2 text",
+      "default": "Earrings"
+    },
+    {
+      "type": "url",
+      "id": "column_2_link_2_url",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_2_link_3_text",
+      "label": "Link 3 text",
+      "default": "Bracelets"
+    },
+    {
+      "type": "url",
+      "id": "column_2_link_3_url",
+      "label": "Link 3 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_2_link_4_text",
+      "label": "Link 4 text",
+      "default": "Rings"
+    },
+    {
+      "type": "url",
+      "id": "column_2_link_4_url",
+      "label": "Link 4 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_2_link_5_text",
+      "label": "Link 5 text"
+    },
+    {
+      "type": "url",
+      "id": "column_2_link_5_url",
+      "label": "Link 5 URL"
+    },
+    {
+      "type": "header",
+      "content": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "column_3_heading",
+      "label": "Heading",
+      "default": "Collections"
+    },
+    {
+      "type": "text",
+      "id": "column_3_link_1_text",
+      "label": "Link 1 text",
+      "default": "Vintage"
+    },
+    {
+      "type": "url",
+      "id": "column_3_link_1_url",
+      "label": "Link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_3_link_2_text",
+      "label": "Link 2 text",
+      "default": "Modern"
+    },
+    {
+      "type": "url",
+      "id": "column_3_link_2_url",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_3_link_3_text",
+      "label": "Link 3 text",
+      "default": "Classic"
+    },
+    {
+      "type": "url",
+      "id": "column_3_link_3_url",
+      "label": "Link 3 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_3_link_4_text",
+      "label": "Link 4 text",
+      "default": "Custom Design"
+    },
+    {
+      "type": "url",
+      "id": "column_3_link_4_url",
+      "label": "Link 4 URL"
+    },
+    {
+      "type": "text",
+      "id": "column_3_link_5_text",
+      "label": "Link 5 text"
+    },
+    {
+      "type": "url",
+      "id": "column_3_link_5_url",
+      "label": "Link 5 URL"
+    },
+    {
+      "type": "header",
+      "content": "Sparkle effect"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sparkle",
+      "label": "Enable sparkle effect",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "sparkle_color",
+      "label": "Sparkle color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "sparkle_count",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "label": "Particle count",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "sparkle_size",
+      "min": 1,
+      "max": 4,
+      "step": 0.5,
+      "label": "Particle size",
+      "default": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "Popular jewelry"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,318 @@
+<section class="luxury-showcase">
+  <div class="luxury-grid">
+
+    <!-- Left Column -->
+    <div class="left-column">
+      {% if section.settings.left_top_image %}
+        <div class="image-box">
+          <img
+            src="{{ section.settings.left_top_image | image_url: width: 800 }}"
+            alt=""
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+
+      {% if section.settings.left_bottom_image %}
+        <div class="image-box">
+          <img
+            src="{{ section.settings.left_bottom_image | image_url: width: 800 }}"
+            alt=""
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Center Column -->
+    <div class="center-column">
+      {% if section.settings.main_image %}
+        <div class="main-image">
+          <img
+            src="{{ section.settings.main_image | image_url: width: 1500 }}"
+            alt=""
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+
+      <div class="product-content">
+        {% if section.settings.badge != blank %}
+          <span class="badge">
+            {{ section.settings.badge }}
+          </span>
+        {% endif %}
+
+        <h2>{{ section.settings.title }}</h2>
+
+        <div class="price">
+          {{ section.settings.price }}
+        </div>
+
+        {% if section.settings.button_link != blank %}
+          <a href="{{ section.settings.button_link }}" class="luxury-btn">
+            {{ section.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-column">
+      {% if section.settings.right_top_image %}
+        <div class="image-box">
+          <img
+            src="{{ section.settings.right_top_image | image_url: width: 800 }}"
+            alt=""
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+
+      {% if section.settings.right_bottom_image %}
+        <div class="image-box">
+          <img
+            src="{{ section.settings.right_bottom_image | image_url: width: 800 }}"
+            alt=""
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+.luxury-showcase{
+  background:#000;
+  padding:60px 20px;
+}
+
+.luxury-grid{
+width:100%;
+  margin:auto;
+  display:grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap:30px;
+  align-items:start;
+}
+
+.image-box img,
+.main-image img{
+  width:100%;
+  display:block;
+  object-fit:cover;
+}
+
+.left-column,
+.right-column{
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+}
+
+.product-content{
+  color:#fff;
+  margin-top:25px;
+}
+
+.badge{
+  display:inline-block;
+  background:#a96a2c;
+  color:#fff;
+  padding:10px 22px;
+  font-size:15px;
+  margin-bottom:20px;
+}
+
+.product-content h2{
+  font-size:52px;
+  line-height:1.1;
+  margin:0 0 20px;
+  font-family: serif;
+  color:#ffff;
+}
+
+.price{
+  color:#00d084;
+  font-size:34px;
+  font-weight:500;
+}
+
+.luxury-btn{
+  display:inline-block;
+  margin-top:25px;
+  padding:14px 34px;
+  background:#fff;
+  color:#000;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.luxury-btn:hover{
+  background:#d4af37;
+  color:#fff;
+}
+.center-column {
+    margin-top: 60px;
+}
+.image-box img,
+.main-image img{
+  opacity: 0;
+  transform: scale(0.9) translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.image-box img.animate,
+.main-image img.animate{
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* Tablet */
+@media(max-width:991px){
+
+  .luxury-grid{
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+
+  .center-column{
+    order:1;
+  }
+
+  .left-column{
+    order:2;
+    flex-direction:row;
+  }
+
+  .right-column{
+    order:3;
+    flex-direction:row;
+  }
+
+  .left-column .image-box,
+  .right-column .image-box{
+    flex:1;
+  }
+
+  .product-content h2{
+    font-size:38px;
+  }
+}
+
+/* Mobile */
+@media(max-width:767px){
+
+  .left-column,
+  .right-column{
+    flex-direction:column;
+  }
+
+  .product-content h2{
+    font-size:30px;
+  }
+
+  .price{
+    font-size:26px;
+  }
+
+  .badge{
+    padding:8px 16px;
+  }
+}
+</style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const images = document.querySelectorAll(
+    '.image-box img, .main-image img'
+  );
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const index = [...images].indexOf(entry.target);
+        setTimeout(() => {
+          entry.target.classList.add('animate');
+        }, index * 200);
+      }
+    });
+  }, {
+    threshold: 0.2
+  });
+
+  images.forEach((img) => observer.observe(img));
+});
+</script>
+
+
+
+{% schema %}
+{
+  "name": "jewelry-collage",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "left_top_image",
+      "label": "Left Top Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_bottom_image",
+      "label": "Left Bottom Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Center Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_top_image",
+      "label": "Right Top Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_bottom_image",
+      "label": "Right Bottom Image"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "2.35in 24K Gold Scaled Bangle Bracelet"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Price",
+      "default": "$4,599.00"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "jewelry-collage"
+    }
+  ]
+}
+{% endschema %}

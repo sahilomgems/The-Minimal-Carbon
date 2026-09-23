@@ -1,0 +1,47 @@
+{%- comment -%}
+  Native Shopify newsletter form.
+  Triggers Customer marketing confirmation when double opt-in is enabled.
+  Usage: {% render 'newsletter-form', form_id: 'FooterNewsletter', input_id: 'FooterNewsletterEmail' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign form_id = form_id | default: 'NewsletterForm'
+  assign input_id = input_id | default: form_id | append: '-email'
+  assign button_icon = button_icon | default: false
+-%}
+
+{% form 'customer', id: form_id %}
+  {{ form.errors | default_errors }}
+
+  {%- if form.posted_successfully? -%}
+    <div class="alert alert-success newsletter-form__success" role="status">
+      {{ 'general.newsletter_form.newsletter_confirmation' | t }}
+      <span class="newsletter-form__success-note"> Please check your inbox (and spam) to confirm your subscription.</span>
+    </div>
+  {%- else -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    <div class="newsletter-form__wrap">
+      <input
+        id="{{ input_id }}"
+        class="form-control newsletter-form__input"
+        type="email"
+        name="contact[email]"
+        value="{% if form.email != blank %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+        placeholder="{{ 'general.newsletter_form.newsletter_placeholder' | t }}"
+        aria-required="true"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="email"
+        required
+      >
+      <button class="btn newsletter-form__submit" type="submit" name="commit">
+        {%- if button_icon -%}
+          <i class="icon-email" aria-hidden="true"></i>
+          <span class="visually-hidden">{{ 'general.newsletter_form.submit' | t }}</span>
+        {%- else -%}
+          <span>{{ 'general.newsletter_form.submit' | t }}</span>
+        {%- endif -%}
+      </button>
+    </div>
+  {%- endif -%}
+{% endform %}

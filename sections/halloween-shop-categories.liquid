@@ -1,0 +1,129 @@
+{% comment %}
+  Halloween Shop by Product Section
+  Displays selected products with a background image.
+{% endcomment %}
+
+<section class="halloween-shop-section" style="background-image: url('{{ section.settings.bg_image | img_url: 'master' }}'); background-size: cover; background-position: center;">
+  <div class="container">
+    <div class="page-width">
+      {% if section.settings.title != blank %}
+        <h2 class="section-title">{{ section.settings.title }}</h2>
+      {% endif %}
+
+      <div class="halloween-product-grid">
+        {% for block in section.blocks %}
+          {% assign product = all_products[block.settings.product] %}
+          {% if product %}
+            <div class="halloween-product-item">
+              <a href="{{ product.url }}">
+                {% if product.featured_image %}
+                  <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title | escape }}" loading="lazy" >
+                {% endif %}
+                <h3>{{ product.title }}</h3>
+              </a>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .halloween-shop-section {
+    text-align: center;
+    padding: 10rem 20px;
+    color: #ff7518;
+    position: relative;
+  }
+
+  .halloween-shop-section .section-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #ff7518;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .halloween-product-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .halloween-product-item {
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #ff7518;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .halloween-product-item:hover {
+    background: #ff7518;
+    color: #000;
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px #ff7518;
+  }
+
+  .halloween-product-item img {
+    width: 100%;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .halloween-product-item:hover img {
+    transform: scale(1.05);
+  }
+
+  .halloween-product-item h3 {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: inherit;
+  }
+
+  .halloween-product-item a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "🎃 Halloween Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Shop by Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "🎃 Halloween Products",
+      "category": "Halloween",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

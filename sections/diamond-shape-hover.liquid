@@ -1,0 +1,363 @@
+<section
+  id="DiamondShapeHover-{{ section.id }}"
+  class="diamond-shape-section"
+>
+  <div class="diamond-shape-section__inner">
+    <h2
+      class="diamond-title"
+      style="
+        text-align: {{ section.settings.heading_alignment }};
+        font-size: {{ section.settings.heading_size }}px;
+        margin-bottom: {{ section.settings.heading_spacing }}px;
+      "
+    >
+      {{ section.settings.heading }}
+    </h2>
+
+    <div class="diamond-wrapper">
+      <div class="diamond-left">
+        <div class="main-ring-image">
+          <img
+            id="mainRingImage-{{ section.id }}"
+            src="{{ section.blocks.first.settings.ring_image | image_url: width: 800 }}"
+            alt="{{ section.blocks.first.settings.shape_name }}"
+            width="600"
+            height="600"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+      </div>
+
+      <div class="diamond-right">
+        <div
+          class="shape-grid"
+        >
+          {% for block in section.blocks %}
+            <a
+              href="{{ block.settings.collection_url }}"
+              class="shape-item"
+              data-ring-image="{{ block.settings.ring_image | image_url: width: 800 }}"
+              {{ block.shopify_attributes }}
+            >
+              <img
+                src="{{ block.settings.shape_image | image_url: width: 180 }}"
+                alt="{{ block.settings.shape_name }}"
+                width="140"
+                height="140"
+                loading="lazy"
+                decoding="async"
+              >
+              <p>{{ block.settings.shape_name }}</p>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .diamond-shape-section {
+    width: 100%;
+    background: #fff;
+    padding: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .diamond-shape-section__inner {
+    width: 100%;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .diamond-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    padding: 30px 0;
+  }
+
+  #shopify-section-{{ section.id }} .diamond-left {
+    width: 45%;
+  }
+
+  #shopify-section-{{ section.id }} .diamond-title {
+    font-weight: 500;
+    margin-top: 25px;
+  }
+
+  #shopify-section-{{ section.id }} .main-ring-image img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: all 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .diamond-right {
+    width: 55%;
+  }
+
+  #shopify-section-{{ section.id }} .shape-grid {
+    display: grid;
+    gap: 40px 30px;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+  }
+
+  #shopify-section-{{ section.id }} .shape-item {
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: #666;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .shape-item img {
+    max-width: {{ section.settings.image_size }}px;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .shape-item:hover img {
+    transform: scale(1.1);
+  }
+
+  #shopify-section-{{ section.id }} .shape-item p {
+    margin-top: 12px;
+    font-size: {{ section.settings.label_size }}px;
+    color: #777;
+  }
+
+  @media (max-width: 989px) {
+    #shopify-section-{{ section.id }} .diamond-left {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .diamond-wrapper {
+      flex-direction: column;
+      gap: 0;
+      padding: 10px 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .diamond-right {
+      width: 100%;
+    }
+
+    #shopify-section-{{ section.id }} .shape-grid {
+      grid-template-columns: repeat({{ section.settings.columns_tablet }}, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .diamond-shape-section {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .diamond-title {
+      font-size: {{ section.settings.heading_size_mobile }}px !important;
+      text-align: center !important;
+    }
+
+    #shopify-section-{{ section.id }} .shape-grid {
+      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+      gap: 25px;
+    }
+
+    #shopify-section-{{ section.id }} .shape-item img {
+      max-width: {{ section.settings.image_size_mobile }}px;
+    }
+
+    #shopify-section-{{ section.id }} .shape-item p {
+      font-size: {{ section.settings.label_size_mobile }}px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.getElementById('DiamondShapeHover-{{ section.id }}');
+    if (!root) return;
+
+    var mainImage = root.querySelector('#mainRingImage-{{ section.id }}');
+    var shapeItems = root.querySelectorAll('.shape-item');
+    if (!mainImage || !shapeItems.length) return;
+
+    shapeItems.forEach(function (item) {
+      item.addEventListener('mouseenter', function () {
+        var newImage = this.getAttribute('data-ring-image');
+        if (newImage) mainImage.src = newImage;
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Diamond Shape Hover",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by Shape"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size (Desktop)",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading Size (Mobile)",
+      "min": 16,
+      "max": 50,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Spacing Below Heading",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Tablet Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "label": "Mobile Columns",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Shape images"
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "label": "Image size (desktop)",
+      "min": 60,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 110
+    },
+    {
+      "type": "range",
+      "id": "image_size_mobile",
+      "label": "Image size (mobile)",
+      "min": 60,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Text size (desktop)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "label_size_mobile",
+      "label": "Text size (mobile)",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Width container",
+      "min": 1000,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "default": 1440
+    }
+  ],
+  "blocks": [
+    {
+      "type": "shape",
+      "name": "Diamond Shape",
+      "settings": [
+        {
+          "type": "text",
+          "id": "shape_name",
+          "label": "Shape Name"
+        },
+        {
+          "type": "image_picker",
+          "id": "shape_image",
+          "label": "Shape Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "ring_image",
+          "label": "Ring Image"
+        },
+        {
+          "type": "url",
+          "id": "collection_url",
+          "label": "Collection URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Diamond Shape Hover"
+    }
+  ]
+}
+{% endschema %}

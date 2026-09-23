@@ -1,0 +1,934 @@
+{% assign padding 	= section.settings.padding | split: "|" %}
+{% assign bg 		= section.settings.bg_color %}
+{%- style -%}
+	{%- if padding[0] != blank -%}
+		.footer-center{
+			padding:{{ padding[0] }};
+			background:{{bg}};
+			{%- if section.settings.border -%}
+				border-width: {{ section.settings.border_width }};
+				border-color: {{ section.settings.border_color }};
+				border-style:solid;
+			{%- endif -%}
+		}
+	{%- endif -%}
+	{%- if section.blocks.size > 0 -%}
+		{%- for block in section.blocks -%}
+			{%- case block.type -%}
+				{%- when 'menu' -%}
+					.footer-center .item-{{forloop.index}}{
+						max-width:{{ block.settings.footer_width }}%;
+						flex:0 0 {{ block.settings.footer_width }}%;
+					}
+					{%- if block.settings.title != blank -%}
+						.footer-center .title-{{forloop.index}}{
+							font-size:{{ block.settings.font_size }}px;
+							line-height:{{ block.settings.line_height }}px;
+							font-weight:{{ block.settings.font_weight }};
+							letter-spacing:{{ block.settings.letter_spacing }}px;
+							margin:{{ block.settings.margin }};
+							color:{{ block.settings.color }};
+						}
+					{%- endif -%}
+				{%- when 'contact' -%}
+					.footer-center .item-{{forloop.index}}{
+						max-width:{{ block.settings.footer_width }}%;
+						flex:0 0 {{ block.settings.footer_width }}%;
+					}
+					{%- if block.settings.title != blank -%}
+						.footer-center .title-{{forloop.index}}{
+							font-size:{{ block.settings.font_size }}px;
+							line-height:{{ block.settings.line_height }}px;
+							font-weight:{{ block.settings.font_weight }};
+							letter-spacing:{{ block.settings.letter_spacing }}px;
+							margin:{{ block.settings.margin }};
+							color:{{ block.settings.color }};
+						}
+					{%- endif -%}
+				{%- when 'newsletter' -%}
+					.footer-center .item-{{forloop.index}}{
+						max-width:{{ block.settings.footer_width }}%;
+						flex:0 0 {{ block.settings.footer_width }}%;
+					}
+					{%- if block.settings.title != blank -%}
+						.footer-center .title-{{forloop.index}}{
+							font-size:{{ block.settings.font_size }}px;
+							line-height:{{ block.settings.line_height }}px;
+							font-weight:{{ block.settings.font_weight }};
+							letter-spacing:{{ block.settings.letter_spacing }}px;
+							margin:{{ block.settings.margin }};
+							color:{{ block.settings.color }};
+						}
+					{%- endif -%}
+				{%- when 'instagram' -%}
+					.footer-center .item-{{forloop.index}}{
+						max-width:{{ block.settings.footer_width }}%;
+						flex:0 0 {{ block.settings.footer_width }}%;
+					}
+					{%- if block.settings.title != blank -%}
+						.footer-center .title-{{forloop.index}}{
+							font-size:{{ block.settings.font_size }}px;
+							line-height:{{ block.settings.line_height }}px;
+							font-weight:{{ block.settings.font_weight }};
+							letter-spacing:{{ block.settings.letter_spacing }}px;
+							margin:{{ block.settings.margin }};
+							color:{{ block.settings.color }};
+						}
+					{%- endif -%}
+			{%- endcase -%}
+		{%- endfor -%}
+		{%- if padding[1] != blank -%}
+			@media (max-width:1199px){
+				.footer-center{
+					padding:{{ padding[1] }};
+				}
+			}
+		{%- endif -%}
+		@media (max-width:991px){
+			{%- if padding[2] != blank -%}
+				.footer-center{
+					padding:{{ padding[2] }};
+				}
+			{%- endif -%}
+			{%- for block in section.blocks -%}
+				{%- case block.type -%}
+					{%- when 'menu' -%}
+						.footer-center .item-{{forloop.index}}{
+							max-width:{{ block.settings.footer_width_ipad }}%;
+							flex:0 0 {{ block.settings.footer_width_ipad }}%;
+						}
+					{%- when 'contact' -%}
+						.footer-center .item-{{forloop.index}}{
+							max-width:{{ block.settings.footer_width_ipad }}%;
+							flex:0 0 {{ block.settings.footer_width_ipad }}%;
+						}
+					{%- when 'newsletter' -%}
+						.footer-center .item-{{forloop.index}}{
+							max-width:{{ block.settings.footer_width_ipad }}%;
+							flex:0 0 {{ block.settings.footer_width_ipad }}%;
+						}
+					{%- when 'instagram' -%}
+						.footer-center .item-{{forloop.index}}{
+							max-width:{{ block.settings.footer_width_ipad }}%;
+							flex:0 0 {{ block.settings.footer_width_ipad }}%;
+						}
+				{%- endcase -%}
+			{%- endfor -%}
+		}
+		@media (max-width:767px){
+			{%- if padding[3] != blank -%}
+				.footer-center{
+					padding:{{ padding[3] }};
+				}
+			{%- endif -%}
+			{%- for block in section.blocks -%}
+				{%- case block.type -%}
+					{%- when 'menu' -%}
+						.footer-center .item-{{forloop.index}}{
+							max-width:{{ block.settings.footer_width_mobi }}%;
+							flex:0 0 {{ block.settings.footer_width_mobi }}%;
+						}
+					{%- when 'contact' -%}
+						.footer-center .item-{{forloop.index}}{
+							max-width:{{ block.settings.footer_width_mobi }}%;
+							flex:0 0 {{ block.settings.footer_width_mobi }}%;
+						}
+					{%- when 'newsletter' -%}
+						.footer-center .item-{{forloop.index}}{
+							max-width:{{ block.settings.footer_width_mobi }}%;
+							flex:0 0 {{ block.settings.footer_width_mobi }}%;
+						}
+					{%- when 'instagram' -%}
+						.footer-center .item-{{forloop.index}}{
+							max-width:{{ block.settings.footer_width_mobi }}%;
+							flex:0 0 {{ block.settings.footer_width_mobi }}%;
+						}
+				{%- endcase -%}
+			{%- endfor -%}
+		}
+	{%- endif -%}
+{%- endstyle -%}
+<div class="footer-center{% if section.settings.accordion %} accordion{% endif %} overflow-hidden">
+    <div class="container">
+		<div class="footer-center__inner">
+			<div class="row">
+				<div class="footer-sec-new">
+					{%- if section.blocks.size > 0 -%}
+						{%- for block in section.blocks -%}
+							{%- case block.type -%}
+								{%- when 'menu' -%}
+									{%- assign footer_menu = block.settings.footer_link_list -%}
+									{%- if block.settings.title != blank -%}
+										<div class="content-toggle item-{{forloop.index}}">
+											<h2 class="title-footer title-{{forloop.index}}">{{ block.settings.title }}</h2>
+											{% include 'footer-menu' %}
+										</div>
+									{%- else -%}
+										<div class="content-item  item-{{forloop.index}}">
+											{% include 'footer-menu' %}
+										</div>
+									{%- endif -%}
+								{%- when 'contact' -%}
+									{%- if block.settings.title != blank -%}
+										<div class="content-toggle  item-{{forloop.index}}">
+											<h2 class="title-footer title-{{forloop.index}}">{{ block.settings.title }}</h2>
+											<div class="footer-block">
+												<div class="footer-block__content js-footer-contact-html">
+													{{ block.settings.content
+														| replace: 'href="https://', 'target="_blank" rel="noopener noreferrer" href="https://'
+														| replace: "href='https://", "target='_blank' rel='noopener noreferrer' href='https://"
+														| replace: 'href="http://', 'target="_blank" rel="noopener noreferrer" href="http://'
+														| replace: "href='http://", "target='_blank' rel='noopener noreferrer' href='http://"
+													}}
+													{%- if block.settings.social != blank -%}
+														{% include 'social-media' %}
+													{%- endif -%}
+												</div>
+											</div>
+										</div>
+									{%- else -%}
+										<div class="content-item  item-{{forloop.index}}">
+											<div class="footer-block">
+												<div class="footer-block__content js-footer-contact-html">
+													{{ block.settings.content
+														| replace: 'href="https://', 'target="_blank" rel="noopener noreferrer" href="https://'
+														| replace: "href='https://", "target='_blank' rel='noopener noreferrer' href='https://"
+														| replace: 'href="http://', 'target="_blank" rel="noopener noreferrer" href="http://'
+														| replace: "href='http://", "target='_blank' rel='noopener noreferrer' href='http://"
+													}}
+													{%- if block.settings.social != blank -%}
+														{% include 'social-media' %}
+													{%- endif -%}
+												</div>
+											</div>
+										</div>
+									{%- endif -%}
+								{%- when 'newsletter' -%}
+									{%- if block.settings.title != blank -%}
+										<div class="content-toggle item-{{forloop.index}}">
+											<h2 class="title-footer title-{{forloop.index}}">{{ block.settings.title }}</h2>
+											<div class="footer-block">
+												<div class="footer-block__content">
+													<p>{{ block.settings.footer_desc }}</p>
+													{%- if block.settings.mailchimp -%}
+														{%- if block.settings.form_action != blank -%}
+															<form class="js-wpbingo-newsletter" action="{{ block.settings.form_action }}" method="post" name="mc-embedded-subscribe-form" target="_blank">
+																<div class="newsletter-form__wrap">
+																	<input class="js-input-newsletter form-control newsletter-form__input" type="email" name="EMAIL"
+																		value="{% if customer %}{{ customer.email }}{% endif %}"
+																		placeholder="{{ 'general.newsletter_form.newsletter_placeholder' | t }}"
+																		autocomplete="email"
+																		required />
+																	<button class="btn newsletter-form__submit" type="submit">
+																		<i class="icon-email"></i>
+																	</button>
+																</div>
+															</form>
+														{%- else -%}
+															<div class="alert alert-danger">Mailchimp URL is empty. Add a MailChimp form action URL, or turn off “Use mailchimp”.</div>
+														{%- endif -%}
+													{%- else -%}
+														{%- assign nl_form_id = 'FooterNewsletter-' | append: block.id -%}
+														{%- assign nl_input_id = 'FooterNewsletterEmail-' | append: block.id -%}
+														{% render 'newsletter-form', form_id: nl_form_id, input_id: nl_input_id, button_icon: true %}
+													{%- endif -%}
+													{%- if block.settings.social != blank -%}
+														{% include 'social-media' %}
+													{%- endif -%}
+												</div>
+											</div>
+										</div>
+									{%- else -%}
+										<div class="content-item  item-{{forloop.index}}">
+											<div class="footer-block">
+												<div class="footer-block__content">
+													<p>{{ block.settings.footer_desc }}</p>
+													{%- if block.settings.mailchimp -%}
+														{%- if block.settings.form_action != blank -%}
+															<form class="js-wpbingo-newsletter" action="{{ block.settings.form_action }}" method="post" name="mc-embedded-subscribe-form" target="_blank">
+																<div class="newsletter-form__wrap">
+																	<input class="js-input-newsletter form-control newsletter-form__input" type="email" name="EMAIL"
+																		value="{% if customer %}{{ customer.email }}{% endif %}"
+																		placeholder="{{ 'general.newsletter_form.newsletter_placeholder' | t }}"
+																		autocomplete="email"
+																		required />
+																	<button class="btn newsletter-form__submit" type="submit">
+																		<span>{{ 'general.newsletter_form.submit' | t }}</span>
+																	</button>
+																</div>
+															</form>
+														{%- else -%}
+															<div class="alert alert-danger">Mailchimp URL is empty. Add a MailChimp form action URL, or turn off “Use mailchimp”.</div>
+														{%- endif -%}
+													{%- else -%}
+														{%- assign nl_form_id_alt = 'FooterNewsletterAlt-' | append: block.id -%}
+														{%- assign nl_input_id_alt = 'FooterNewsletterAltEmail-' | append: block.id -%}
+														{% render 'newsletter-form', form_id: nl_form_id_alt, input_id: nl_input_id_alt, button_icon: false %}
+													{%- endif -%}
+												</div>
+											</div>
+										</div>
+									{%- endif -%}
+								{%- when 'instagram' -%}
+									{%- assign infinite = block.settings.infinite -%}
+									{%- assign autoplay = block.settings.autoplay -%}
+									{%- assign autoplay_speed = block.settings.autoplay_speed | escape -%}
+									{%- assign columns = block.settings.columns -%}
+									{%- assign column1440 = block.settings.column1440 -%}
+									{%- assign column1 = block.settings.column1 -%}
+									{%- assign column2 = block.settings.column2 -%}
+									{%- assign column3 = block.settings.column3 -%}
+									{%- assign column4 = block.settings.column4 -%}
+									{%- assign j = 1 -%}
+									{%- assign row = block.settings.row -%}
+									{%- if block.settings.title != blank -%}
+										<div class="content-toggle footer-instagram item-{{forloop.index}}">
+											<h2 class="title-footer title-{{forloop.index}}">{{ block.settings.title }}</h2>
+											<div class="footer-block">
+												<div class="footer-block__content">
+													<div class="js-carousel slick-carousel" data-nav="false" data-infinite="{{ infinite }}" data-autoplay="{{ autoplay }}"
+														data-autoplayspeed="{{ autoplay_speed }}"
+														data-columns="{{ columns }}"
+														data-column1440="{{ column1440 }}"
+														data-column1="{{ column1 }}"
+														data-column2="{{ column2 }}"
+														data-column3="{{ column3 }}"
+														data-column4="{{ column4 }}">
+														{%- for block in section.blocks -%}
+															{%- if block.type == "image_instagram" -%}
+																{%- assign modulo = j | modulo:row -%}
+																{%- if row == 1 or modulo == 1 -%}
+																	<div class="image-instagram">
+																{%- endif -%}
+																	<div class="image">
+																		<a href="{{ block.settings.url }}">
+																			{%- if block.settings.image != blank -%}
+																				{% include 'img-global' with image, image: block.settings.image, class: "featured-banner__img", effect: "fade-in" %}
+																			{%- else -%}
+																				<img src="https://placehold.jp/100x100.png"  width="100" height="100" />
+																			{%- endif -%}
+																		</a>
+																	</div>
+																{%- if modulo == 0 or forloop.last == true -%}
+																	</div>
+																{%- endif -%}
+																{%- assign j = j | plus: 1 -%}
+															{%- endif -%}
+														{%- endfor -%}
+													</div>
+												</div>
+											</div>
+										</div>
+									{%- else -%}
+										<div class="content-item  item-{{forloop.index}}">
+											<div class="footer-block">
+												<div class="footer-block__content">
+													<div class="js-carousel slick-carousel" data-nav="false" data-infinite="{{ infinite }}" data-autoplay="{{ autoplay }}"
+														data-autoplayspeed="{{ autoplay_speed }}"
+														data-columns="{{ columns }}"
+														data-column1440="{{ column1440 }}"
+														data-column1="{{ column1 }}"
+														data-column2="{{ column2 }}"
+														data-column3="{{ column3 }}"
+														data-column4="{{ column4 }}">
+														{%- for block in section.blocks -%}
+															{%- if block.type == "image_instagram" -%}
+																{%- assign modulo = j | modulo:row -%}
+																{%- if row == 1 or modulo == 1 -%}
+																	<div class="image-instagram">
+																{%- endif -%}
+																	<div class="image">
+																		<a href="{{ block.settings.url }}">
+																			{%- if block.settings.image != blank -%}
+																				<img src="{{ block.settings.image | image_url:width:block.settings.image.width,height:block.settings.image.height }}" width="{{ block.settings.image.width }}"
+																				height="{{ block.settings.image.height }}" />
+																			{%- else -%}
+																				<img src="https://placehold.jp/100x100.png"  width="100" height="100" />
+																			{%- endif -%}
+																		</a>
+																	</div>
+																{%- if modulo == 0 or forloop.last == true -%}
+																	</div>
+																{%- endif -%}
+																{%- assign j = j | plus: 1 -%}
+															{%- endif -%}
+														{%- endfor -%}
+													</div>
+												</div>
+											</div>
+										</div>
+									{%- endif -%}
+							{%- endcase -%}
+						{%- endfor -%}
+					{%- endif -%}
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+<script>
+  (function () {
+    var roots = document.querySelectorAll('.js-footer-contact-html');
+    for (var r = 0; r < roots.length; r++) {
+      var links = roots[r].querySelectorAll('a[href]');
+      for (var i = 0; i < links.length; i++) {
+        var a = links[i];
+        var href = (a.getAttribute('href') || '').trim().toLowerCase();
+        if (!href || href.indexOf('tel:') === 0 || href.indexOf('mailto:') === 0 || href.charAt(0) === '#') continue;
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          window.open(this.href, '_blank', 'noopener,noreferrer');
+        });
+      }
+    }
+  })();
+</script>
+{% schema %}
+{
+	"name": "Footer",
+	"settings": [
+		{
+			"type": "text",
+			"id": "padding",
+			"label": "Padding",
+			"default": "50px 0 60px",
+			"placeholder": "top right bottom right",
+			"info":"Screen: desktop | 1200px | 991px | 767px"
+		},
+		{
+			"type": "color",
+			"id": "bg_color",
+			"label": "Background color",
+			"default": "#fff"
+		},
+		{
+			"type": "checkbox",
+			"id": "border",
+			"label": "Uses border",
+			"default":false
+		},
+		{
+			"type": "text",
+			"id": "border_width",
+			"label": "Border width",
+			"default":"1px 1px 1px 1px",
+			"info": "top right bottom right"
+		},
+		{
+			"type": "color",
+			"id": "border_color",
+			"label": "Border color",
+			"default":"#fff"
+		},
+		{
+			"type": "checkbox",
+			"id": "accordion",
+			"label": "Enable accordion menu in mobile",
+			"default":true
+		}
+	],
+	"blocks": [
+		{
+            "type": "@app"
+        },
+		{
+            "type": "menu",
+            "name": "Menu",
+            "settings": [
+				{
+					"type": "header",
+					"content": "== title settings"
+				},
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Heading"
+				},
+				{
+					"type": "color",
+					"id": "color",
+					"label": "color",
+					"default": "#000"
+				},
+				{
+					"type": "number",
+					"id": "font_size",
+					"label": "Font size",
+					"default": 12,
+					"info": "px"
+				},
+				{
+					"type": "number",
+					"id": "line_height",
+					"label": "Line height",
+					"default": 12,
+					"info": "px"
+				},
+				{
+					"type": "number",
+					"id": "letter_spacing",
+					"label": "Letter spacing",
+					"default": 2,
+					"info": "px"
+				},
+				{
+					"type": "text",
+					"id": "font_weight",
+					"label": "Font Weight",
+					"default": "400"
+				},
+				{
+					"type": "text",
+					"id": "margin",
+					"label": "Margin",
+					"default": "0px 0px 0px 0px",
+					"info": "top right bottom left"
+				},
+				{
+					"type": "header",
+					"content": "== content"
+				},
+				{
+					"type": "link_list",
+					"id": "footer_link_list",
+					"label": "Footer menu"
+				},
+				{
+					"type": "header",
+					"content": "== width settings"
+				},
+				{
+					"type": "number",
+					"id": "footer_width",
+					"label": "Container width",
+					"default": 25,
+					"info": "%"
+				},
+				{
+					"type": "number",
+					"id": "footer_width_ipad",
+					"label": "Container width tablet",
+					"default": 50,
+					"info": "%"
+				},
+				{
+					"type": "number",
+					"id": "footer_width_mobi",
+					"label": "Container width mobile",
+					"default": 100,
+					"info": "%"
+				}
+            ]
+        },
+		{
+            "type": "contact",
+            "name": "Contact",
+            "settings": [
+				{
+					"type": "header",
+					"content": "== title settings"
+				},
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Heading"
+				},
+				{
+					"type": "color",
+					"id": "color",
+					"label": "color",
+					"default": "#000"
+				},
+				{
+					"type": "number",
+					"id": "font_size",
+					"label": "Font size",
+					"default": 12,
+					"info": "px"
+				},
+				{
+					"type": "number",
+					"id": "line_height",
+					"label": "Line height",
+					"default": 12,
+					"info": "px"
+				},
+				{
+					"type": "number",
+					"id": "letter_spacing",
+					"label": "Letter spacing",
+					"default": 2,
+					"info": "px"
+				},
+				{
+					"type": "text",
+					"id": "font_weight",
+					"label": "Font Weight",
+					"default": "400"
+				},
+				{
+					"type": "text",
+					"id": "margin",
+					"label": "Margin",
+					"default": "0px 0px 0px 0px",
+					"info": "top right bottom left"
+				},
+				{
+					"type": "header",
+					"content": "== content"
+				},
+				{
+					"type": "textarea",
+					"id": "content",
+					"label": "Content",
+					"default": "<\p><\span>Add : <\/span>4 Copley Place, 7th Floor, Boston,MA 6<\/p><\p><\span>Tell : <\/span>866.453.4748<\/p><\p><\span>HR Fax : <\/span>810.222.5439<\/p><\p><\span>Email : <\/span>sales@theminimalcarbon.com<\/p>"
+				},
+				{
+					"type": "checkbox",
+					"id": "social",
+					"label": "Show social"
+				},
+				{
+					"type": "header",
+					"content": "== width settings"
+				},
+				{
+					"type": "number",
+					"id": "footer_width",
+					"label": "Container width",
+					"default": 25,
+					"info": "%"
+				},
+				{
+					"type": "number",
+					"id": "footer_width_ipad",
+					"label": "Container width tablet",
+					"default": 50,
+					"info": "%"
+				},
+				{
+					"type": "number",
+					"id": "footer_width_mobi",
+					"label": "Container width mobile",
+					"default": 100,
+					"info": "%"
+				}
+            ]
+        },
+		{
+            "type": "newsletter",
+            "name": "Newsletter",
+            "settings": [
+				{
+					"type": "header",
+					"content": "== title settings"
+				},
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Heading"
+				},
+				{
+					"type": "color",
+					"id": "color",
+					"label": "color",
+					"default": "#000"
+				},
+				{
+					"type": "number",
+					"id": "font_size",
+					"label": "Font size",
+					"default": 12,
+					"info": "px"
+				},
+				{
+					"type": "number",
+					"id": "line_height",
+					"label": "Line height",
+					"default": 12,
+					"info": "px"
+				},
+				{
+					"type": "number",
+					"id": "letter_spacing",
+					"label": "Letter spacing",
+					"default": 2,
+					"info": "px"
+				},
+				{
+					"type": "text",
+					"id": "font_weight",
+					"label": "Font Weight",
+					"default": "400"
+				},
+				{
+					"type": "text",
+					"id": "margin",
+					"label": "Margin",
+					"default": "0px 0px 0px 0px",
+					"info": "top right bottom left"
+				},
+				{
+					"type": "header",
+					"content": "== content"
+				},
+				{
+					"type": "textarea",
+					"id": "footer_desc",
+					"label": "Description",
+					"default": "New subscribers receive 10% off their first purchase"
+				},
+				{
+					"type": "checkbox",
+					"id": "social",
+					"label": "Show social"
+				},
+				{
+					"type": "checkbox",
+					"id": "mailchimp",
+					"label": "Use mailchimp",
+					"default": false
+				},
+				{
+					"type": "text",
+					"id": "form_action",
+					"label": "MailChimp form action URL",
+					"info": "[Where do I find my MailChimp form action URL?](http:\/\/wpbingo.com\/guide\/wpbingo\/homepage.html#sectionFour)"
+				},
+				{
+					"type": "header",
+					"content": "== width settings"
+				},
+				{
+					"type": "number",
+					"id": "footer_width",
+					"label": "Container width",
+					"default": 25,
+					"info": "%"
+				},
+				{
+					"type": "number",
+					"id": "footer_width_ipad",
+					"label": "Container width tablet",
+					"default": 50,
+					"info": "%"
+				},
+				{
+					"type": "number",
+					"id": "footer_width_mobi",
+					"label": "Container width mobile",
+					"default": 100,
+					"info": "%"
+				}
+            ]
+        },
+		{
+            "type": "instagram",
+            "name": "Instagram",
+            "settings": [
+				{
+					"type": "header",
+					"content": "== title settings"
+				},
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Heading"
+				},
+				{
+					"type": "color",
+					"id": "color",
+					"label": "color",
+					"default": "#000"
+				},
+				{
+					"type": "number",
+					"id": "font_size",
+					"label": "Font size",
+					"default": 12,
+					"info": "px"
+				},
+				{
+					"type": "number",
+					"id": "line_height",
+					"label": "Line height",
+					"default": 12,
+					"info": "px"
+				},
+				{
+					"type": "number",
+					"id": "letter_spacing",
+					"label": "Letter spacing",
+					"default": 2,
+					"info": "px"
+				},
+				{
+					"type": "text",
+					"id": "font_weight",
+					"label": "Font Weight",
+					"default": "400"
+				},
+				{
+					"type": "text",
+					"id": "margin",
+					"label": "Margin",
+					"default": "0px 0px 0px 0px",
+					"info": "top right bottom left"
+				},
+				{
+					"type": "header",
+					"content": "Carousel Settings"
+				},
+				{
+					"type": "checkbox",
+					"id": "infinite",
+					"label": "Infinite loop sliding",
+					"default": true
+				},
+				{
+					"type": "checkbox",
+					"id": "autoplay",
+					"label": "Enable autoplay",
+					"default": false
+				},
+				{
+					"type": "text",
+					"id": "autoplay_speed",
+					"label": "Autoplay speed",
+					"info": "Autoplay speed in milliseconds. Type: int(ms)",
+					"default": "10000"
+				},
+				{
+					"type": "range",
+					"id": "row",
+					"min": 1,
+					"max": 5,
+					"step": 1,
+					"label": "Number of Row",
+					"default": 2
+				},
+				{
+					"type": "range",
+					"id": "columns",
+					"min": 1,
+					"max": 5,
+					"step": 1,
+					"label": "Number of Columns >1440px",
+					"default": 4,
+					"info": "Desktops"
+				},
+				{
+					"type": "range",
+					"id": "column1440",
+					"min": 1,
+					"max": 5,
+					"step": 1,
+					"label": "Number of Columns 1200px to 1440px",
+					"default": 4,
+					"info": "Desktops"
+				},
+				{
+					"type": "range",
+					"id": "column1",
+					"min": 1,
+					"max": 5,
+					"step": 1,
+					"label": "Number of Columns on 992px to 1199px",
+					"default": 4,
+					"info": "Desktops"
+				},
+				{
+					"type": "range",
+					"id": "column2",
+					"min": 1,
+					"max": 5,
+					"step": 1,
+					"label": "Number of Columns on 768px to 991px",
+					"default": 3,
+					"info": "Laptop"
+				},
+				{
+					"type": "range",
+					"id": "column3",
+					"min": 1,
+					"max": 5,
+					"step": 1,
+					"label": "Number of Columns on 480px to 767px",
+					"default": 1,
+					"info": "Tablets"
+				},
+				{
+					"type": "range",
+					"id": "column4",
+					"min": 1,
+					"max": 5,
+					"step": 1,
+					"label": "Number of Columns in 480px or less than",
+					"default": 1,
+					"info": "Mobile phone"
+				},
+				{
+					"type": "header",
+					"content": "== width settings"
+				},
+				{
+					"type": "number",
+					"id": "footer_width",
+					"label": "Container width",
+					"default": 25,
+					"info": "%"
+				},
+				{
+					"type": "number",
+					"id": "footer_width_ipad",
+					"label": "Container width tablet",
+					"default": 50,
+					"info": "%"
+				},
+				{
+					"type": "number",
+					"id": "footer_width_mobi",
+					"label": "Container width mobile",
+					"default": 100,
+					"info": "%"
+				}
+            ]
+        },
+		{
+            "type": "image_instagram",
+            "name": "Image Instagram",
+            "settings": [
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				},
+				{
+					"type": "url",
+					"id": "url",
+					"label": "Url",
+					"default":"/"
+				}
+			]
+		}
+	]
+}
+{% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: '{% include ''img-global'' with image: block.settings.image, class: "featured-banner__img",
+    effect: "fade-in" %}'
+  to: '{% include ''img-global'' with image, image: block.settings.image, class: "featured-banner__img",
+    effect: "fade-in" %}'
+  position: 13484..13600
+{% endcomment %}

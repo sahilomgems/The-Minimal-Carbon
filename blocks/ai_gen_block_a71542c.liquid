@@ -1,0 +1,884 @@
+{% doc %}
+  @prompt
+    ✨ FULL CHRISTMAS WEBSITE DESIGN PROMPT (5-SECTION) 🎄
+    
+    Prompt:
+    Create a premium, festive, Christmas-themed webpage layout with 5 clean and modern sections, using a cozy holiday design style. The overall theme should include soft snow textures, glowing fairy lights, red-green-gold color accents, and elegant typography. The layout should feel warm, luxury, and joyful.
+    
+    Section 1: Christmas Hero Banner
+    
+    A full-width Christmas banner at the top.
+    
+    Background elements: falling snowflakes, pine leaves, warm fairy lights, ornaments, and a soft golden glow.
+    
+    In the center, add a smooth moving text animation scrolling left to right saying:
+    “🎄 Celebrating the Season of Joy — Christmas Sale Live Now! 🎁”
+    
+    Add a main bold heading:
+    “Merry Christmas and Happy Shopping!”
+    
+    Add a CTA button:
+    “Shop Christmas Collection”
+    
+    Section 2: Product Showcase in Unique Style
+    
+    Display products in a creative festive design layout.
+    
+    Use snow-covered product frames, gift-style borders, or hanging ornaments layout.
+    
+    Each product should have:
+    
+    Small snowflake hover effect
+    
+    A red ribbon tag for price or discount
+    
+    A small gold star rating under each item
+    
+    Section 3: Limited-Time Christmas Offer
+    
+    Add an attractive countdown timer styled like a glowing Christmas ornament.
+    
+    Text:
+    “Exclusive Christmas Deals Ending Soon!”
+    
+    Highlight discount badges like:
+    
+    ❄️ 20% OFF
+    
+    🎁 Buy 1 Get 1
+    
+    ⭐ Special Holiday Bundle
+    
+    Section 4: Customer Review Section in Christmas Theme
+    
+    Design this area like a Christmas postcard or gift tag board.
+    
+    Add customer reviews in cute Christmas frames with icons like bells, stockings, holly leaves.
+    
+    Example review format:
+    
+    ⭐⭐⭐⭐⭐
+    “Absolutely loved it! Perfect gift for the holidays!” — Sarah J. 🎄
+    
+    Optional: Add animated blinking fairy lights around the border.
+    
+    Section 5: Footer With Christmas Vibes
+    
+    Use warm cozy colors and icons like reindeer, candy canes, gingerbread, or Santa hat.
+    
+    Add:
+    
+    Contact details
+    
+    Social icons styled as ornaments
+    
+    Newsletter subscription box saying:
+    “Subscribe & , Create a premium Christmas sale banner in a warm festive style. Include a cozy winter background with soft falling snow, pine leaves, golden fairy lights, red and green ornaments, and glowing Christmas decorations. Add a beautiful Christmas tree on one side and gift boxes with ribbons on the other side. In the center, place elegant bold text: "Christmas Sale 🎄 Up to 50% Off" with a golden sparkling effect. Add a glowing red CTA button that says: "Shop Now". Make the design clean, modern, and luxurious with warm lighting, soft shadows, and high detail. Use a landscape ratio, 1920x600. --v 6 --ar 16:5 --style festive
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-xmas-banner-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    min-height: 600px;
+    background: linear-gradient(135deg, {{ block.settings.bg_gradient_1 }} 0%, {{ block.settings.bg_gradient_2 }} 50%, {{ block.settings.bg_gradient_3 }} 100%);
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-xmas-banner-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.2) 100%);
+    pointer-events: none;
+  }
+
+  .ai-xmas-banner-snow-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .ai-xmas-snowflake-{{ ai_gen_id }} {
+    position: absolute;
+    color: {{ block.settings.snow_color }};
+    opacity: 0.8;
+    animation: ai-xmas-fall-{{ ai_gen_id }} linear infinite;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+  }
+
+  @keyframes ai-xmas-fall-{{ ai_gen_id }} {
+    0% {
+      transform: translateY(-50px) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    90% {
+      opacity: 0.6;
+    }
+    100% {
+      transform: translateY(650px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .ai-xmas-banner-lights-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .ai-xmas-light-{{ ai_gen_id }} {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: ai-xmas-twinkle-{{ ai_gen_id }} 2s ease-in-out infinite;
+    box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
+
+  @keyframes ai-xmas-twinkle-{{ ai_gen_id }} {
+    0%, 100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  .ai-xmas-banner-tree-left-{{ ai_gen_id }} {
+    position: absolute;
+    left: {{ block.settings.tree_position }}px;
+    bottom: 0;
+    width: 300px;
+    height: 500px;
+    z-index: 3;
+  }
+
+  .ai-xmas-tree-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-xmas-tree-layer-{{ ai_gen_id }} {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+    border-bottom: 100px solid {{ block.settings.tree_color }};
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  }
+
+  .ai-xmas-tree-layer-{{ ai_gen_id }}:nth-child(1) {
+    bottom: 300px;
+    border-left-width: 40px;
+    border-right-width: 40px;
+    border-bottom-width: 80px;
+  }
+
+  .ai-xmas-tree-layer-{{ ai_gen_id }}:nth-child(2) {
+    bottom: 200px;
+    border-left-width: 70px;
+    border-right-width: 70px;
+    border-bottom-width: 120px;
+  }
+
+  .ai-xmas-tree-layer-{{ ai_gen_id }}:nth-child(3) {
+    bottom: 80px;
+    border-left-width: 90px;
+    border-right-width: 90px;
+    border-bottom-width: 140px;
+  }
+
+  .ai-xmas-tree-trunk-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 80px;
+    background-color: {{ block.settings.trunk_color }};
+    border-radius: 4px;
+  }
+
+  .ai-xmas-tree-ornament-{{ ai_gen_id }} {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: ai-xmas-ornament-glow-{{ ai_gen_id }} 1.5s ease-in-out infinite;
+  }
+
+  @keyframes ai-xmas-ornament-glow-{{ ai_gen_id }} {
+    0%, 100% {
+      box-shadow: 0 0 5px currentColor;
+    }
+    50% {
+      box-shadow: 0 0 15px currentColor, 0 0 25px currentColor;
+    }
+  }
+
+  .ai-xmas-banner-gifts-right-{{ ai_gen_id }} {
+    position: absolute;
+    right: {{ block.settings.gifts_position }}px;
+    bottom: 50px;
+    z-index: 3;
+    display: flex;
+    gap: 15px;
+  }
+
+  .ai-xmas-gift-box-{{ ai_gen_id }} {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    background-color: {{ block.settings.gift_color_1 }};
+    border-radius: 4px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  .ai-xmas-gift-box-{{ ai_gen_id }}:nth-child(2) {
+    width: 100px;
+    height: 100px;
+    background-color: {{ block.settings.gift_color_2 }};
+  }
+
+  .ai-xmas-gift-box-{{ ai_gen_id }}:nth-child(3) {
+    width: 70px;
+    height: 70px;
+    background-color: {{ block.settings.gift_color_3 }};
+    align-self: flex-end;
+  }
+
+  .ai-xmas-gift-ribbon-v-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 100%;
+    background-color: {{ block.settings.ribbon_color }};
+  }
+
+  .ai-xmas-gift-ribbon-h-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 15px;
+    background-color: {{ block.settings.ribbon_color }};
+  }
+
+  .ai-xmas-gift-bow-{{ ai_gen_id }} {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 20px;
+    background-color: {{ block.settings.ribbon_color }};
+    border-radius: 50% 50% 0 0;
+  }
+
+  .ai-xmas-gift-bow-{{ ai_gen_id }}::before,
+  .ai-xmas-gift-bow-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 15px;
+    height: 20px;
+    background-color: {{ block.settings.ribbon_color }};
+    border-radius: 50%;
+  }
+
+  .ai-xmas-gift-bow-{{ ai_gen_id }}::before {
+    left: -12px;
+  }
+
+  .ai-xmas-gift-bow-{{ ai_gen_id }}::after {
+    right: -12px;
+  }
+
+  .ai-xmas-banner-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    max-width: 900px;
+    padding: 40px 20px;
+  }
+
+  .ai-xmas-banner-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 30px;
+    text-shadow: 
+      0 0 10px {{ block.settings.title_glow }},
+      0 0 20px {{ block.settings.title_glow }},
+      0 0 30px {{ block.settings.title_glow }},
+      2px 2px 4px rgba(0,0,0,0.3);
+    line-height: 1.2;
+    animation: ai-xmas-title-sparkle-{{ ai_gen_id }} 2s ease-in-out infinite;
+  }
+
+  @keyframes ai-xmas-title-sparkle-{{ ai_gen_id }} {
+    0%, 100% {
+      text-shadow: 
+        0 0 10px {{ block.settings.title_glow }},
+        0 0 20px {{ block.settings.title_glow }},
+        0 0 30px {{ block.settings.title_glow }},
+        2px 2px 4px rgba(0,0,0,0.3);
+    }
+    50% {
+      text-shadow: 
+        0 0 20px {{ block.settings.title_glow }},
+        0 0 30px {{ block.settings.title_glow }},
+        0 0 40px {{ block.settings.title_glow }},
+        0 0 50px {{ block.settings.title_glow }},
+        2px 2px 4px rgba(0,0,0,0.3);
+    }
+  }
+
+  .ai-xmas-banner-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0 0 40px;
+    font-weight: 600;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .ai-xmas-banner-cta-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.button_padding_v }}px {{ block.settings.button_padding_h }}px;
+    background: linear-gradient(135deg, {{ block.settings.button_bg_1 }} 0%, {{ block.settings.button_bg_2 }} 100%);
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 700;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    box-shadow: 
+      0 0 20px {{ block.settings.button_glow }},
+      0 8px 25px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: ai-xmas-button-pulse-{{ ai_gen_id }} 2s ease-in-out infinite;
+  }
+
+  @keyframes ai-xmas-button-pulse-{{ ai_gen_id }} {
+    0%, 100% {
+      box-shadow: 
+        0 0 20px {{ block.settings.button_glow }},
+        0 8px 25px rgba(0,0,0,0.3);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 
+        0 0 30px {{ block.settings.button_glow }},
+        0 0 40px {{ block.settings.button_glow }},
+        0 8px 25px rgba(0,0,0,0.3);
+      transform: scale(1.05);
+    }
+  }
+
+  .ai-xmas-banner-cta-{{ ai_gen_id }}:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+      0 0 40px {{ block.settings.button_glow }},
+      0 0 60px {{ block.settings.button_glow }},
+      0 12px 35px rgba(0,0,0,0.4);
+  }
+
+  .ai-xmas-pine-{{ ai_gen_id }} {
+    position: absolute;
+    color: {{ block.settings.pine_color }};
+    font-size: 40px;
+    opacity: 0.6;
+    z-index: 2;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+  }
+
+  @media screen and (max-width: 1200px) {
+    .ai-xmas-banner-tree-left-{{ ai_gen_id }} {
+      width: 200px;
+      height: 350px;
+      left: 20px;
+    }
+
+    .ai-xmas-banner-gifts-right-{{ ai_gen_id }} {
+      right: 20px;
+    }
+
+    .ai-xmas-gift-box-{{ ai_gen_id }} {
+      width: 60px;
+      height: 60px;
+    }
+
+    .ai-xmas-gift-box-{{ ai_gen_id }}:nth-child(2) {
+      width: 75px;
+      height: 75px;
+    }
+
+    .ai-xmas-gift-box-{{ ai_gen_id }}:nth-child(3) {
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-xmas-banner-{{ ai_gen_id }} {
+      min-height: 400px;
+    }
+
+    .ai-xmas-banner-tree-left-{{ ai_gen_id }},
+    .ai-xmas-banner-gifts-right-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-xmas-banner-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.6 }}px;
+    }
+
+    .ai-xmas-banner-subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.8 }}px;
+    }
+
+    .ai-xmas-banner-cta-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_text_size | times: 0.9 }}px;
+      padding: {{ block.settings.button_padding_v | times: 0.8 }}px {{ block.settings.button_padding_h | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-xmas-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-xmas-banner-overlay-{{ ai_gen_id }}"></div>
+
+  <div class="ai-xmas-banner-snow-{{ ai_gen_id }}">
+    {% for i in (1..30) %}
+      {% assign left = forloop.index | times: 3.3 | modulo: 100 %}
+      {% assign delay = forloop.index | times: 0.3 %}
+      {% assign duration = forloop.index | modulo: 4 | plus: 8 %}
+      {% assign size = forloop.index | modulo: 3 | plus: 1 %}
+      {% if size == 1 %}
+        {% assign font_size = 14 %}
+      {% elsif size == 2 %}
+        {% assign font_size = 18 %}
+      {% else %}
+        {% assign font_size = 22 %}
+      {% endif %}
+      <div 
+        class="ai-xmas-snowflake-{{ ai_gen_id }}"
+        style="left: {{ left }}%; font-size: {{ font_size }}px; animation-delay: {{ delay }}s; animation-duration: {{ duration }}s;"
+      >❄</div>
+    {% endfor %}
+  </div>
+
+  <div class="ai-xmas-banner-lights-{{ ai_gen_id }}">
+    {% for i in (1..20) %}
+      {% assign left = forloop.index | times: 5 | modulo: 100 %}
+      {% assign top = forloop.index | times: 7 | modulo: 100 %}
+      {% assign delay = forloop.index | times: 0.2 %}
+      {% assign color_index = forloop.index | modulo: 3 %}
+      {% if color_index == 0 %}
+        {% assign light_color = block.settings.light_color_1 %}
+      {% elsif color_index == 1 %}
+        {% assign light_color = block.settings.light_color_2 %}
+      {% else %}
+        {% assign light_color = block.settings.light_color_3 %}
+      {% endif %}
+      <div 
+        class="ai-xmas-light-{{ ai_gen_id }}"
+        style="left: {{ left }}%; top: {{ top }}%; color: {{ light_color }}; animation-delay: {{ delay }}s;"
+      ></div>
+    {% endfor %}
+  </div>
+
+  {% for i in (1..8) %}
+    {% assign left = forloop.index | times: 12 | modulo: 100 %}
+    {% assign top = forloop.index | times: 15 | modulo: 80 %}
+    {% assign rotation = forloop.index | times: 45 %}
+    <div 
+      class="ai-xmas-pine-{{ ai_gen_id }}"
+      style="left: {{ left }}%; top: {{ top }}%; transform: rotate({{ rotation }}deg);"
+    >🌿</div>
+  {% endfor %}
+
+  <div class="ai-xmas-banner-tree-left-{{ ai_gen_id }}">
+    <div class="ai-xmas-tree-{{ ai_gen_id }}">
+      <div class="ai-xmas-tree-layer-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-tree-layer-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-tree-layer-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-tree-trunk-{{ ai_gen_id }}"></div>
+      
+      {% for i in (1..12) %}
+        {% assign ornament_left = forloop.index | times: 15 | modulo: 80 | plus: 10 %}
+        {% assign ornament_top = forloop.index | times: 30 | modulo: 350 | plus: 50 %}
+        {% assign delay = forloop.index | times: 0.3 %}
+        {% assign color_index = forloop.index | modulo: 3 %}
+        {% if color_index == 0 %}
+          {% assign ornament_color = block.settings.ornament_color_1 %}
+        {% elsif color_index == 1 %}
+          {% assign ornament_color = block.settings.ornament_color_2 %}
+        {% else %}
+          {% assign ornament_color = block.settings.ornament_color_3 %}
+        {% endif %}
+        <div 
+          class="ai-xmas-tree-ornament-{{ ai_gen_id }}"
+          style="left: {{ ornament_left }}%; top: {{ ornament_top }}px; background-color: {{ ornament_color }}; animation-delay: {{ delay }}s;"
+        ></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="ai-xmas-banner-gifts-right-{{ ai_gen_id }}">
+    <div class="ai-xmas-gift-box-{{ ai_gen_id }}">
+      <div class="ai-xmas-gift-ribbon-v-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-gift-ribbon-h-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-gift-bow-{{ ai_gen_id }}"></div>
+    </div>
+    <div class="ai-xmas-gift-box-{{ ai_gen_id }}">
+      <div class="ai-xmas-gift-ribbon-v-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-gift-ribbon-h-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-gift-bow-{{ ai_gen_id }}"></div>
+    </div>
+    <div class="ai-xmas-gift-box-{{ ai_gen_id }}">
+      <div class="ai-xmas-gift-ribbon-v-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-gift-ribbon-h-{{ ai_gen_id }}"></div>
+      <div class="ai-xmas-gift-bow-{{ ai_gen_id }}"></div>
+    </div>
+  </div>
+
+  <div class="ai-xmas-banner-content-{{ ai_gen_id }}">
+    <h1 class="ai-xmas-banner-title-{{ ai_gen_id }}">{{ block.settings.banner_title }}</h1>
+    {% if block.settings.banner_subtitle != blank %}
+      <p class="ai-xmas-banner-subtitle-{{ ai_gen_id }}">{{ block.settings.banner_subtitle }}</p>
+    {% endif %}
+    <a href="{{ block.settings.cta_link }}" class="ai-xmas-banner-cta-{{ ai_gen_id }}">
+      {{ block.settings.cta_text }}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Christmas sale banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner content"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Title",
+      "default": "Christmas Sale 🎄 Up to 50% Off"
+    },
+    {
+      "type": "text",
+      "id": "banner_subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 32,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Title size",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "title_glow",
+      "label": "Title glow color",
+      "default": "#FFA500"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Call to action button"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "button_padding_v",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button vertical padding",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "button_padding_h",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Button horizontal padding",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "button_bg_1",
+      "label": "Button gradient start",
+      "default": "#c41e3a"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_2",
+      "label": "Button gradient end",
+      "default": "#8b0000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_glow",
+      "label": "Button glow color",
+      "default": "rgba(196, 30, 58, 0.6)"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_1",
+      "label": "Background gradient start",
+      "default": "#0f3d2c"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_2",
+      "label": "Background gradient middle",
+      "default": "#1a5c42"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_3",
+      "label": "Background gradient end",
+      "default": "#0f3d2c"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Banner border radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Snow effect"
+    },
+    {
+      "type": "color",
+      "id": "snow_color",
+      "label": "Snow color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Fairy lights"
+    },
+    {
+      "type": "color",
+      "id": "light_color_1",
+      "label": "Light color 1",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "light_color_2",
+      "label": "Light color 2",
+      "default": "#FF6347"
+    },
+    {
+      "type": "color",
+      "id": "light_color_3",
+      "label": "Light color 3",
+      "default": "#32CD32"
+    },
+    {
+      "type": "header",
+      "content": "Christmas tree"
+    },
+    {
+      "type": "range",
+      "id": "tree_position",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Tree position from left",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "tree_color",
+      "label": "Tree color",
+      "default": "#2d5f3f"
+    },
+    {
+      "type": "color",
+      "id": "trunk_color",
+      "label": "Trunk color",
+      "default": "#5d4037"
+    },
+    {
+      "type": "color",
+      "id": "ornament_color_1",
+      "label": "Ornament color 1",
+      "default": "#c41e3a"
+    },
+    {
+      "type": "color",
+      "id": "ornament_color_2",
+      "label": "Ornament color 2",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "ornament_color_3",
+      "label": "Ornament color 3",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Gift boxes"
+    },
+    {
+      "type": "range",
+      "id": "gifts_position",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Gifts position from right",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "gift_color_1",
+      "label": "Gift box color 1",
+      "default": "#c41e3a"
+    },
+    {
+      "type": "color",
+      "id": "gift_color_2",
+      "label": "Gift box color 2",
+      "default": "#2d5f3f"
+    },
+    {
+      "type": "color",
+      "id": "gift_color_3",
+      "label": "Gift box color 3",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "ribbon_color",
+      "label": "Ribbon color",
+      "default": "#FFD700"
+    },
+    {
+      "type": "header",
+      "content": "Pine leaves"
+    },
+    {
+      "type": "color",
+      "id": "pine_color",
+      "label": "Pine color",
+      "default": "#2d5f3f"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Christmas sale banner"
+    }
+  ]
+}
+{% endschema %}

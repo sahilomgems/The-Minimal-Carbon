@@ -1,0 +1,368 @@
+{% comment %}
+Ring Details Section
+All settings are editable in the Theme Editor
+{% endcomment %}
+{% if product.title contains 'Ring' or product.title contains 'Band' or product.title contains 'Diamond' or product.title contains 'Gemstones' or product.title contains 'Gemstone' %}
+<div class="container">
+    <div class="ring-details-section">
+      {% for block in section.blocks %}
+        {% if block.type == 'stone' %}
+          <div class="ring-details-left">
+            {% if block.settings.ring_height != blank or block.settings.ring_width != blank or  block.settings.resizable != blank or block.settings.comfort_fit != blank %}
+              {% assign product_title = product.title | downcase %}
+              <h2>
+                {% if product_title contains 'earring' or product_title contains 'earrings' %}
+                  Earrings Details
+                {% elsif product_title contains 'ring' %}
+                  Ring Details
+                {% else %}
+                  Band Details
+                {% endif %}
+              </h2>
+            {% endif %}
+            {% unless product_title contains 'earring' or product_title contains 'earrings' %}
+              <div class="details-with-img d-flex flex-wrap mt-4">
+                  {% if block.settings.ring_height != blank %}
+                    <div class="size-item-height d-flex align-items-center mb-lg-5 mb-4">
+                      <div class="w-100 d-flex d-lg-block">
+                          <div class="size-img mx-lg-auto">
+                              <img class="w-100 h-100 object-fit-contain" src="https://cdn.shopify.com/s/files/1/0880/5125/3543/files/ring-height-icon.svg?v=1755080361" width="100" height="100" loading="lazy">
+                          </div>
+                          <div class="size-details d-flex flex-lg-row justify-content-center flex-column mt-lg-3 ps-4 ms-1 ps-lg-0 ms-lg-o">
+                              <span class="pe-2 me-1">Height </span>
+                              <span class="fw-semibold">&nbsp;{{ block.settings.ring_height }}</span>
+                          </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.ring_width != blank %}
+                    <div class="size-item-width d-flex align-items-center mb-lg-5 mb-4">
+                      <div class="w-100 d-flex d-lg-block">
+                          <div class="size-img mx-lg-auto">
+                              <img class="w-100 h-100 object-fit-contain" src="https://cdn.shopify.com/s/files/1/0880/5125/3543/files/ring-width-icon.svg?v=1755080361" width="100" height="100" loading="lazy">
+                          </div>
+                          <div class="size-details d-flex flex-lg-row justify-content-center flex-column mt-lg-3 ps-4 ms-1 ps-lg-0 ms-lg-o">
+                              <span class="pe-2 me-1">Width </span>
+                              <span class="fw-semibold">&nbsp;{{ block.settings.ring_width }}</span>
+                          </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.comfort_fit != blank or block.settings.resizable != blank %}
+                    <div class="size-item-features d-flex align-items-center mb-2 mb-lg-5 pt-4 pt-lg-0">
+                      <div class="w-100">
+                          <div class="icon-size-18 fw-semibold pb-1">Features</div>
+                          <ul class="list-unstyled w-100 p-0 m-0">
+                              <li class="d-flex mt-2">
+                                  <span class="pe-2 me-1">Comfort-fit:</span>
+                                  <span class="fw-semibold"> {{ block.settings.comfort_fit }}</span>
+                              </li>
+                              <li class="d-flex mt-2">
+                                  <span class="pe-2 me-1">Resizable:</span>
+                                  <span class="fw-semibold">{{ block.settings.resizable }}</span>
+                              </li>
+                          </ul>
+                      </div>
+                    </div>
+                  {% endif %}
+              </div>
+            {% endunless %}
+           {% if block.settings.side_stone_type != blank %}
+            {% if block.settings.stone_type != blank 
+                  or block.settings.shape != blank 
+                  or block.settings.color != blank 
+                  or block.settings.carat_weight != blank 
+                  or block.settings.measurement != blank 
+                  or block.settings.clarity != blank 
+                  or block.settings.side_stone_type != blank 
+                  or block.settings.side_shape != blank 
+                  or block.settings.side_color != blank 
+                  or block.settings.side_carat_weight != blank 
+                  or block.settings.side_measurement != blank 
+                  or block.settings.side_clarity != blank %}
+              <div class="stone-box-wrapper">
+                  <div class="stone-box mt-lg-0 mt-3 mt-md-0">
+                      <h3>Stone Details</h3>
+                      {% if block.settings.stone_type != blank %}<p><strong>Stone Type :</strong> {{ block.settings.stone_type }}</p>{% endif %}
+                      {% if block.settings.shape != blank %}<p><strong>Shape :</strong> {{ block.settings.shape }}</p>{% endif %}
+                      {% if block.settings.color != blank %}<p><strong>Color :</strong> {{ block.settings.color }}</p>{% endif %}
+                      {% if block.settings.carat_weight != blank %}<p><strong>Carat Weight :</strong> {{ block.settings.carat_weight }}</p>{% endif %}
+                      {% if block.settings.measurement != blank %}<p><strong>Measurement :</strong> {{ block.settings.measurement }}</p>{% endif %}
+                      {% if block.settings.clarity != blank %}<p><strong>Clarity :</strong> {{ block.settings.clarity }}</p>{% endif %}
+                  </div>
+                  <div class="stone-box mt-lg-0 mt-3 mt-md-0">
+                      <h3>Side Stone Details</h3>
+                      {% if block.settings.side_stone_type != blank %}<p><strong>Stone Type :</strong> {{ block.settings.side_stone_type }}</p>{% endif %}
+                      {% if block.settings.side_shape != blank %}<p><strong>Shape :</strong> {{ block.settings.side_shape }}</p>{% endif %}
+                      {% if block.settings.side_color != blank %}<p><strong>Color :</strong> {{ block.settings.side_color }}</p>{% endif %}
+                      {% if block.settings.side_carat_weight != blank %}<p><strong>Carat Weight :</strong> {{ block.settings.side_carat_weight }}</p>{% endif %}
+                      {% if block.settings.side_measurement != blank %}<p><strong>Measurement :</strong> {{ block.settings.side_measurement }}</p>{% endif %}
+                      {% if block.settings.side_clarity != blank %}<p><strong>Clarity :</strong> {{ block.settings.side_clarity }}</p>{% endif %}
+                  </div>
+              </div>
+            {% endif %}
+          {% else %}
+            {% if block.settings.stone_type != blank or block.settings.shape != blank or block.settings.color != blank or block.settings.carat_weight != blank or block.settings.measurement != blank or block.settings.clarity != blank %}
+              <div class="stone-box mt-lg-0 mt-3 mt-md-0">
+                  <h3>Stone Details</h3>
+                  {% if block.settings.stone_type != blank %}<p><strong>Stone Type :</strong> {{ block.settings.stone_type }}</p>{% endif %}
+                  {% if block.settings.shape != blank %}<p><strong>Shape :</strong> {{ block.settings.shape }}</p>{% endif %}
+                  {% if block.settings.color != blank %}<p><strong>Color :</strong> {{ block.settings.color }}</p>{% endif %}
+                  {% if block.settings.carat_weight != blank %}<p><strong>Carat Weight :</strong> {{ block.settings.carat_weight }}</p>{% endif %}
+                  {% if block.settings.measurement != blank %}<p><strong>Measurement :</strong> {{ block.settings.measurement }}</p>{% endif %}
+                  {% if block.settings.clarity != blank %}<p><strong>Clarity :</strong> {{ block.settings.clarity }}</p>{% endif %}
+              </div>
+            {% endif %}
+          {% endif %}
+
+          </div>
+          {% if block.settings.ring_video != blank %}
+            <div class="ring-details-right">
+              {% assign video_url = block.settings.ring_video %}
+              {% if video_url contains 'youtube.com' or video_url contains 'youtu.be' %}
+
+                {% comment %} YouTube video {% endcomment %}
+                {% assign video_id = video_url | split: '/' | last | split: 'v=' | last | split: '&' | first %}
+
+                <iframe
+                  src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&loop=1&playlist={{ video_id }}&controls=0&playsinline=1"
+                  frameborder="0"
+                  allow="autoplay"
+                  allowfullscreen>
+                </iframe>
+
+              {% else %}
+
+                {% comment %} MP4 video (your existing code) {% endcomment %}
+                <video autoplay muted loop playsinline>
+                  <source src="{{ video_url }}" type="video/mp4">
+                </video>
+
+              {% endif %}
+
+              {% comment %} <video autoplay muted loop playsinline>
+                <source src="{{ block.settings.ring_video}}" type="video/mp4">
+              </video> {% endcomment %}
+            </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    </div>
+</div>
+{% endif %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const left = document.querySelector('.ring-details-left');
+    const rightImage = document.querySelector('.ring-details-right');
+    
+    if (left && rightImage) {
+      const height = left.offsetHeight;
+      rightImage.style.minHeight = height + 'px';
+      rightImage.style.maxHeight = height + 'px';
+    }
+  });
+</script>
+<style>
+.ring-details-section {
+    display: flex;
+    gap: 30px;
+    align-items: start;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    align-items: stretch;
+}
+.ring-details-left {
+  flex: 1.5;
+  {% comment %} min-width: 300px; {% endcomment %}
+}
+.dimensions {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+.dim-item {
+  text-align: center;
+}
+.stone-box {
+    background: #efefef;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 10px;
+    width: 100%
+}
+.ring-details-right {
+  flex: 1;
+  min-width: 300px;
+  {% comment %} min-height: 515px;
+  max-height: 515px; {% endcomment %}
+  position: relative;
+}
+.ring-details-right img, 
+.ring-details-right video {
+  max-width: 100%;
+  border-radius: 10px;
+}
+.ring-details-right video {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    object-fit: cover;
+}
+.stone-box-wrapper{
+  display: flex;
+  gap: 20px;
+}
+@media (min-width: 992px){
+  .details-with-img>div:not(:last-child) {
+    margin-right: 5%;
+    padding-right: 5%;
+    border-right: 1px solid #D9DBDD;
+  }
+  .mb-lg-5 {
+    margin-bottom: 2rem!important;
+  }
+  .mx-lg-auto {
+    margin-inline: auto!important;
+  }
+  .details-with-img .size-img {
+    width: 67px;
+    height: 67px;
+  }
+  .ps-lg-0 {
+    padding-left: 0!important;
+  }
+  .mt-lg-3 {
+    margin-top: 1rem!important;
+  }
+  .flex-lg-row {
+    -webkit-box-orient: horizontal!important;
+    -ms-flex-direction: row!important;
+    flex-direction: row!important;
+  }
+  .justify-content-center {
+    -webkit-box-pack: center!important;
+    -ms-flex-pack: center!important;
+    justify-content: center!important;
+  }
+  .d-lg-block {
+    display: block!important;
+  }
+}
+@media (max-width:390.85px)
+{
+    .size-details
+    {
+        padding-left: 7% !important;
+    }
+}
+@media (max-width:991.85px)
+{
+    .details-with-img > div:not(:last-child)
+    {
+        width: 50%;
+    }
+    .details-with-img > div:last-child
+    {
+        width: 100%;
+    }
+    .details-with-img > div:first-child
+    {
+        border-right: 1px solid #D9DBDD;
+    }
+    .details-with-img > div:last-child
+    {
+        border-top: 1px solid #D9DBDD;
+        padding-top: 15px;
+    }
+    .details-with-img > div:nth-child(2) img
+    {
+        object-position: right;
+    }
+    .details-with-img, .stone-box{
+      margin: 0 15px;
+    }
+    .ring-details-right{
+      padding: 0 15px;
+    }
+}
+@media (max-width:991.85px) and (min-width:360px)
+{
+    .size-item-features ul
+    {
+        display: flex;
+        justify-content: space-between;
+    }
+    .size-item-features li
+    {
+        width: 43%;
+    }
+}
+@media (max-width: 575px){
+  .stone-box-wrapper {
+      display: block;
+  }
+  .details-with-img, .stone-box{
+    margin: 0;
+  }
+  .ring-details-right {
+    padding: 0 10px 0 0;
+    min-height: 500px !important;
+    max-height: 500px !important;
+  }
+  .details-with-img .size-img {
+    width: 40px;
+    height: 40px;
+  }
+  .size-details span {
+    font-size: 12px;
+  }
+  .ring-details-section {
+    gap: 15px;
+    margin-top: 10px;
+  }
+}
+/* ring info sec code end */
+</style>
+
+{% schema %}
+{
+  "name": "Ring Details Section",
+  "blocks": [
+    {
+      "type": "stone",
+      "name": "Stone Details",
+      "settings": [
+        { "type": "text", "id": "ring_height", "label": "Ring Height" },
+        { "type": "text", "id": "ring_width", "label": "Ring Width" },
+        { "type": "text", "id": "comfort_fit", "label": "Comfort Fit" },
+        { "type": "text", "id": "resizable", "label": "Resizable" },
+        { "type": "text", "id": "ring_video", "label": "Ring Video" },
+        { "type": "text", "id": "stone_type", "label": "Stone Type" },
+        { "type": "text", "id": "shape", "label": "Shape" },
+        { "type": "text", "id": "color", "label": "Color" },
+        { "type": "text", "id": "measurement", "label": "Measurement" },
+        { "type": "text", "id": "carat_weight", "label": "Carat Weight" },
+        { "type": "text", "id": "clarity", "label": "Clarity" },
+        { "type": "text", "id": "side_stone_type", "label": "Side Stone Type" },
+        { "type": "text", "id": "side_shape", "label": "Side Shape" },
+        { "type": "text", "id": "side_color", "label": "Side Color" },
+        { "type": "text", "id": "side_carat_weight", "label": "Side Carat Weight" },
+        { "type": "text", "id": "side_measurement", "label": "Side Measurement" },
+        { "type": "text", "id": "side_clarity", "label": "Side Clarity" },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ring Details Section",
+      "blocks": [
+        { "type": "stone" }
+      ]
+    }
+  ]
+}
+{% endschema %}

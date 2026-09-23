@@ -1,0 +1,790 @@
+{% comment %}
+  ============================================================
+  Diamond Ring Product Template — Shopify Section
+  ============================================================
+  FILE: sections/diamond-product-template.liquid
+  
+  FEATURES:
+  - Product picker (admin selects product from settings)
+  - All options configurable via section settings (no metafields needed)
+  - Admin adds Diamond Shapes, Carats, Colors, Clarities, Certifications,
+    Metals, Ring Sizes as comma-separated values in settings
+  - All CSS colors/fonts controlled from admin settings
+  - Variant selector with auto price update
+  - Line item properties for Cart, Checkout, Order display
+  - No reviews section
+  ============================================================
+{% endcomment %}
+
+{%- liquid
+  if section.settings.product != blank
+    assign dp_product = section.settings.product
+  else
+    assign dp_product = product
+  endif
+
+  assign current_variant = dp_product.selected_or_first_available_variant
+
+  assign shapes_raw = section.settings.diamond_shapes | split: ','
+  assign carats_raw = section.settings.diamond_carats | split: ','
+  assign colors_raw = section.settings.diamond_colors | split: ','
+  assign clarities_raw = section.settings.diamond_clarities | split: ','
+  assign certs_raw = section.settings.diamond_certifications | split: ','
+  assign metals_raw = section.settings.diamond_metals | split: ','
+  assign sizes_raw = section.settings.ring_sizes | split: ','
+
+  assign c_primary = section.settings.color_primary
+  assign c_primary_light = section.settings.color_primary_light
+  assign c_accent = section.settings.color_accent
+  assign c_bg = section.settings.color_bg
+  assign c_bg_light = section.settings.color_bg_light
+  assign c_text = section.settings.color_text
+  assign c_text_muted = section.settings.color_text_muted
+  assign c_border = section.settings.color_border
+  assign c_btn_text = section.settings.color_btn_text
+  assign c_atc_bg = section.settings.color_atc_bg
+  assign c_atc_bg2 = section.settings.color_atc_bg2
+-%}
+
+<style>
+  #dp-sec-{{ section.id }} {
+    --dp-primary: {{ c_primary }};
+    --dp-primary-light: {{ c_primary_light }};
+    --dp-accent: {{ c_accent }};
+    --dp-bg: {{ c_bg }};
+    --dp-bg-light: {{ c_bg_light }};
+    --dp-text: {{ c_text }};
+    --dp-text-muted: {{ c_text_muted }};
+    --dp-border: {{ c_border }};
+    --dp-radius: 6px;
+    --dp-transition: all 0.25s cubic-bezier(.4,0,.2,1);
+  }
+  #dp-sec-{{ section.id }} * { box-sizing: border-box; margin: 0; padding: 0; }
+  #dp-sec-{{ section.id }} {
+    font-family: {{ section.settings.font_family }};
+    max-width: 1400px; margin: 0 auto; padding: 30px 20px 60px; color: var(--dp-text); background: var(--dp-bg);
+  }
+  #dp-sec-{{ section.id }} .dp-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: start; }
+  #dp-sec-{{ section.id }} .dp-gallery { position: sticky; top: 20px; }
+  #dp-sec-{{ section.id }} .dp-gallery__main { width: 100%; border-radius: 12px; overflow: hidden; background: var(--dp-bg-light); border: 1px solid var(--dp-border); margin-bottom: 14px; position: relative; }
+  #dp-sec-{{ section.id }} .dp-gallery__main img { width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.4s ease; }
+  #dp-sec-{{ section.id }} .dp-gallery__main:hover img { transform: scale(1.04); }
+  #dp-sec-{{ section.id }} .dp-gallery__badge { position: absolute; top: 14px; left: 14px; background: linear-gradient(135deg, var(--dp-primary), var(--dp-primary-light)); color: #fff; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; z-index: 2; }
+  #dp-sec-{{ section.id }} .dp-gallery__thumbs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+  #dp-sec-{{ section.id }} .dp-gallery__thumb { flex: 0 0 72px; height: 72px; border-radius: 8px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: var(--dp-transition); background: var(--dp-bg-light); }
+  #dp-sec-{{ section.id }} .dp-gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
+  #dp-sec-{{ section.id }} .dp-gallery__thumb:hover,
+  #dp-sec-{{ section.id }} .dp-gallery__thumb.active { border-color: var(--dp-primary); box-shadow: 0 0 0 2px rgba(44,62,107,0.18); }
+  #dp-sec-{{ section.id }} .dp-info { padding-top: 5px; }
+  #dp-sec-{{ section.id }} .dp-info__title { font-size: 26px; font-weight: 700; line-height: 1.3; color: var(--dp-text); margin-bottom: 10px; }
+  #dp-sec-{{ section.id }} .dp-price-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
+  #dp-sec-{{ section.id }} .dp-price-row__current { font-size: 28px; font-weight: 800; color: var(--dp-primary); }
+  #dp-sec-{{ section.id }} .dp-price-row__compare { font-size: 16px; text-decoration: line-through; color: var(--dp-text-muted); }
+  #dp-sec-{{ section.id }} .dp-price-row__sale { font-size: 14px; font-weight: 600; background: linear-gradient(135deg, var(--dp-primary), var(--dp-primary-light)); color: #fff; padding: 3px 12px; border-radius: 20px; }
+  #dp-sec-{{ section.id }} .dp-price-row__save { font-size: 13px; color: #16a34a; font-weight: 600; }
+
+  /* Variant selector */
+  #dp-sec-{{ section.id }} .dp-variant-select { width: 100%; padding: 10px 14px; font-size: 14px; font-weight: 600; border: 2px solid var(--dp-border); border-radius: var(--dp-radius); background: var(--dp-bg); color: var(--dp-text); margin-bottom: 20px; cursor: pointer; outline: none; transition: var(--dp-transition); }
+  #dp-sec-{{ section.id }} .dp-variant-select:focus { border-color: var(--dp-primary); }
+
+  #dp-sec-{{ section.id }} .dp-option-group { margin-bottom: 24px; }
+  #dp-sec-{{ section.id }} .dp-option-group__label { font-size: 13px; font-weight: 700; color: var(--dp-text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.8px; }
+  #dp-sec-{{ section.id }} .dp-option-group__label span.dp-selected-val { font-weight: 600; color: var(--dp-primary); text-transform: none; letter-spacing: 0; }
+  #dp-sec-{{ section.id }} .dp-option-group__row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  #dp-sec-{{ section.id }} .dp-chip { display: inline-flex; align-items: center; justify-content: center; padding: 9px 18px; font-size: 13px; font-weight: 600; border: 2px solid var(--dp-border); border-radius: var(--dp-radius); background: var(--dp-bg); color: var(--dp-text); cursor: pointer; transition: var(--dp-transition); user-select: none; min-width: 46px; text-align: center; position: relative; }
+  #dp-sec-{{ section.id }} .dp-chip:hover { border-color: var(--dp-primary); background: rgba(44,62,107,0.04); }
+  #dp-sec-{{ section.id }} .dp-chip.active { border-color: var(--dp-primary); background: var(--dp-primary); color: {{ c_btn_text }}; box-shadow: 0 2px 8px rgba(44,62,107,0.25); }
+
+  #dp-sec-{{ section.id }} .dp-shape-chip { flex-direction: column; gap: 6px; padding: 10px 14px; min-width: 72px; border-radius: 8px; }
+  #dp-sec-{{ section.id }} .dp-shape-chip svg { width: 28px; height: 28px; fill: none; stroke: var(--dp-text-muted); stroke-width: 1.5; transition: var(--dp-transition); }
+  #dp-sec-{{ section.id }} .dp-shape-chip.active svg { stroke: {{ c_btn_text }}; }
+  #dp-sec-{{ section.id }} .dp-shape-chip span { font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
+
+  #dp-sec-{{ section.id }} .dp-color-chip.active { border-color: var(--dp-primary) !important; box-shadow: 0 0 0 3px rgba(44,62,107,0.2); }
+  #dp-sec-{{ section.id }} .dp-color-chip.active::after { content: '✓'; position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: var(--dp-primary); color: #fff; font-size: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+  #dp-sec-{{ section.id }} .dp-metal-chip { padding: 9px 16px; font-size: 12px; border-radius: 6px; min-width: auto; }
+  #dp-sec-{{ section.id }} .dp-metal-silver { border-color: #b0b8c1; background: #f0f2f5; color: #4a5568; }
+  #dp-sec-{{ section.id }} .dp-metal-silver.active { background: #b0b8c1; color: #fff; border-color: #8a9bae; }
+  #dp-sec-{{ section.id }} .dp-metal-white-gold { border-color: #d1ccc4; background: #f5f3ef; color: #5a5549; }
+  #dp-sec-{{ section.id }} .dp-metal-white-gold.active { background: #c9c3b8; color: #fff; border-color: #a8a092; }
+  #dp-sec-{{ section.id }} .dp-metal-yellow-gold { border-color: #d4a844; background: #fdf6e3; color: #7a5c1a; }
+  #dp-sec-{{ section.id }} .dp-metal-yellow-gold.active { background: #d4a844; color: #fff; border-color: #b8912e; }
+  #dp-sec-{{ section.id }} .dp-metal-rose-gold { border-color: #c97f7f; background: #fdf0f0; color: #7a3f3f; }
+  #dp-sec-{{ section.id }} .dp-metal-rose-gold.active { background: #c97f7f; color: #fff; border-color: #a86060; }
+  #dp-sec-{{ section.id }} .dp-metal-platinum { border-color: #9ca3af; background: #f3f4f6; color: #374151; }
+  #dp-sec-{{ section.id }} .dp-metal-platinum.active { background: #6b7280; color: #fff; border-color: #4b5563; }
+
+  #dp-sec-{{ section.id }} .dp-cert-chip { padding: 9px 22px; font-size: 13px; }
+  #dp-sec-{{ section.id }} .dp-cert-chip.active { background: linear-gradient(135deg, var(--dp-accent), #d4a844); border-color: var(--dp-accent); color: #1a1a2e; }
+
+  /* Inline groups — each group on its own row for clarity */
+  #dp-sec-{{ section.id }} .dp-inline-groups { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 4px; }
+
+  #dp-sec-{{ section.id }} .dp-qty-wrap { display: flex; align-items: center; gap: 0; border: 2px solid var(--dp-border); border-radius: var(--dp-radius); overflow: hidden; width: fit-content; }
+  #dp-sec-{{ section.id }} .dp-qty-btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; background: var(--dp-bg-light); border: none; color: var(--dp-text); cursor: pointer; transition: var(--dp-transition); }
+  #dp-sec-{{ section.id }} .dp-qty-btn:hover { background: var(--dp-primary); color: #fff; }
+  #dp-sec-{{ section.id }} .dp-qty-input { width: 56px; height: 44px; text-align: center; font-size: 15px; font-weight: 700; border: none; border-left: 1px solid var(--dp-border); border-right: 1px solid var(--dp-border); outline: none; color: var(--dp-text); background: var(--dp-bg); -moz-appearance: textfield; }
+  #dp-sec-{{ section.id }} .dp-qty-input::-webkit-inner-spin-button,
+  #dp-sec-{{ section.id }} .dp-qty-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  #dp-sec-{{ section.id }} .dp-atc-btn { margin-top: 24px; width: 100%; padding: 16px 30px; font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border: none; border-radius: 8px; background: linear-gradient(135deg, {{ c_atc_bg }} 0%, {{ c_atc_bg2 }} 100%); color: {{ c_btn_text }}; cursor: pointer; transition: var(--dp-transition); position: relative; overflow: hidden; }
+  #dp-sec-{{ section.id }} .dp-atc-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.5s ease; }
+  #dp-sec-{{ section.id }} .dp-atc-btn:hover { box-shadow: 0 6px 24px rgba(44,62,107,0.35); transform: translateY(-2px); }
+  #dp-sec-{{ section.id }} .dp-atc-btn:hover::before { left: 100%; }
+  #dp-sec-{{ section.id }} .dp-atc-btn:active { transform: translateY(0); }
+  #dp-sec-{{ section.id }} .dp-atc-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+  #dp-sec-{{ section.id }} .dp-atc-btn.added { background: linear-gradient(135deg, #16a34a, #22c55e) !important; }
+
+  #dp-sec-{{ section.id }} .dp-divider { height: 1px; background: var(--dp-border); margin: 20px 0; }
+  #dp-sec-{{ section.id }} .dp-error-msg { display: none; padding: 10px 16px; background: #fef2f2; border: 1px solid #fca5a5; border-radius: var(--dp-radius); color: #dc2626; font-size: 13px; font-weight: 500; margin-top: 10px; }
+  #dp-sec-{{ section.id }} .dp-error-msg.show { display: block; animation: dpShake 0.4s ease; }
+  @keyframes dpShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  #dp-sec-{{ section.id }} .dp-trust { display: flex; gap: 20px; margin-top: 22px; padding: 16px; background: var(--dp-bg-light); border-radius: 10px; border: 1px solid var(--dp-border); }
+  #dp-sec-{{ section.id }} .dp-trust__item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dp-text-muted); font-weight: 500; }
+  #dp-sec-{{ section.id }} .dp-trust__icon { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; background: var(--dp-primary); color: #fff; border-radius: 50%; font-size: 11px; }
+
+  @media (max-width: 900px) {
+    #dp-sec-{{ section.id }} .dp-wrapper { grid-template-columns: 1fr; gap: 30px; }
+    #dp-sec-{{ section.id }} .dp-gallery { position: static; }
+    #dp-sec-{{ section.id }} .dp-inline-groups { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    #dp-sec-{{ section.id }} .dp-info__title { font-size: 20px; }
+    #dp-sec-{{ section.id }} .dp-price-row__current { font-size: 22px; }
+    #dp-sec-{{ section.id }} .dp-shape-chip { min-width: 56px; padding: 8px 8px; }
+    #dp-sec-{{ section.id }} .dp-shape-chip svg { width: 22px; height: 22px; }
+    #dp-sec-{{ section.id }} .dp-option-group__row { gap: 8px; }
+    #dp-sec-{{ section.id }} .dp-chip { padding: 7px 12px; font-size: 12px; min-width: 40px; }
+    #dp-sec-{{ section.id }} .dp-trust { flex-direction: column; gap: 10px; }
+    #dp-sec-{{ section.id }} .dp-inline-groups { grid-template-columns: 1fr; }
+  }
+</style>
+
+<section class="dp-section" id="dp-sec-{{ section.id }}">
+  <div class="dp-wrapper">
+
+    <!-- ======== LEFT — IMAGE GALLERY ======== -->
+    <div class="dp-gallery">
+      <div class="dp-gallery__main" id="dp-main-image-wrap-{{ section.id }}">
+        {% if current_variant.compare_at_price > current_variant.price %}
+          <span class="dp-gallery__badge">{{ section.settings.sale_badge_text }}</span>
+        {% endif %}
+        <img id="dp-main-img-{{ section.id }}" src="{{ dp_product.featured_image | image_url: width: 900 }}" alt="{{ dp_product.featured_image.alt | escape }}" loading="lazy">
+      </div>
+      {% if dp_product.images.size > 1 %}
+        <div class="dp-gallery__thumbs">
+          {% for img in dp_product.images %}
+            <div class="dp-gallery__thumb {% if forloop.first %}active{% endif %}" data-full="{{ img | image_url: width: 900 }}" data-action="thumb">
+              <img src="{{ img | image_url: width: 120 }}" alt="{{ img.alt | escape }}" loading="lazy">
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ======== RIGHT — PRODUCT DETAILS ======== -->
+    <div class="dp-info">
+      <h1 class="dp-info__title">{{ section.settings.heading_override | default: dp_product.title }}</h1>
+
+      <div class="dp-price-row">
+        <span class="dp-price-row__current" id="dp-price-{{ section.id }}">{{ current_variant.price | money }}</span>
+        {% if current_variant.compare_at_price > current_variant.price %}
+          <span class="dp-price-row__compare">{{ current_variant.compare_at_price | money }}</span>
+          {% assign saved = current_variant.compare_at_price | minus: current_variant.price %}
+          <span class="dp-price-row__sale">Sale</span>
+          <span class="dp-price-row__save">Save {{ saved | money }}</span>
+        {% endif %}
+      </div>
+
+      <form id="dp-product-form-{{ section.id }}" action="/cart/add" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" id="dp-variant-id-{{ section.id }}" value="{{ current_variant.id }}">
+
+        <!-- Variant Selector -->
+        {% if dp_product.variants.size > 1 %}
+          <div class="dp-option-group">
+            <div class="dp-option-group__label">Select Variant</div>
+            <select class="dp-variant-select" id="dp-variant-select-{{ section.id }}" data-action="variant">
+              {% for variant in dp_product.variants %}
+                <option value="{{ variant.id }}"
+                  data-price="{{ variant.price | money }}"
+                  data-compare="{{ variant.compare_at_price | money }}"
+                  data-available="{{ variant.available }}"
+                  {% if variant == current_variant %}selected{% endif %}>
+                  {{ variant.title }} — {{ variant.price | money }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endif %}
+
+        <!-- 1 ── Diamond / Stone Shape ── -->
+        {% if shapes_raw.size > 0 and shapes_raw[0] != blank %}
+        <div class="dp-option-group">
+          <div class="dp-option-group__label">Diamond / Stone Shape <span class="dp-selected-val" id="dp-shape-val-{{ section.id }}"></span></div>
+          <div class="dp-option-group__row">
+            {% for shape in shapes_raw %}
+              {%- assign s = shape | strip -%}
+              {% if s != blank %}
+              <div class="dp-chip dp-shape-chip {% if forloop.first %}active{% endif %}" data-group="shape" data-value="{{ s }}">
+                {% case s %}
+                  {% when 'Round' %}
+                    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16"/><line x1="20" y1="4" x2="20" y2="36"/><line x1="4" y1="20" x2="36" y2="20"/><line x1="8" y1="8" x2="32" y2="32"/><line x1="32" y1="8" x2="8" y2="32"/></svg>
+                  {% when 'Oval' %}
+                    <svg viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="12" ry="17"/><line x1="20" y1="3" x2="20" y2="37"/><line x1="8" y1="20" x2="32" y2="20"/></svg>
+                  {% when 'Princess' %}
+                    <svg viewBox="0 0 40 40"><rect x="6" y="6" width="28" height="28"/><line x1="6" y1="6" x2="34" y2="34"/><line x1="34" y1="6" x2="6" y2="34"/><line x1="20" y1="6" x2="20" y2="34"/><line x1="6" y1="20" x2="34" y2="20"/></svg>
+                  {% when 'Cushion' %}
+                    <svg viewBox="0 0 40 40"><rect x="6" y="6" width="28" height="28" rx="8"/><line x1="6" y1="6" x2="34" y2="34"/><line x1="34" y1="6" x2="6" y2="34"/></svg>
+                  {% when 'Emerald' %}
+                    <svg viewBox="0 0 40 40"><polygon points="10,4 30,4 36,12 36,28 30,36 10,36 4,28 4,12"/><line x1="4" y1="12" x2="36" y2="12"/><line x1="4" y1="28" x2="36" y2="28"/><line x1="10" y1="4" x2="10" y2="36"/><line x1="30" y1="4" x2="30" y2="36"/></svg>
+                  {% when 'Asscher' %}
+                    <svg viewBox="0 0 40 40"><polygon points="10,4 30,4 36,10 36,30 30,36 10,36 4,30 4,10"/><rect x="12" y="12" width="16" height="16"/><line x1="4" y1="10" x2="12" y2="12"/><line x1="30" y1="4" x2="28" y2="12"/><line x1="36" y1="30" x2="28" y2="28"/><line x1="10" y1="36" x2="12" y2="28"/></svg>
+                  {% when 'Radiant' %}
+                    <svg viewBox="0 0 40 40"><polygon points="8,4 32,4 36,8 36,32 32,36 8,36 4,32 4,8"/><line x1="8" y1="4" x2="20" y2="20"/><line x1="32" y1="4" x2="20" y2="20"/><line x1="36" y1="32" x2="20" y2="20"/><line x1="4" y1="32" x2="20" y2="20"/></svg>
+                  {% when 'Pear' %}
+                    <svg viewBox="0 0 40 40"><path d="M20 4 C10 14, 6 24, 20 38 C34 24, 30 14, 20 4Z"/><line x1="20" y1="4" x2="20" y2="38"/><line x1="8" y1="22" x2="32" y2="22"/></svg>
+                  {% when 'Marquise' %}
+                    <svg viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="10" ry="18"/><line x1="20" y1="2" x2="20" y2="38"/><line x1="10" y1="20" x2="30" y2="20"/><line x1="12" y1="8" x2="28" y2="32"/><line x1="28" y1="8" x2="12" y2="32"/></svg>
+                  {% when 'Heart' %}
+                    <svg viewBox="0 0 40 40"><path d="M20 36 L6 22 C2 16, 4 8, 12 8 C16 8, 19 11, 20 14 C21 11, 24 8, 28 8 C36 8, 38 16, 34 22 Z"/><line x1="20" y1="14" x2="20" y2="36"/></svg>
+                {% endcase %}
+                <span>{{ s }}</span>
+              </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <input type="hidden" name="properties[Diamond Shape]" id="dp-prop-shape-{{ section.id }}" value="{{ shapes_raw[0] | strip }}">
+        </div>
+        {% endif %}
+
+        <!-- 2 ── Diamond Carat ── -->
+        {% if carats_raw.size > 0 and carats_raw[0] != blank %}
+        <div class="dp-option-group">
+          <div class="dp-option-group__label">Diamond Carat <span class="dp-selected-val" id="dp-carat-val-{{ section.id }}"></span></div>
+          <div class="dp-option-group__row">
+            {% for c in carats_raw %}{%- assign cv = c | strip -%}{% if cv != blank %}
+              <div class="dp-chip {% if forloop.first %}active{% endif %}" data-group="carat" data-value="{{ cv }}">{{ cv }}</div>
+            {% endif %}{% endfor %}
+          </div>
+          <input type="hidden" name="properties[Diamond Carat]" id="dp-prop-carat-{{ section.id }}" value="{{ carats_raw[0] | strip }}">
+        </div>
+        {% endif %}
+
+        <!-- 3 ── Color + Clarity + Cert (inline) ── -->
+        <div class="dp-inline-groups">
+          {% if colors_raw.size > 0 and colors_raw[0] != blank %}
+          <div class="dp-option-group">
+            <div class="dp-option-group__label">Diamond Color <span class="dp-selected-val" id="dp-color-val-{{ section.id }}"></span></div>
+            <div class="dp-option-group__row">
+              {% for clr in colors_raw %}{%- assign cv2 = clr | strip -%}{%- assign clr_lower = cv2 | downcase -%}{% if cv2 != blank %}
+                <div class="dp-chip dp-color-chip {% if forloop.first %}active{% endif %}" data-group="color" data-value="{{ cv2 }}">{{ cv2 }}</div>
+              {% endif %}{% endfor %}
+            </div>
+            <input type="hidden" name="properties[Diamond Color]" id="dp-prop-color-{{ section.id }}" value="{{ colors_raw[0] | strip }}">
+          </div>
+          {% endif %}
+
+          {% if clarities_raw.size > 0 and clarities_raw[0] != blank %}
+          <div class="dp-option-group">
+            <div class="dp-option-group__label">Diamond Clarity <span class="dp-selected-val" id="dp-clarity-val-{{ section.id }}"></span></div>
+            <div class="dp-option-group__row">
+              {% for cl in clarities_raw %}{%- assign clv = cl | strip -%}{% if clv != blank %}
+                <div class="dp-chip {% if forloop.first %}active{% endif %}" data-group="clarity" data-value="{{ clv }}">{{ clv }}</div>
+              {% endif %}{% endfor %}
+            </div>
+            <input type="hidden" name="properties[Diamond Clarity]" id="dp-prop-clarity-{{ section.id }}" value="{{ clarities_raw[0] | strip }}">
+          </div>
+          {% endif %}
+
+          {% if certs_raw.size > 0 and certs_raw[0] != blank %}
+          <div class="dp-option-group">
+            <div class="dp-option-group__label">Certification <span class="dp-selected-val" id="dp-cert-val-{{ section.id }}"></span></div>
+            <div class="dp-option-group__row">
+              {% for cert in certs_raw %}{%- assign certv = cert | strip -%}{% if certv != blank %}
+                <div class="dp-chip dp-cert-chip {% if forloop.first %}active{% endif %}" data-group="cert" data-value="{{ certv }}">{{ certv }}</div>
+              {% endif %}{% endfor %}
+            </div>
+            <input type="hidden" name="properties[Certification]" id="dp-prop-cert-{{ section.id }}" value="{{ certs_raw[0] | strip }}">
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="dp-divider"></div>
+
+        <!-- 4 ── Metal ── -->
+        {% if metals_raw.size > 0 and metals_raw[0] != blank %}
+        <div class="dp-option-group">
+          <div class="dp-option-group__label">Metal <span class="dp-selected-val" id="dp-metal-val-{{ section.id }}"></span></div>
+          <div class="dp-option-group__row">
+            {% for m in metals_raw %}
+              {%- assign mv = m | strip | downcase -%}{%- assign ml = m | strip -%}
+              {%- assign metal_class = 'dp-metal-silver' -%}
+              {%- if mv contains 'yellow' -%}{%- assign metal_class = 'dp-metal-yellow-gold' -%}
+              {%- elsif mv contains 'rose' -%}{%- assign metal_class = 'dp-metal-rose-gold' -%}
+              {%- elsif mv contains 'white' -%}{%- assign metal_class = 'dp-metal-white-gold' -%}
+              {%- elsif mv contains 'platinum' -%}{%- assign metal_class = 'dp-metal-platinum' -%}
+              {%- endif -%}
+              {% if ml != blank %}
+              <div class="dp-chip dp-metal-chip {{ metal_class }} {% if forloop.first %}active{% endif %}" data-group="metal" data-value="{{ ml }}">{{ ml }}</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <input type="hidden" name="properties[Metal]" id="dp-prop-metal-{{ section.id }}" value="{{ metals_raw[0] | strip }}">
+        </div>
+        {% endif %}
+
+        <!-- 5 ── Ring Size ── -->
+        {% if sizes_raw.size > 0 and sizes_raw[0] != blank %}
+        <div class="dp-option-group">
+          <div class="dp-option-group__label">Ring Size <span class="dp-selected-val" id="dp-size-val-{{ section.id }}"></span></div>
+          <div class="dp-option-group__row">
+            {% for sz in sizes_raw %}{%- assign szv = sz | strip -%}{% if szv != blank %}
+              <div class="dp-chip {% if forloop.first %}active{% endif %}" data-group="size" data-value="{{ szv }}">{{ szv }}</div>
+            {% endif %}{% endfor %}
+          </div>
+          <input type="hidden" name="properties[Ring Size]" id="dp-prop-size-{{ section.id }}" value="{{ sizes_raw[0] | strip }}">
+        </div>
+        {% endif %}
+
+        <div class="dp-divider"></div>
+
+        <!-- 6 ── Quantity ── -->
+        <div class="dp-option-group">
+          <div class="dp-option-group__label">Quantity</div>
+          <div class="dp-qty-wrap">
+            <button type="button" class="dp-qty-btn" data-action="qty" data-delta="-1">−</button>
+            <input type="number" name="quantity" id="dp-qty-{{ section.id }}" class="dp-qty-input" value="1" min="1" max="99">
+            <button type="button" class="dp-qty-btn" data-action="qty" data-delta="1">+</button>
+          </div>
+        </div>
+
+        <div class="dp-error-msg" id="dp-error-msg-{{ section.id }}"></div>
+        <button type="submit" class="dp-atc-btn" id="dp-atc-btn-{{ section.id }}">{{ section.settings.atc_button_text }}</button>
+      </form>
+
+      {% if section.settings.show_trust_badges %}
+      <div class="dp-trust">
+        <div class="dp-trust__item"><span class="dp-trust__icon">🔒</span> {{ section.settings.trust_1 }}</div>
+        <div class="dp-trust__item"><span class="dp-trust__icon">💎</span> {{ section.settings.trust_2 }}</div>
+        <div class="dp-trust__item"><span class="dp-trust__icon">📦</span> {{ section.settings.trust_3 }}</div>
+        <div class="dp-trust__item"><span class="dp-trust__icon">↩️</span> {{ section.settings.trust_4 }}</div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  var sid = '{{ section.id }}';
+
+  function dpInit() {
+    /* ── Section container ── */
+    var sec = document.getElementById('dp-sec-' + sid);
+    if (!sec) return false;
+    if (sec.dataset.dpInit === 'true') return true;
+    sec.dataset.dpInit = 'true';
+
+    var propMap = { shape:'dp-prop-shape-', carat:'dp-prop-carat-', color:'dp-prop-color-', clarity:'dp-prop-clarity-', cert:'dp-prop-cert-', metal:'dp-prop-metal-', size:'dp-prop-size-' };
+    var valMap = { shape:'dp-shape-val-', carat:'dp-carat-val-', color:'dp-color-val-', clarity:'dp-clarity-val-', cert:'dp-cert-val-', metal:'dp-metal-val-', size:'dp-size-val-' };
+
+    function getEl(prefix) { return document.getElementById(prefix + sid); }
+
+    /* ── Init displayed values ── */
+    Object.keys(propMap).forEach(function(g) {
+      var inp = getEl(propMap[g]);
+      var lbl = getEl(valMap[g]);
+      if (inp && lbl) lbl.textContent = '— ' + inp.value;
+    });
+
+    /* ── Event Delegation — all clicks handled here ── */
+    sec.addEventListener('click', function(e) {
+      var el = e.target.closest('[data-group]');
+      if (el) {
+        var g = el.dataset.group, v = el.dataset.value;
+        el.parentElement.querySelectorAll('.dp-chip').forEach(function(c) { c.classList.remove('active'); });
+        el.classList.add('active');
+        var inp = getEl(propMap[g]); if (inp) inp.value = v;
+        var lbl = getEl(valMap[g]); if (lbl) lbl.textContent = '— ' + v;
+        return;
+      }
+
+      /* Thumbnail click */
+      var thumb = e.target.closest('[data-action="thumb"]');
+      if (thumb) {
+        sec.querySelectorAll('.dp-gallery__thumb').forEach(function(x) { x.classList.remove('active'); });
+        thumb.classList.add('active');
+        var mainImg = getEl('dp-main-img-');
+        if (mainImg && thumb.dataset.full) mainImg.src = thumb.dataset.full;
+        return;
+      }
+
+      /* Quantity +/- click */
+      var qtyBtn = e.target.closest('[data-action="qty"]');
+      if (qtyBtn) {
+        var qtyInput = getEl('dp-qty-');
+        var val = parseInt(qtyInput.value, 10) || 1;
+        val += parseInt(qtyBtn.dataset.delta, 10);
+        if (val < 1) val = 1;
+        if (val > 99) val = 99;
+        qtyInput.value = val;
+        return;
+      }
+    });
+
+    /* ── Variant change ── */
+    var variantSel = getEl('dp-variant-select-');
+    if (variantSel) {
+      variantSel.addEventListener('change', function() {
+        var opt = variantSel.options[variantSel.selectedIndex];
+        var variantInput = getEl('dp-variant-id-');
+        var priceEl = getEl('dp-price-');
+        if (variantInput) variantInput.value = variantSel.value;
+        if (priceEl) priceEl.textContent = opt.dataset.price;
+      });
+    }
+
+    /* ── Form Submit — AJAX Add to Cart ── */
+    var form = getEl('dp-product-form-');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var btn = getEl('dp-atc-btn-');
+        var errDiv = getEl('dp-error-msg-');
+        errDiv.classList.remove('show');
+
+        var fd = new FormData(form);
+        var payload = { id: fd.get('id'), quantity: parseInt(fd.get('quantity'), 10) || 1, properties: {} };
+
+        for (var pair of fd.entries()) {
+          var m = pair[0].match(/^properties\[(.+)\]$/);
+          if (m) payload.properties[m[1]] = pair[1];
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Adding...';
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(function(r) { if (!r.ok) throw new Error('Could not add to cart'); return r.json(); })
+        .then(function(addedItem) {
+          btn.textContent = '✓ Added to Cart!';
+          btn.classList.add('added');
+
+          /* ── Refresh theme cart UI ── */
+          fetch('/cart.js').then(function(r) { return r.json(); }).then(function(cartData) {
+
+            /* 1. Update all possible cart count elements */
+            var countSelectors = [
+              '.cart-count', '.cart-count-bubble span', '[data-cart-count]',
+              '.cart-link__count', '.site-header__cart-count', '.js-cart-count',
+              '.header__cart-count', '.cart-count-tag', '#CartCount',
+              '.cart__count', '.cart-item-count', '.mini-cart__count',
+              '.header-cart-count', '.cart_count'
+            ];
+            countSelectors.forEach(function(sel) {
+              document.querySelectorAll(sel).forEach(function(el) { el.textContent = cartData.item_count; });
+            });
+
+            /* 2. Dispatch common theme events */
+            document.dispatchEvent(new CustomEvent('cart:refresh'));
+            document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cartData } }));
+            document.dispatchEvent(new CustomEvent('cart-updated', { detail: { cart: cartData } }));
+            document.dispatchEvent(new CustomEvent('ajaxProduct:added', { detail: { product: addedItem } }));
+            document.dispatchEvent(new Event('cart:build'));
+
+            /* 3. jQuery events (if theme uses jQuery) */
+            if (typeof jQuery !== 'undefined') {
+              jQuery(document).trigger('ajaxCart.afterCartLoad', [cartData]);
+              jQuery(document).trigger('cart.requestComplete', [cartData]);
+              jQuery('body').trigger('added.ajaxProduct');
+              jQuery('body').trigger('updateCart', [cartData]);
+            }
+
+            /* 4. Shopify theme callbacks */
+            if (typeof Shopify !== 'undefined' && Shopify.onCartUpdate) {
+              Shopify.onCartUpdate(cartData);
+            }
+
+            /* 5. Try to open cart drawer (common theme patterns) */
+            /* Click the cart icon to trigger drawer */
+            var cartTriggers = document.querySelectorAll(
+              '[data-action="toggle-cart"], .js-drawer-open-cart, .cart-link, ' +
+              '.site-header__cart, [data-cart-toggle], .header__icon--cart, ' +
+              '.js-cart-drawer-trigger, [href="/cart"], a[href$="/cart"]'
+            );
+            if (cartTriggers.length > 0) {
+              /* Small delay to let cart data update first */
+              setTimeout(function() { cartTriggers[0].click(); }, 300);
+            }
+
+          });
+
+          setTimeout(function() {
+            btn.disabled = false;
+            btn.textContent = '{{ section.settings.atc_button_text }}';
+            btn.classList.remove('added');
+          }, 2500);
+        })
+        .catch(function(err) {
+          errDiv.textContent = err.message || 'Something went wrong.';
+          errDiv.classList.add('show');
+          btn.disabled = false;
+          btn.textContent = '{{ section.settings.atc_button_text }}';
+        });
+      });
+    }
+
+    return true;
+  }
+
+  /* ── Try immediately ── */
+  if (!dpInit()) {
+    /* ── DOM not ready — wait for it ── */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { dpInit(); });
+    } else {
+      /* DOM already loaded but element may not be painted yet */
+      requestAnimationFrame(function() { dpInit(); });
+    }
+
+    /* ── Fallback: retry every 100ms up to 5 seconds ── */
+    var retries = 0;
+    var retryInterval = setInterval(function() {
+      retries++;
+      if (dpInit() || retries >= 50) clearInterval(retryInterval);
+    }, 100);
+  }
+
+  /* ── Shopify Theme Editor events ── */
+  document.addEventListener('shopify:section:load', function(e) {
+    if (e.detail && e.detail.sectionId === sid) { var s = document.getElementById('dp-sec-' + sid); if(s) s.removeAttribute('data-dp-init'); dpInit(); }
+  });
+  document.addEventListener('shopify:section:select', function(e) {
+    if (e.detail && e.detail.sectionId === sid) dpInit();
+  });
+
+  /* ── AJAX Navigation Support (Turbolinks / Turbo / Barba / InstantClick) ── */
+  document.addEventListener('turbolinks:load', function() { dpInit(); });
+  document.addEventListener('turbo:load', function() { dpInit(); });
+  document.addEventListener('page:load', function() { dpInit(); });
+  document.addEventListener('page:change', function() { dpInit(); });
+  window.addEventListener('pageshow', function(e) { if (e.persisted) dpInit(); });
+  window.addEventListener('popstate', function() { setTimeout(dpInit, 100); });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Diamond Product",
+  "tag": "section",
+  "class": "diamond-product-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "═══ PRODUCT ═══"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Select Product"
+    },
+    {
+      "type": "text",
+      "id": "heading_override",
+      "label": "Custom Heading (optional)",
+      "info": "Leave blank = product title"
+    },
+    {
+      "type": "text",
+      "id": "sale_badge_text",
+      "label": "Sale Badge Text",
+      "default": "Sale"
+    },
+    {
+      "type": "text",
+      "id": "atc_button_text",
+      "label": "Add to Cart Button Text",
+      "default": "Add To Cart"
+    },
+    {
+      "type": "header",
+      "content": "═══ DIAMOND OPTIONS (comma-separated) ═══"
+    },
+    {
+      "type": "text",
+      "id": "diamond_shapes",
+      "label": "Diamond Shapes",
+      "default": "Round,Oval,Princess,Cushion,Emerald,Asscher,Radiant,Pear,Marquise,Heart",
+      "info": "Comma-separated. Supported: Round, Oval, Princess, Cushion, Emerald, Asscher, Radiant, Pear, Marquise, Heart"
+    },
+    {
+      "type": "text",
+      "id": "diamond_carats",
+      "label": "Diamond Carats",
+      "default": "0.25,0.50,0.75,1.00,1.50,2.00,2.50,3.00,3.50,4.00,4.50,5.00",
+      "info": "Comma-separated carat values"
+    },
+    {
+      "type": "text",
+      "id": "diamond_colors",
+      "label": "Diamond Colors",
+      "default": "D,E,F,G,H,I,J",
+      "info": "Comma-separated color grades"
+    },
+    {
+      "type": "text",
+      "id": "diamond_clarities",
+      "label": "Diamond Clarities",
+      "default": "IF,VVS1,VVS2,VS1,VS2",
+      "info": "Comma-separated clarity grades"
+    },
+    {
+      "type": "text",
+      "id": "diamond_certifications",
+      "label": "Certifications",
+      "default": "IGI Certified,Non Certified",
+      "info": "Comma-separated certification options"
+    },
+    {
+      "type": "text",
+      "id": "diamond_metals",
+      "label": "Metals",
+      "default": "925 Silver,995 Silver,10K White Gold,18K Yellow Gold,18K Rose Gold,14K White Gold,14K Yellow Gold,14K Rose Gold,18K White Gold,18K Yellow Gold,18K Rose Gold,950 Platinum",
+      "info": "Comma-separated. Auto-colored: yellow, rose, white, silver, platinum"
+    },
+    {
+      "type": "text",
+      "id": "ring_sizes",
+      "label": "Ring Sizes",
+      "default": "4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9",
+      "info": "Comma-separated ring sizes"
+    },
+    {
+      "type": "header",
+      "content": "═══ COLORS & FONTS ═══"
+    },
+    {
+      "type": "color",
+      "id": "color_primary",
+      "label": "Primary Color",
+      "default": "#2c3e6b"
+    },
+    {
+      "type": "color",
+      "id": "color_primary_light",
+      "label": "Primary Light Color",
+      "default": "#3b5998"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "Accent Color (Cert badge)",
+      "default": "#e8c56d"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_bg_light",
+      "label": "Light Background",
+      "default": "#f8f9fb"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text Color",
+      "default": "#1a1a2e"
+    },
+    {
+      "type": "color",
+      "id": "color_text_muted",
+      "label": "Muted Text Color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "color",
+      "id": "color_border",
+      "label": "Border Color",
+      "default": "#e2e5ea"
+    },
+    {
+      "type": "color",
+      "id": "color_btn_text",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_atc_bg",
+      "label": "Add to Cart Button Color 1",
+      "default": "#2c3e6b"
+    },
+    {
+      "type": "color",
+      "id": "color_atc_bg2",
+      "label": "Add to Cart Button Color 2",
+      "default": "#3b5998"
+    },
+    {
+      "type": "text",
+      "id": "font_family",
+      "label": "Font Family",
+      "default": "'Inter', 'Segoe UI', system-ui, sans-serif"
+    },
+    {
+      "type": "header",
+      "content": "═══ TRUST BADGES ═══"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Show Trust Badges",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_1",
+      "label": "Trust Badge 1",
+      "default": "Secure Checkout"
+    },
+    {
+      "type": "text",
+      "id": "trust_2",
+      "label": "Trust Badge 2",
+      "default": "Certified Diamonds"
+    },
+    {
+      "type": "text",
+      "id": "trust_3",
+      "label": "Trust Badge 3",
+      "default": "Free Shipping"
+    },
+    {
+      "type": "text",
+      "id": "trust_4",
+      "label": "Trust Badge 4",
+      "default": "30-Day Returns"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Diamond Product Page"
+    }
+  ]
+}
+{% endschema %}

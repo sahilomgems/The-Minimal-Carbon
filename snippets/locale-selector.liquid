@@ -1,0 +1,61 @@
+{%- if shop.enabled_locales.size > 1 -%}
+	<div class="js-disclosure header-selector header-selector--locale dropdown" data-disclosure-locale>
+		<h4 class="d-none">{{ 'general.language.dropdown_label' | t }}</h4>
+		<div class="header-selector__toggle" data-toggle="dropdown">{{ request.locale.endonym_name }}</div>
+		<div class="dropdown-menu dropdown-menu-right header-selector__dropdown">
+			<ul class="header-selector__list">
+				{%- for locale in shop.published_locales -%}
+					{%- assign is_rtl = fasle -%}
+					{%- assign iso_code = locale.iso_code  | split: "-" -%}
+					{%- assign iso_code_arr_rtl = settings.iso_rtl  | split: ";" -%}
+					{%- assign current_iso_code = request.locale.iso_code  | split: "-" -%}
+					{%- assign path = request.path | remove: current_iso_code[0] | replace: '//', '/' -%}
+					{%- if locale.primary == true -%}
+						{%- assign url = request.origin | append: path -%}
+					{%- else -%}
+						{%- assign url = request.origin | append: '/' | append: iso_code[0] | append: path -%}
+					{%- endif -%}
+					{%- if settings.iso_rtl != blank and settings.id_ltr != blank and settings.id_rtl != blank -%}
+						{%- for iso_arr_rtl in iso_code_arr_rtl -%}
+							{%- assign iso_rtl = iso_arr_rtl | remove: " " -%}
+							{%- if iso_rtl == locale.iso_code -%}
+								{%- assign is_rtl = true -%}
+							{%- endif -%}
+						{%- endfor -%}
+					{%- endif -%}
+					{%- if settings.iso_rtl != blank and settings.id_ltr != blank and settings.id_rtl != blank -%}
+						{%- if is_rtl -%}
+							{%- if locale.primary == true -%}
+								{%- assign url = request.origin | append: path | append: "?preview_theme_id=" | append: settings.id_rtl -%}
+							{%- else -%}
+								{%- assign url = request.origin | append: '/' | append: iso_code[0] | append: path | append: "?preview_theme_id=" | append: settings.id_rtl -%}
+							{%- endif -%}
+							<li class="header-selector__item{% if locale.iso_code == request.locale.iso_code %} locale-selector__item--current{% endif %}">
+								<a href="{{ url }}" lang="{{ locale.iso_code }}">
+									{{ locale.endonym_name }}
+								</a>
+							</li>
+						{%- else -%}
+							{%- if locale.primary == true -%}
+								{%- assign url = request.origin | append: path | append: "?preview_theme_id=" | append: settings.id_ltr -%}
+							{%- else -%}
+								{%- assign url = request.origin | append: '/' | append: iso_code[0] | append: path | append: "?preview_theme_id=" | append: settings.id_ltr -%}
+							{%- endif -%}
+							<li class="header-selector__item{% if locale.iso_code == request.locale.iso_code %} locale-selector__item--current{% endif %}">
+								<a href="{{ url }}" lang="{{ locale.iso_code }}">
+									{{ locale.endonym_name }}
+								</a>
+							</li>
+						{%- endif -%}
+					{%- else -%}
+						<li class="header-selector__item{% if locale.iso_code == request.locale.iso_code %} locale-selector__item--current{% endif %}">
+							<a href="{{ url }}" lang="{{ locale.iso_code }}">
+								{{ locale.endonym_name }}
+							</a>
+						</li>
+					{%- endif -%}
+				{%- endfor -%}
+			</ul>
+		</div>
+	</div>
+{%- endif -%}

@@ -1,0 +1,267 @@
+{% comment %}
+  Customer Reviews Slider Section - Slick Slider Version
+  User-settable container class & max-width
+  Desktop: 4 slides, no box-shadow
+{% endcomment %}
+
+<section
+  class="reviews-section {% if section.settings.container_class != blank %}{{ section.settings.container_class }}{% else %}bwp-container{% endif %}"
+  aria-label="{{ section.settings.section_title }}"
+  data-section-id="{{ section.id }}"
+  style="max-width: {{ section.settings.container_max_width }}px; margin: 0 auto;"
+>
+
+  {% if section.settings.section_title != blank %}
+    <h2 class="reviews-title">
+      {{ section.settings.section_title }}
+    </h2>
+  {% endif %}
+
+  <div class="slick-slider">
+    {% for block in section.blocks %}
+      <div class="slick-slide">
+        <div class="review-card">
+
+          {% if block.settings.review_image != blank %}
+            <div class="review-image">
+              <img
+                src="{{ block.settings.review_image | image_url: width:600 }}"
+                alt="{{ block.settings.customer_name | escape }}"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
+
+          <div class="review-content">
+            <div class="review-text">
+              <span
+                class="review-snippet"
+                data-short="{{ block.settings.short_text | escape }}"
+                data-full="{{ block.settings.full_text | escape }}"
+              >
+                {{ block.settings.short_text }}
+              </span>
+
+              {% if block.settings.full_text != blank %}
+                <button
+                  type="button"
+                  class="read-more-toggle"
+                  aria-expanded="false"
+                >
+                  Read More
+                </button>
+              {% endif %}
+            </div>
+
+            <div class="review-footer">
+              {{ block.settings.purchase_date }}<br>
+              <strong>{{ block.settings.customer_name }}</strong>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% style %}
+.reviews-section {
+  padding: 40px 20px;
+}
+
+.reviews-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.review-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 8px -3px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.review-image img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.review-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.review-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.read-more-toggle {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #0077cc;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.review-footer {
+    margin-top: auto;
+    font-size: 13px;
+    color: #666b73;
+}
+
+.review-footer strong {
+    display: block;
+    margin-top: 4px;
+    color: #2c2c2c;
+    text-transform: capitalize;
+}
+
+.slick-slider {
+  padding-bottom: 1px;
+}
+
+.slick-slide {
+    padding: 0 5px;
+}
+@media (max-width: 1024px) {
+  .review-image img {
+    height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .review-image img {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviews-title {
+    font-size: 22px;
+  }
+}
+{% endstyle %}
+
+{% javascript %}
+document.addEventListener("DOMContentLoaded", function () {
+
+  if (typeof jQuery !== "undefined" && jQuery('.slick-slider').length) {
+    jQuery('.slick-slider').slick({
+      slidesToShow: 4,  // Desktop shows 4 slides
+      slidesToScroll: 1,
+      dots: false,
+      arrows: false,
+      infinite: true,
+      responsive: [
+        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+        { breakpoint: 768, settings: { slidesToShow: 2 } },
+        { breakpoint: 480, settings: { slidesToShow: 1 } }
+      ]
+    });
+  }
+
+  // Read More toggle
+  jQuery('.read-more-toggle').on('click', function(){
+    var snippet = jQuery(this).prev('.review-snippet');
+    var shortText = snippet.data('short');
+    var fullText = snippet.data('full');
+
+    if(jQuery(this).attr('aria-expanded') === 'false'){
+      snippet.text(fullText);
+      jQuery(this).text('Read Less');
+      jQuery(this).attr('aria-expanded', 'true');
+    } else {
+      snippet.text(shortText);
+      jQuery(this).text('Read More');
+      jQuery(this).attr('aria-expanded', 'false');
+    }
+  });
+
+});
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Customer Reviews Slider",
+  "tag": "section",
+  "class": "customer-reviews-slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section heading",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "text",
+      "id": "container_class",
+      "label": "Container class (user-settable)",
+      "default": "bwp-container"
+    },
+    {
+      "type": "number",
+      "id": "container_max_width",
+      "label": "Container max-width (px)",
+      "default": 1200
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "review_image",
+          "label": "Review image"
+        },
+        {
+          "type": "text",
+          "id": "short_text",
+          "label": "Short review text"
+        },
+        {
+          "type": "textarea",
+          "id": "full_text",
+          "label": "Full review text"
+        },
+        {
+          "type": "text",
+          "id": "purchase_date",
+          "label": "Purchase info",
+          "default": "Verified Purchase"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer name"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Customer Reviews Slider",
+      "category": "Testimonials"
+    }
+  ]
+}
+{% endschema %}

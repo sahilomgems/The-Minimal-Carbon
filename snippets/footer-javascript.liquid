@@ -1,0 +1,229 @@
+<script src="/services/javascripts/countries.js" defer="defer"></script>
+<script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+<script src="{{ 'lazysizes.min.js' | asset_url }}" async="async"></script>
+<script src="{{ 'handlebars.min.js' | asset_url }}" defer="defer"></script>
+{%- if settings.store_develop -%}
+  <script src="{{ 'site.js' | asset_url }}" defer="defer"></script>
+{%- else -%}
+	<script src="{{ 'jquery-3.5.1.min.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'vendor.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'debounce.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'enquire.min.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'jquery.countdown.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'slick.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'lodash.min.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ '360imagerotate.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'velocity.min.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'image.zoom.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'wpbingo.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'recent-product.min.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'photoswipe.min.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'photoswipe-ui-default.min.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+	<script src="{{ '//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js' }}" defer="defer"></script>
+	{% if settings.show_currency_selector and settings.currency_type == '2' %}
+		<script src="{{ '/services/javascripts/currencies.js' }}" defer="defer"></script>
+		<script src="{{ 'currencies.js' | asset_url }}" defer="defer"></script>
+	{% endif %}	
+{%- endif -%}
+<script>
+  (function () {
+    var locked = false;
+    var lockTimer = null;
+    var moving = false;
+
+    function isReallyVisible(el) {
+      if (!el) return false;
+      var style = window.getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden') return false;
+      return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+    }
+
+    function isCurrencyDropdownOpen() {
+      var box = document.querySelector('.buckscc-currency-box');
+      if (!box) return false;
+
+      if (
+        box.querySelector(
+          '.buckscc-select-styled.active, .buckscc-select.active, [aria-expanded="true"], .open'
+        )
+      ) {
+        return true;
+      }
+
+      var lists = box.querySelectorAll(
+        'ul, .buckscc-list, .buckscc-options, .buckscc-select-options, .buckscc-select-list'
+      );
+      for (var i = 0; i < lists.length; i++) {
+        var style = window.getComputedStyle(lists[i]);
+        if (
+          style.display !== 'none' &&
+          style.visibility !== 'hidden' &&
+          lists[i].offsetHeight > 0
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function lockMoves(ms) {
+      locked = true;
+      clearTimeout(lockTimer);
+      lockTimer = setTimeout(function () {
+        locked = false;
+        moveBucksCurrency(true);
+      }, ms || 2000);
+    }
+
+    function getTargetSlot() {
+      var header = document.querySelector('.bwp-header');
+      var stickyOn = header && header.classList.contains('sticky');
+      var mobile = window.matchMedia('(max-width: 1049px)').matches;
+
+      if (mobile) {
+        var mobileSlot = document.querySelector('.header-mobile [data-header-currency-slot]');
+        if (mobileSlot && isReallyVisible(mobileSlot.closest('.header-mobile') || mobileSlot)) {
+          return mobileSlot;
+        }
+      }
+
+      if (stickyOn) {
+        var stickySlot = document.querySelector('.header-sticky [data-header-currency-slot]');
+        if (stickySlot && isReallyVisible(document.querySelector('.header-sticky'))) {
+          return stickySlot;
+        }
+      }
+
+      var desktopSlot = document.querySelector('.header-desktop [data-header-currency-slot]');
+      if (desktopSlot) return desktopSlot;
+
+      return document.querySelector('[data-header-currency-slot]');
+    }
+
+    function moveBucksCurrency(force) {
+      if (moving) return;
+      if (!force && (locked || isCurrencyDropdownOpen())) return;
+
+      var boxes = document.querySelectorAll('.buckscc-currency-box');
+      if (!boxes.length) return;
+
+      var slot = getTargetSlot();
+      if (!slot) return;
+
+      var keep = null;
+      for (var i = 0; i < boxes.length; i++) {
+        if (boxes[i].closest('[data-header-currency-slot]')) {
+          keep = boxes[i];
+          break;
+        }
+      }
+      if (!keep) keep = boxes[0];
+
+      // Already in the correct slot — do nothing (avoids dropdown remount)
+      if (keep.parentElement === slot) {
+        // Still clean duplicates that are outside slots
+        for (var d = 0; d < boxes.length; d++) {
+          if (boxes[d] !== keep && !boxes[d].closest('[data-header-currency-slot]')) {
+            boxes[d].parentNode && boxes[d].parentNode.removeChild(boxes[d]);
+          }
+        }
+        return;
+      }
+
+      moving = true;
+      try {
+        // Close any open list before relocating the widget
+        var openLists = keep.querySelectorAll(
+          'ul, .buckscc-list, .buckscc-options, .buckscc-select-options'
+        );
+        for (var o = 0; o < openLists.length; o++) {
+          openLists[o].style.display = 'none';
+        }
+        keep.querySelectorAll('.active').forEach(function (el) {
+          el.classList.remove('active');
+        });
+
+        slot.appendChild(keep);
+
+        boxes = document.querySelectorAll('.buckscc-currency-box');
+        for (var j = 0; j < boxes.length; j++) {
+          if (boxes[j] !== keep) {
+            boxes[j].parentNode && boxes[j].parentNode.removeChild(boxes[j]);
+          }
+        }
+      } finally {
+        moving = false;
+      }
+    }
+
+    function nodeHasBucks(node) {
+      if (!node || node.nodeType !== 1) return false;
+      if (node.classList && node.classList.contains('buckscc-currency-box')) return true;
+      return !!(node.querySelector && node.querySelector('.buckscc-currency-box'));
+    }
+
+    function start() {
+      moveBucksCurrency(true);
+
+      var tries = 0;
+      var timer = setInterval(function () {
+        moveBucksCurrency(true);
+        tries += 1;
+        if (tries > 60) clearInterval(timer);
+      }, 250);
+
+      // Do NOT move on scroll — that remounts the dropdown while open
+      window.addEventListener('resize', function () {
+        moveBucksCurrency(false);
+      });
+
+      var header = document.querySelector('.bwp-header');
+      if (header && window.MutationObserver) {
+        new MutationObserver(function () {
+          moveBucksCurrency(false);
+        }).observe(header, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
+      }
+
+      if (window.MutationObserver) {
+        new MutationObserver(function (mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            var added = mutations[i].addedNodes;
+            if (!added || !added.length) continue;
+            for (var n = 0; n < added.length; n++) {
+              if (nodeHasBucks(added[n])) {
+                moveBucksCurrency(false);
+                return;
+              }
+            }
+          }
+        }).observe(document.body, { childList: true, subtree: true });
+      }
+
+      // Lock relocating while the user interacts with the switcher
+      document.addEventListener(
+        'pointerdown',
+        function (e) {
+          if (e.target.closest('.buckscc-currency-box, .buckscc-select, .hxoSelectTheme')) {
+            lockMoves(2500);
+          }
+        },
+        true
+      );
+
+      document.addEventListener('BUCKS_SELECTED_CURRENCY', function () {
+        lockMoves(3000);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start);
+    } else {
+      start();
+    }
+  })();
+</script>

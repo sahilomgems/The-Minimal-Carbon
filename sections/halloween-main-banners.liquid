@@ -1,0 +1,200 @@
+{% schema %}
+{
+  "name": "🎃 Halloween Multi Banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image (optional)"
+    },
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Layout Style",
+      "default": "grid",
+      "options": [
+        { "value": "grid", "label": "Grid Layout" },
+        { "value": "slider", "label": "Slider Layout" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Banners per row (desktop)",
+      "default": 3,
+      "min": 1,
+      "max": 4,
+      "step": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Halloween Banner",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Banner Image"
+        },
+        {
+          "type": "text",
+          "id": "banner_heading",
+          "label": "Heading",
+          "default": "Spooky Collection"
+        },
+        {
+          "type": "text",
+          "id": "banner_subheading",
+          "label": "Subheading",
+          "default": "Unleash your inner monster"
+        },
+        {
+          "type": "text",
+          "id": "banner_button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "banner_button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "🎃 Halloween Multi Banner",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="halloween-multi-banner" 
+         {% if section.settings.background_image != blank %} 
+           style="background-image: url('{{ section.settings.background_image | image_url: width: 1600 }}'); background-size: cover; background-position: top;"
+         {% endif %}>
+
+  <style>
+    .halloween-multi-banner {
+      padding: 60px 20px;
+      background-color: #000;
+      background-image: radial-gradient(circle at top left, #1b1b1b, #000);
+      color: #fff;
+    }
+    .halloween-multi-banner .multi-banner-wrapper {
+      display: grid;
+      grid-template-columns: repeat(var(--columns), 1fr);
+      gap: 25px;
+      padding-top: 100px;
+    }
+    .halloween-multi-banner .banner-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(255, 80, 0, 0.3);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .halloween-multi-banner .banner-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 35px rgba(255, 80, 0, 0.6);
+    }
+    .halloween-multi-banner .banner-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .halloween-multi-banner .banner-item:hover .banner-image img {
+      transform: scale(1.05);
+    }
+    .halloween-multi-banner .banner-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      text-align: center;
+      padding: 20px;
+    }
+    .halloween-multi-banner .banner-item:hover .banner-content {
+      opacity: 1;
+    }
+    .halloween-multi-banner .banner-heading {
+      font-family: 'Creepster', cursive;
+      font-size: 2rem;
+      color: #ff6a00;
+      text-shadow: 0 0 10px #ff3c00;
+      margin-bottom: 10px;
+    }
+    .halloween-multi-banner .banner-subheading {
+      font-family: 'Vampliers', serif;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      color: #ffdab9;
+    }
+    .halloween-multi-banner .banner-button {
+      font-family: 'Vampliers', serif;
+      display: inline-block;
+      background: #ff6a00;
+      color: #000;
+      padding: 10px 25px;
+      border-radius: 40px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    .halloween-multi-banner .banner-button:hover {
+      background: #000;
+      color: #ff6a00;
+      box-shadow: 0 0 10px #ff6a00;
+    }
+
+    @media (max-width: 768px) {
+      .halloween-multi-banner .multi-banner-wrapper {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 480px) {
+      .halloween-multi-banner .multi-banner-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <div class="container">
+    <div class="multi-banner-wrapper" style="--columns: {{ section.settings.columns }};">
+        {% for block in section.blocks %}
+        {% assign b = block.settings %}
+        <div class="banner-item" {{ block.shopify_attributes }}>
+            {% if b.banner_image != blank %}
+            <div class="banner-image">
+                <img src="{{ b.banner_image | image_url: width: 800 }}" alt="{{ b.banner_heading | escape }}">
+            </div>
+            {% endif %}
+            <div class="banner-content">
+            {% if b.banner_heading != blank %}
+                <h3 class="banner-heading">{{ b.banner_heading }}</h3>
+            {% endif %}
+            {% if b.banner_subheading != blank %}
+                <p class="banner-subheading">{{ b.banner_subheading }}</p>
+            {% endif %}
+            {% if b.banner_button_text != blank %}
+                <a href="{{ b.banner_button_link }}" class="banner-button">{{ b.banner_button_text }}</a>
+            {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+  </div>
+</section>

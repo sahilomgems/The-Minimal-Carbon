@@ -1,0 +1,898 @@
+{% doc %}
+  @prompt
+    create a black friday full page also add a one ai video and also add a black friday product section
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-black-friday-page-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    overflow: hidden;
+  }
+
+  .ai-bf-hero-{{ ai_gen_id }} {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, {{ block.settings.hero_gradient_start }} 0%, {{ block.settings.hero_gradient_end }} 100%);
+  }
+
+  .ai-bf-hero-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .ai-bf-hero-badge-{{ ai_gen_id }} {
+    display: inline-block;
+    background-color: {{ block.settings.badge_bg_color }};
+    color: {{ block.settings.badge_text_color }};
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .ai-bf-hero-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.hero_title_size }}px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    line-height: 1.1;
+    color: {{ block.settings.hero_title_color }};
+  }
+
+  .ai-bf-hero-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.hero_subtitle_size }}px;
+    margin: 0 0 32px;
+    opacity: 0.9;
+    line-height: 1.5;
+  }
+
+  .ai-bf-countdown-{{ ai_gen_id }} {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin: 40px 0;
+    flex-wrap: wrap;
+  }
+
+  .ai-bf-countdown-item-{{ ai_gen_id }} {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px 24px;
+    border-radius: 12px;
+    min-width: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .ai-bf-countdown-number-{{ ai_gen_id }} {
+    font-size: 48px;
+    font-weight: 700;
+    display: block;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .ai-bf-countdown-label-{{ ai_gen_id }} {
+    font-size: 14px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    letter-spacing: 1px;
+  }
+
+  .ai-bf-cta-button-{{ ai_gen_id }} {
+    display: inline-block;
+    background-color: {{ block.settings.cta_bg_color }};
+    color: {{ block.settings.cta_text_color }};
+    padding: 18px 48px;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .ai-bf-cta-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.cta_hover_bg_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .ai-bf-video-section-{{ ai_gen_id }} {
+    padding: 80px 20px;
+    background-color: {{ block.settings.video_section_bg }};
+  }
+
+  .ai-bf-video-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-bf-video-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .ai-bf-video-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.video_title_size }}px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: {{ block.settings.video_title_color }};
+  }
+
+  .ai-bf-video-description-{{ ai_gen_id }} {
+    font-size: 18px;
+    opacity: 0.8;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .ai-bf-video-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .ai-bf-video-wrapper-{{ ai_gen_id }} iframe,
+  .ai-bf-video-wrapper-{{ ai_gen_id }} video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .ai-bf-products-section-{{ ai_gen_id }} {
+    padding: 80px 20px;
+    background-color: {{ block.settings.products_section_bg }};
+  }
+
+  .ai-bf-products-container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-bf-products-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .ai-bf-products-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.products_title_size }}px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: {{ block.settings.products_title_color }};
+  }
+
+  .ai-bf-products-subtitle-{{ ai_gen_id }} {
+    font-size: 18px;
+    opacity: 0.8;
+  }
+
+  .ai-bf-products-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px;
+  }
+
+  .ai-bf-product-card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.product_card_bg }};
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid {{ block.settings.product_card_border }};
+  }
+
+  .ai-bf-product-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-bf-product-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+  }
+
+  .ai-bf-product-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-bf-product-badge-{{ ai_gen_id }} {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: {{ block.settings.sale_badge_bg }};
+    color: {{ block.settings.sale_badge_text }};
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .ai-bf-product-info-{{ ai_gen_id }} {
+    padding: 20px;
+  }
+
+  .ai-bf-product-title-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: {{ block.settings.product_title_color }};
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ai-bf-product-price-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .ai-bf-product-price-current-{{ ai_gen_id }} {
+    font-size: 24px;
+    font-weight: 700;
+    color: {{ block.settings.sale_price_color }};
+  }
+
+  .ai-bf-product-price-original-{{ ai_gen_id }} {
+    font-size: 18px;
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+
+  .ai-bf-product-button-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.product_btn_bg }};
+    color: {{ block.settings.product_btn_text }};
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .ai-bf-product-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.product_btn_hover_bg }};
+  }
+
+  .ai-bf-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+  }
+
+  .ai-bf-empty-state-{{ ai_gen_id }} svg {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 24px;
+    opacity: 0.3;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-bf-hero-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.hero_title_size }}px * 0.6);
+    }
+
+    .ai-bf-hero-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.hero_subtitle_size }}px * 0.8);
+    }
+
+    .ai-bf-countdown-number-{{ ai_gen_id }} {
+      font-size: 36px;
+    }
+
+    .ai-bf-countdown-item-{{ ai_gen_id }} {
+      min-width: 80px;
+      padding: 16px 20px;
+    }
+
+    .ai-bf-products-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .ai-bf-video-title-{{ ai_gen_id }},
+    .ai-bf-products-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.video_title_size }}px * 0.7);
+    }
+  }
+{% endstyle %}
+
+<black-friday-page-{{ ai_gen_id }} class="ai-black-friday-page-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <section class="ai-bf-hero-{{ ai_gen_id }}">
+    <div class="ai-bf-hero-content-{{ ai_gen_id }}">
+      {% if block.settings.show_badge %}
+        <div class="ai-bf-hero-badge-{{ ai_gen_id }}">
+          {{ block.settings.badge_text }}
+        </div>
+      {% endif %}
+
+      <h1 class="ai-bf-hero-title-{{ ai_gen_id }}">
+        {{ block.settings.hero_title }}
+      </h1>
+
+      {% if block.settings.hero_subtitle != blank %}
+        <p class="ai-bf-hero-subtitle-{{ ai_gen_id }}">
+          {{ block.settings.hero_subtitle }}
+        </p>
+      {% endif %}
+
+      {% if block.settings.show_countdown %}
+        <div class="ai-bf-countdown-{{ ai_gen_id }}" data-end-date="{{ block.settings.countdown_end_date }}">
+          <div class="ai-bf-countdown-item-{{ ai_gen_id }}">
+            <span class="ai-bf-countdown-number-{{ ai_gen_id }}" data-days>00</span>
+            <span class="ai-bf-countdown-label-{{ ai_gen_id }}">Days</span>
+          </div>
+          <div class="ai-bf-countdown-item-{{ ai_gen_id }}">
+            <span class="ai-bf-countdown-number-{{ ai_gen_id }}" data-hours>00</span>
+            <span class="ai-bf-countdown-label-{{ ai_gen_id }}">Hours</span>
+          </div>
+          <div class="ai-bf-countdown-item-{{ ai_gen_id }}">
+            <span class="ai-bf-countdown-number-{{ ai_gen_id }}" data-minutes>00</span>
+            <span class="ai-bf-countdown-label-{{ ai_gen_id }}">Minutes</span>
+          </div>
+          <div class="ai-bf-countdown-item-{{ ai_gen_id }}">
+            <span class="ai-bf-countdown-number-{{ ai_gen_id }}" data-seconds>00</span>
+            <span class="ai-bf-countdown-label-{{ ai_gen_id }}">Seconds</span>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.cta_url != blank %}
+        <a href="{{ block.settings.cta_url }}" class="ai-bf-cta-button-{{ ai_gen_id }}">
+          {{ block.settings.cta_text }}
+        </a>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if block.settings.show_video_section %}
+    <section class="ai-bf-video-section-{{ ai_gen_id }}">
+      <div class="ai-bf-video-container-{{ ai_gen_id }}">
+        <div class="ai-bf-video-header-{{ ai_gen_id }}">
+          <h2 class="ai-bf-video-title-{{ ai_gen_id }}">
+            {{ block.settings.video_section_title }}
+          </h2>
+          {% if block.settings.video_section_description != blank %}
+            <p class="ai-bf-video-description-{{ ai_gen_id }}">
+              {{ block.settings.video_section_description }}
+            </p>
+          {% endif %}
+        </div>
+
+        {% if block.settings.video_url != blank %}
+          <div class="ai-bf-video-wrapper-{{ ai_gen_id }}">
+            {% if block.settings.video_url contains 'youtube.com' or block.settings.video_url contains 'youtu.be' %}
+              {% assign video_id = block.settings.video_url | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+              <iframe
+                src="https://www.youtube.com/embed/{{ video_id }}?rel=0&modestbranding=1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            {% elsif block.settings.video_url contains 'vimeo.com' %}
+              {% assign video_id = block.settings.video_url | split: '/' | last %}
+              <iframe
+                src="https://player.vimeo.com/video/{{ video_id }}"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            {% else %}
+              <video controls>
+                <source src="{{ block.settings.video_url }}" type="video/mp4">
+              </video>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="ai-bf-empty-state-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+            <p>Add a video URL to display your Black Friday promotional video</p>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if block.settings.show_products_section %}
+    <section class="ai-bf-products-section-{{ ai_gen_id }}">
+      <div class="ai-bf-products-container-{{ ai_gen_id }}">
+        <div class="ai-bf-products-header-{{ ai_gen_id }}">
+          <h2 class="ai-bf-products-title-{{ ai_gen_id }}">
+            {{ block.settings.products_section_title }}
+          </h2>
+          {% if block.settings.products_section_subtitle != blank %}
+            <p class="ai-bf-products-subtitle-{{ ai_gen_id }}">
+              {{ block.settings.products_section_subtitle }}
+            </p>
+          {% endif %}
+        </div>
+
+        {% if block.settings.product_collection != blank %}
+          <div class="ai-bf-products-grid-{{ ai_gen_id }}">
+            {% for product in block.settings.product_collection.products limit: block.settings.products_limit %}
+              <div class="ai-bf-product-card-{{ ai_gen_id }}">
+                <div class="ai-bf-product-image-wrapper-{{ ai_gen_id }}">
+                  {% if product.featured_image %}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 600 }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      class="ai-bf-product-image-{{ ai_gen_id }}"
+                      loading="lazy"
+                      width="600"
+                      height="600"
+                    >
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  {% endif %}
+
+                  {% if product.compare_at_price > product.price %}
+                    {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+                    <div class="ai-bf-product-badge-{{ ai_gen_id }}">
+                      -{{ discount }}%
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="ai-bf-product-info-{{ ai_gen_id }}">
+                  <h3 class="ai-bf-product-title-{{ ai_gen_id }}">
+                    {{ product.title }}
+                  </h3>
+
+                  <div class="ai-bf-product-price-{{ ai_gen_id }}">
+                    <span class="ai-bf-product-price-current-{{ ai_gen_id }}">
+                      {{ product.price | money }}
+                    </span>
+                    {% if product.compare_at_price > product.price %}
+                      <span class="ai-bf-product-price-original-{{ ai_gen_id }}">
+                        {{ product.compare_at_price | money }}
+                      </span>
+                    {% endif %}
+                  </div>
+
+                  <a href="{{ product.url }}" class="ai-bf-product-button-{{ ai_gen_id }}">
+                    {{ block.settings.product_btn_label }}
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="ai-bf-empty-state-{{ ai_gen_id }}">
+            {{ 'collection-1' | placeholder_svg_tag }}
+            <p>Select a collection to display Black Friday products</p>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+</black-friday-page-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BlackFridayPage{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.countdown = this.querySelector('.ai-bf-countdown-{{ ai_gen_id }}');
+      }
+
+      connectedCallback() {
+        if (this.countdown) {
+          this.initCountdown();
+        }
+      }
+
+      initCountdown() {
+        const endDate = this.countdown.dataset.endDate;
+        if (!endDate) return;
+
+        const countdownDate = new Date(endDate).getTime();
+        const daysEl = this.countdown.querySelector('[data-days]');
+        const hoursEl = this.countdown.querySelector('[data-hours]');
+        const minutesEl = this.countdown.querySelector('[data-minutes]');
+        const secondsEl = this.countdown.querySelector('[data-seconds]');
+
+        const updateCountdown = () => {
+          const now = new Date().getTime();
+          const distance = countdownDate - now;
+
+          if (distance < 0) {
+            daysEl.textContent = '00';
+            hoursEl.textContent = '00';
+            minutesEl.textContent = '00';
+            secondsEl.textContent = '00';
+            return;
+          }
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          daysEl.textContent = String(days).padStart(2, '0');
+          hoursEl.textContent = String(hours).padStart(2, '0');
+          minutesEl.textContent = String(minutes).padStart(2, '0');
+          secondsEl.textContent = String(seconds).padStart(2, '0');
+        };
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+      }
+    }
+
+    customElements.define('black-friday-page-{{ ai_gen_id }}', BlackFridayPage{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Black Friday full page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Hero section"
+    },
+    {
+      "type": "color",
+      "id": "hero_gradient_start",
+      "label": "Gradient start",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "hero_gradient_end",
+      "label": "Gradient end",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Black Friday Sale"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge background",
+      "default": "#ff0000"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "hero_title",
+      "label": "Title",
+      "default": "BLACK FRIDAY MEGA SALE"
+    },
+    {
+      "type": "color",
+      "id": "hero_title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "hero_title_size",
+      "min": 30,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 72
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subtitle",
+      "label": "Subtitle",
+      "default": "Up to 70% off on selected items. Limited time only!"
+    },
+    {
+      "type": "range",
+      "id": "hero_subtitle_size",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Countdown timer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Show countdown",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "countdown_end_date",
+      "label": "End date",
+      "default": "2025-11-30T23:59:59",
+      "info": "Format: YYYY-MM-DDTHH:MM:SS"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Button background",
+      "default": "#ff0000"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cta_hover_bg_color",
+      "label": "Button hover background",
+      "default": "#cc0000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Video section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_video_section",
+      "label": "Show video section",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "video_section_bg",
+      "label": "Background",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "video_section_title",
+      "label": "Title",
+      "default": "Watch Our Black Friday Preview"
+    },
+    {
+      "type": "color",
+      "id": "video_title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "video_title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "video_section_description",
+      "label": "Description",
+      "default": "Discover amazing deals and exclusive offers in our Black Friday collection"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "YouTube, Vimeo, or direct video file URL"
+    },
+    {
+      "type": "header",
+      "content": "Products section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_products_section",
+      "label": "Show products section",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "products_section_bg",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "products_section_title",
+      "label": "Title",
+      "default": "Black Friday Deals"
+    },
+    {
+      "type": "color",
+      "id": "products_title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "products_title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "products_section_subtitle",
+      "label": "Subtitle",
+      "default": "Don't miss out on these incredible offers"
+    },
+    {
+      "type": "collection",
+      "id": "product_collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "label": "Products to show",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Product card style"
+    },
+    {
+      "type": "color",
+      "id": "product_card_bg",
+      "label": "Card background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "product_card_border",
+      "label": "Card border",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Product title",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "sale_price_color",
+      "label": "Sale price",
+      "default": "#ff0000"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_bg",
+      "label": "Sale badge background",
+      "default": "#ff0000"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_text",
+      "label": "Sale badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "product_btn_label",
+      "label": "Button label",
+      "default": "View Product"
+    },
+    {
+      "type": "color",
+      "id": "product_btn_bg",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "product_btn_text",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "product_btn_hover_bg",
+      "label": "Button hover background",
+      "default": "#ff0000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Black Friday full page"
+    }
+  ]
+}
+{% endschema %}

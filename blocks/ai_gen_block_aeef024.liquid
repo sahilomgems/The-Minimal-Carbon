@@ -1,0 +1,272 @@
+{% doc %}
+  @prompt
+    Section 2: Auto-Scrolling Valentine Line (Right to Left)
+    Purpose
+    
+    Add movement and luxury-brand feel while reinforcing Valentine messaging.
+    
+    Layout
+    
+    Horizontal marquee / auto-scroll
+    
+    Direction: Right to Left
+    
+    Continuous loop
+    
+    Content
+    
+    Repeating elements:
+    
+    Ring icons
+    
+    Small heart icons
+    
+    Valentine phrases
+    
+    Example Text
+    
+    💍 Valentine Special • Made With Love • Perfect Gift For Her • Forever Starts Here • 💖
+    
+    Shopify Settings (Editable)
+    
+    Enable / disable auto-scroll
+    
+    Text content
+    
+    Scroll speed
+    
+    Icon selection
+    
+    Background color
+    
+    Text color
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-valentine-marquee-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    overflow: hidden;
+    padding: {{ block.settings.padding_vertical }}px 0;
+    position: relative;
+  }
+
+  .ai-valentine-marquee__track-{{ ai_gen_id }} {
+    display: flex;
+    width: fit-content;
+    animation: ai-valentine-scroll-{{ ai_gen_id }} {{ block.settings.scroll_speed }}s linear infinite;
+    gap: {{ block.settings.item_spacing }}px;
+  }
+
+  {% if block.settings.enable_scroll == false %}
+    .ai-valentine-marquee__track-{{ ai_gen_id }} {
+      animation-play-state: paused;
+    }
+  {% endif %}
+
+  .ai-valentine-marquee__item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.item_spacing }}px;
+    white-space: nowrap;
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    font-weight: {{ block.settings.text_weight }};
+  }
+
+  .ai-valentine-marquee__icon-{{ ai_gen_id }} {
+    font-size: {{ block.settings.icon_size }}px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  @keyframes ai-valentine-scroll-{{ ai_gen_id }} {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-valentine-marquee__item-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.85 }}px;
+    }
+
+    .ai-valentine-marquee__icon-{{ ai_gen_id }} {
+      font-size: {{ block.settings.icon_size | times: 0.85 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-valentine-marquee-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-valentine-marquee__track-{{ ai_gen_id }}">
+    {% for i in (1..2) %}
+      {% liquid
+        assign items = block.settings.marquee_text | split: '•'
+        for item in items
+          assign trimmed_item = item | strip
+          if trimmed_item != blank
+            echo '<div class="ai-valentine-marquee__item-' | append: ai_gen_id | append: '">'
+            
+            if block.settings.show_ring_icon
+              echo '<span class="ai-valentine-marquee__icon-' | append: ai_gen_id | append: '">💍</span>'
+            endif
+            
+            echo '<span>' | append: trimmed_item | append: '</span>'
+            
+            if block.settings.show_heart_icon
+              echo '<span class="ai-valentine-marquee__icon-' | append: ai_gen_id | append: '">💖</span>'
+            endif
+            
+            echo '</div>'
+          endif
+        endfor
+      %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Valentine marquee",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "marquee_text",
+      "label": "Marquee text",
+      "default": "Valentine Special • Made With Love • Perfect Gift For Her • Forever Starts Here",
+      "info": "Separate phrases with '•' symbol"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ring_icon",
+      "label": "Show ring icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heart_icon",
+      "label": "Show heart icon",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_scroll",
+      "label": "Enable auto-scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "s",
+      "label": "Scroll speed",
+      "default": 30,
+      "info": "Lower number = faster speed"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#cb8161"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Item spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Valentine marquee"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,189 @@
+<a
+  href="https://wa.me/12243811548?text={{ 'Hey there, I have a question!' | url_encode }}"
+  class="whatsapp-float"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Chat on WhatsApp"
+  title="Chat on WhatsApp"
+  onclick="window.open(this.href, '_blank', 'noopener,noreferrer'); return false;"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M16.004 0h-.008C7.174 0 0 7.176 0 16.004c0 2.824.736 5.582 2.134 8.01L.07 31.34l7.53-1.975A15.96 15.96 0 0 0 16.004 32C24.826 32 32 24.822 32 15.996 32 7.176 24.826 0 16.004 0zm9.292 22.606c-.392 1.104-1.942 2.022-3.182 2.288-.846.178-1.95.32-5.668-1.218-4.756-1.966-7.812-6.788-8.048-7.102-.226-.314-1.9-2.53-1.9-4.826s1.202-3.424 1.63-3.894c.428-.47.934-.588 1.246-.588.312 0 .624.002.898.016.288.014.674-.11 1.054.804.392.942 1.332 3.252 1.45 3.49.118.236.196.514.04.826-.156.314-.234.51-.462.784-.228.274-.48.612-.684.822-.228.236-.466.492-.2.964.266.47 1.182 1.95 2.538 3.158 1.744 1.554 3.214 2.038 3.672 2.266.458.228.726.192.994-.114.268-.308 1.15-1.342 1.456-1.804.306-.47.612-.39 1.032-.234.422.156 2.67 1.26 3.128 1.49.458.228.762.342.874.534.11.192.11 1.11-.282 2.214z"/>
+  </svg>
+</a>
+<script>
+  (function () {
+    var ICON = 56;
+    var SIDE = 10;
+    var GAP = 12;
+    var placing = false;
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 1050px)').matches;
+    }
+
+    function isVisible(el) {
+      if (!el) return false;
+      var r = el.getBoundingClientRect();
+      var s = window.getComputedStyle(el);
+      return r.width > 8 && r.height > 8 && s.display !== 'none' && s.visibility !== 'hidden' && s.opacity !== '0';
+    }
+
+    function navHeight() {
+      var nav = document.querySelector('.header-bottom-fixed');
+      if (nav && isVisible(nav) && window.getComputedStyle(nav).display !== 'none') {
+        return Math.ceil(nav.getBoundingClientRect().height);
+      }
+      return isMobile() ? 50 : 0;
+    }
+
+    function rowBottom() {
+      return navHeight() + GAP;
+    }
+
+    function pin(el, props) {
+      if (!el) return;
+      for (var k in props) {
+        if (Object.prototype.hasOwnProperty.call(props, k)) {
+          el.style.setProperty(k, props[k], 'important');
+        }
+      }
+    }
+
+    function placeWhatsApp() {
+      var wa = document.querySelector('.whatsapp-float');
+      if (!wa) return;
+
+      if (isMobile()) {
+        pin(wa, {
+          position: 'fixed',
+          left: SIDE + 'px',
+          right: 'auto',
+          top: 'auto',
+          bottom: rowBottom() + 'px',
+          width: ICON + 'px',
+          height: ICON + 'px',
+          'z-index': '10002'
+        });
+      } else {
+        pin(wa, {
+          left: '24px',
+          bottom: '24px',
+          width: '60px',
+          height: '60px',
+          'z-index': '9999'
+        });
+      }
+    }
+
+    function hideAppWhatsApp() {
+      var wa = document.querySelector('.whatsapp-float');
+      var nodes = document.querySelectorAll(
+        'a[href*="wa.me"], a[href*="api.whatsapp.com"], [id*="whatsapp" i], iframe[src*="whatsapp" i]'
+      );
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (wa && (el === wa || wa.contains(el))) continue;
+        if (el.classList && el.classList.contains('whatsapp-float')) continue;
+        if (window.getComputedStyle(el).position !== 'fixed') continue;
+        el.style.setProperty('display', 'none', 'important');
+      }
+    }
+
+    function isTidio(el) {
+      if (!el) return false;
+      var hay = ((el.id || '') + ' ' + (el.className || '') + ' ' + (el.title || '') + ' ' + (el.src || '')).toLowerCase();
+      return hay.indexOf('tidio') !== -1;
+    }
+
+    function placeScrollTop() {
+      var btn = document.querySelector('.js-scroll-to-top, .scroll-to-top');
+      if (!btn || !isMobile()) return;
+      pin(btn, {
+        right: SIDE + 'px',
+        left: 'auto',
+        bottom: rowBottom() + ICON + GAP + 'px',
+        'z-index': '10001'
+      });
+    }
+
+    function isReserved(el) {
+      if (!el) return true;
+      if (el.classList && (el.classList.contains('whatsapp-float') || el.classList.contains('scroll-to-top') || el.classList.contains('header-bottom-fixed'))) return true;
+      if (el.closest && el.closest('.whatsapp-float, .scroll-to-top, .header-bottom-fixed, .cookie-consent, .newsletter-popup, .drawer, .menu-mobile')) return true;
+      if (isTidio(el)) return true;
+      return false;
+    }
+
+    function placeShopWithAI() {
+      if (!isMobile()) return;
+      var bottom = rowBottom();
+      var found = [];
+
+      var labeled = document.querySelectorAll('[aria-label*="Shop with AI" i], [title*="Shop with AI" i]');
+      for (var i = 0; i < labeled.length; i++) found.push(labeled[i]);
+
+      var nodes = document.body.querySelectorAll('iframe, button, a, div');
+      for (var n = 0; n < nodes.length; n++) {
+        var el = nodes[n];
+        if (isReserved(el)) continue;
+        var style = window.getComputedStyle(el);
+        if (style.position !== 'fixed') continue;
+        if (!isVisible(el)) continue;
+        var r = el.getBoundingClientRect();
+        if (r.width < 110 || r.width > 280) continue;
+        if (r.height < 36 || r.height > 72) continue;
+        if (window.innerHeight - r.bottom > 180) continue;
+        found.push(el);
+      }
+
+      var seen = [];
+      for (var f = 0; f < found.length; f++) {
+        var node = found[f];
+        if (seen.indexOf(node) !== -1) continue;
+        seen.push(node);
+        pin(node, {
+          bottom: bottom + 'px',
+          left: '50%',
+          right: 'auto',
+          top: 'auto',
+          transform: 'translateX(-50%)',
+          'z-index': '10001'
+        });
+      }
+    }
+
+    function layout() {
+      if (placing) return;
+      placing = true;
+      try {
+        placeWhatsApp();
+        hideAppWhatsApp();
+        placeScrollTop();
+        placeShopWithAI();
+      } finally {
+        placing = false;
+      }
+    }
+
+    function start() {
+      layout();
+
+      var tries = 0;
+      var fast = setInterval(function () {
+        layout();
+        tries += 1;
+        if (tries > 40) clearInterval(fast);
+      }, 400);
+
+      window.addEventListener('resize', layout);
+      window.addEventListener('orientationchange', layout);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start);
+    } else {
+      start();
+    }
+  })();
+</script>

@@ -1,0 +1,1486 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} .testimonial-section {
+    --ts-bg: {{ section.settings.bg_color }};
+    --ts-card-bg: {{ section.settings.card_bg }};
+    --ts-heading: {{ section.settings.heading_color }};
+    --ts-subheading: {{ section.settings.subheading_color }};
+    --ts-text: {{ section.settings.text_color }};
+    --ts-name: {{ section.settings.name_color }};
+    --ts-handle: {{ section.settings.handle_color }};
+    --ts-star: {{ section.settings.star_color }};
+    --ts-star-empty: {{ section.settings.star_empty_color }};
+    --ts-arrow: {{ section.settings.arrow_color }};
+    --ts-arrow-bg: {{ section.settings.arrow_bg }};
+    --ts-arrow-border: {{ section.settings.arrow_border }};
+    --ts-radius: {{ section.settings.card_radius }}px;
+    --ts-gap: {{ section.settings.card_gap }}px;
+    --ts-pad-top: {{ section.settings.padding_top }}px;
+    --ts-pad-bottom: {{ section.settings.padding_bottom }}px;
+    --ts-pad-top-m: {{ section.settings.padding_top_mobile }}px;
+    --ts-pad-bottom-m: {{ section.settings.padding_bottom_mobile }}px;
+    --ts-cols: {{ section.settings.columns_desktop }};
+    --ts-cols-t: {{ section.settings.columns_tablet }};
+    --ts-visible-m: {{ section.settings.visible_mobile }};
+  }
+{%- endstyle -%}
+
+<section
+  id="Testimonials-{{ section.id }}"
+  class="testimonial-section"
+  style="background-color: var(--ts-bg);"
+>
+  <div class="testimonial-section__inner">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div
+        class="testimonial-section__header"
+        style="text-align: {{ section.settings.heading_alignment }};"
+      >
+        {%- if section.settings.heading != blank -%}
+          <h2
+            class="testimonial-section__heading"
+            style="
+              color: var(--ts-heading);
+              font-size: {{ section.settings.heading_size }}px;
+              font-weight: {{ section.settings.heading_weight }};
+              margin-bottom: {{ section.settings.heading_spacing }}px;
+            "
+          >
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.subheading != blank -%}
+          <p
+            class="testimonial-section__subheading"
+            style="
+              color: var(--ts-subheading);
+              font-size: {{ section.settings.subheading_size }}px;
+              margin-bottom: {{ section.settings.subheading_spacing }}px;
+            "
+          >
+            {{ section.settings.subheading }}
+          </p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="testimonial-section__slider-wrap">
+        {%- if section.settings.show_arrows -%}
+          <button
+            type="button"
+            class="testimonial-section__arrow testimonial-section__arrow--prev"
+            data-ts-prev
+            aria-label="Previous"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 6L9 12l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="testimonial-section__arrow testimonial-section__arrow--next"
+            data-ts-next
+            aria-label="Next"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        {%- endif -%}
+
+        <div class="testimonial-section__track" data-ts-track role="list">
+          {%- for block in section.blocks -%}
+            <article
+              class="testimonial-section__card"
+              role="listitem"
+              {{ block.shopify_attributes }}
+            >
+              <div
+                class="testimonial-section__stars"
+                aria-label="{{ block.settings.star_count }} out of 5 stars"
+              >
+                {%- for i in (1..5) -%}
+                  <span
+                    class="testimonial-section__star{% if i > block.settings.star_count %} testimonial-section__star--empty{% endif %}"
+                    aria-hidden="true"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3 6.2 20.4l1.1-6.5L2.6 9.3l6.5-.9L12 2.5z"/>
+                    </svg>
+                  </span>
+                {%- endfor -%}
+              </div>
+
+              {%- if block.settings.review_text != blank -%}
+                <div class="testimonial-section__quote-wrap">
+                  <div
+                    class="testimonial-section__quote is-clamped"
+                    data-ts-quote
+                    style="
+                      color: var(--ts-text);
+                      font-size: {{ section.settings.quote_size }}px;
+                    "
+                  >
+                    {{ block.settings.review_text }}
+                  </div>
+                  <button
+                    type="button"
+                    class="testimonial-section__read-more"
+                    data-ts-read-more
+                    hidden
+                    aria-expanded="false"
+                  >
+                    {{ section.settings.read_more_label }}
+                  </button>
+                </div>
+              {%- endif -%}
+
+              <div class="testimonial-section__author">
+                <div class="testimonial-section__avatar">
+                  {%- if block.settings.avatar != blank -%}
+                    {{
+                      block.settings.avatar
+                      | image_url: width: 120
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '60, 90, 120',
+                        sizes: '48px',
+                        alt: block.settings.customer_name,
+                        class: 'testimonial-section__avatar-img'
+                    }}
+                  {%- else -%}
+                    <span class="testimonial-section__avatar-fallback" aria-hidden="true">
+                      {{ block.settings.customer_name | slice: 0 | upcase }}
+                    </span>
+                  {%- endif -%}
+                </div>
+
+                <div class="testimonial-section__meta">
+                  {%- if block.settings.customer_name != blank -%}
+                    <p
+                      class="testimonial-section__name"
+                      style="color: var(--ts-name);"
+                    >
+                      {{ block.settings.customer_name }}
+                    </p>
+                  {%- endif -%}
+
+                  {%- if block.settings.customer_handle != blank -%}
+                    <p
+                      class="testimonial-section__handle"
+                      style="color: var(--ts-handle);"
+                    >
+                      {{ block.settings.customer_handle }}
+                    </p>
+                  {%- endif -%}
+                </div>
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.show_dots_mobile -%}
+          <div
+            class="testimonial-section__dots"
+            data-ts-dots
+            role="tablist"
+            aria-label="Testimonials pagination"
+          ></div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .testimonial-section {
+    width: 100%;
+    padding: var(--ts-pad-top) 40px var(--ts-pad-bottom);
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__inner {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__header {
+    margin: 0 auto {{ section.settings.header_spacing }}px;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__heading {
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__subheading {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__slider-wrap {
+    position: relative;
+    padding: 0 calc({{ section.settings.arrow_size | divided_by: 2.0 }}px + 12px);
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__track {
+    display: flex;
+    gap: var(--ts-gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
+    padding: 4px 0;
+    overscroll-behavior-x: contain;
+  }
+
+  /* Snap + scrollLeft jumps cause vibrate — disable snap when infinite is on */
+  #shopify-section-{{ section.id }} .testimonial-section__track.is-infinite {
+    scroll-snap-type: none;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__track.is-dragging,
+  #shopify-section-{{ section.id }} .testimonial-section__track.is-jumping {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__track::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__card {
+    flex: 0 0 calc((100% - (var(--ts-gap) * (var(--ts-cols) - 1))) / var(--ts-cols));
+    max-width: calc((100% - (var(--ts-gap) * (var(--ts-cols) - 1))) / var(--ts-cols));
+    scroll-snap-align: start;
+    background: var(--ts-card-bg);
+    border-radius: var(--ts-radius);
+    padding: {{ section.settings.card_padding }}px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    min-height: {{ section.settings.card_min_height }}px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: {{ section.settings.stars_spacing }}px;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__star {
+    color: var(--ts-star);
+    display: inline-flex;
+    line-height: 0;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__star--empty {
+    color: var(--ts-star-empty);
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__star svg {
+    width: {{ section.settings.star_size }}px;
+    height: {{ section.settings.star_size }}px;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__quote-wrap {
+    width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__quote {
+    margin: 0;
+    line-height: 1.55;
+    font-weight: 400;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__quote.is-clamped {
+    max-height: calc(1.55em * 5);
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__quote p {
+    margin: 10px 0px;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__quote p::before {
+    content: "“";
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__quote p::after {
+    content: "”";
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__quote strong,
+  #shopify-section-{{ section.id }} .testimonial-section__quote b {
+    font-weight: 700;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__read-more {
+    display: block;
+    margin-top: 8px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: {{ section.settings.read_more_color }};
+    font-size: {{ section.settings.read_more_size }}px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    line-height: 1.3;
+    text-align: right;
+    width: fit-content;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__read-more[hidden] {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: {{ section.settings.author_spacing }}px;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__avatar {
+    width: {{ section.settings.avatar_size }}px;
+    height: {{ section.settings.avatar_size }}px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__avatar-fallback {
+    font-size: 14px;
+    font-weight: 600;
+    color: #777;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__meta {
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__name {
+    margin: 0;
+    font-size: {{ section.settings.name_size }}px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__handle {
+    margin: 2px 0 0;
+    font-size: {{ section.settings.handle_size }}px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    transform: translateY(-50%);
+    width: {{ section.settings.arrow_size }}px;
+    height: {{ section.settings.arrow_size }}px;
+    border-radius: 50%;
+    border: 1px solid var(--ts-arrow-border);
+    background: var(--ts-arrow-bg);
+    color: var(--ts-arrow);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: auto;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__arrow:hover {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__arrow--prev {
+    left: 0;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__arrow--next {
+    right: 0;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__dots {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 18px;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__dots[hidden] {
+    display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__dot {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: {{ section.settings.dot_color }};
+    opacity: 0.35;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-section__dot.is-active {
+    opacity: 1;
+    background: {{ section.settings.dot_active_color }};
+    transform: scale(1.2);
+  }
+
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ section.id }} .testimonial-section__card {
+      flex-basis: calc((100% - (var(--ts-gap) * (var(--ts-cols-t) - 1))) / var(--ts-cols-t));
+      max-width: calc((100% - (var(--ts-gap) * (var(--ts-cols-t) - 1))) / var(--ts-cols-t));
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__heading {
+      font-size: {{ section.settings.heading_size_tablet }}px !important;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .testimonial-section {
+      padding: var(--ts-pad-top-m) 16px var(--ts-pad-bottom-m);
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__heading {
+      font-size: {{ section.settings.heading_size_mobile }}px !important;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__subheading {
+      font-size: {{ section.settings.subheading_size_mobile }}px !important;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__card {
+      flex-basis: calc((100% - (var(--ts-gap) * (var(--ts-visible-m) - 1))) / var(--ts-visible-m));
+      max-width: calc((100% - (var(--ts-gap) * (var(--ts-visible-m) - 1))) / var(--ts-visible-m));
+      padding: {{ section.settings.card_padding_mobile }}px;
+      min-height: {{ section.settings.card_min_height_mobile }}px;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__quote {
+      font-size: {{ section.settings.quote_size_mobile }}px !important;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__track {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__track.is-infinite {
+      scroll-snap-type: none;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__slider-wrap {
+      padding: 0{% if section.settings.show_arrows_mobile %} calc({{ section.settings.arrow_size | divided_by: 2.0 }}px + 8px){% endif %};
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__arrow {
+      display: {% if section.settings.show_arrows_mobile %}inline-flex{% else %}none{% endif %};
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__arrow--prev {
+      left: 0;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__arrow--next {
+      right: 0;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-section__dots {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.getElementById('Testimonials-{{ section.id }}');
+    if (!root) return;
+
+    var track = root.querySelector('[data-ts-track]');
+    var prev = root.querySelector('[data-ts-prev]');
+    var next = root.querySelector('[data-ts-next]');
+    var dotsWrap = root.querySelector('[data-ts-dots]');
+    if (!track) return;
+
+    var infiniteEnabled = {{ section.settings.infinite_scroll | json }};
+    var originalCount = 0;
+    var setWidth = 0;
+    var looping = false;
+    var dots = [];
+    var isTouching = false;
+    var isDown = false;
+    var startX = 0;
+    var startScroll = 0;
+    var moved = false;
+    var scrollRaf = null;
+    var settleTimer = null;
+
+    function getCards() {
+      return Array.prototype.slice.call(track.querySelectorAll('.testimonial-section__card'));
+    }
+
+    function getOriginalCards() {
+      return getCards().filter(function (card) {
+        return !card.classList.contains('is-clone');
+      });
+    }
+
+    function getGap() {
+      var styles = window.getComputedStyle(track);
+      return parseFloat(styles.columnGap || styles.gap) || 0;
+    }
+
+    function getStep() {
+      var item = getOriginalCards()[0] || track.querySelector('.testimonial-section__card');
+      if (!item) return track.clientWidth;
+      return item.getBoundingClientRect().width + getGap();
+    }
+
+    function measureSetWidth() {
+      var count = originalCount || getOriginalCards().length;
+      var step = getStep();
+      return count > 0 && step > 0 ? count * step : 0;
+    }
+
+    function quietJump(left) {
+      if (looping) return;
+      looping = true;
+      track.classList.add('is-jumping');
+      track.style.scrollBehavior = 'auto';
+      track.scrollLeft = left;
+      requestAnimationFrame(function () {
+        track.scrollLeft = left;
+        track.classList.remove('is-jumping');
+        track.style.scrollBehavior = '';
+        looping = false;
+      });
+    }
+
+    function setupInfinite() {
+      if (!infiniteEnabled) return;
+      var cards = getCards();
+      if (cards.length < 2) {
+        infiniteEnabled = false;
+        return;
+      }
+
+      originalCount = cards.length;
+      track.classList.add('is-infinite');
+
+      var fragStart = document.createDocumentFragment();
+      var fragEnd = document.createDocumentFragment();
+
+      cards.forEach(function (card) {
+        var cloneStart = card.cloneNode(true);
+        var cloneEnd = card.cloneNode(true);
+        cloneStart.classList.add('is-clone');
+        cloneEnd.classList.add('is-clone');
+        cloneStart.setAttribute('aria-hidden', 'true');
+        cloneEnd.setAttribute('aria-hidden', 'true');
+        fragStart.appendChild(cloneStart);
+        fragEnd.appendChild(cloneEnd);
+      });
+
+      track.insertBefore(fragStart, track.firstChild);
+      track.appendChild(fragEnd);
+
+      setWidth = measureSetWidth();
+      quietJump(setWidth);
+    }
+
+    function normalizeLoop() {
+      if (!infiniteEnabled || looping || !setWidth) return;
+      if (isDown || isTouching) return;
+
+      var sl = track.scrollLeft;
+      // Dead-zone avoids subpixel re-jump vibrate (must NOT use 0.5 / 1.5 mid-set)
+      if (sl < setWidth - 8) {
+        quietJump(sl + setWidth);
+      } else if (sl >= setWidth * 2 - 8) {
+        quietJump(sl - setWidth);
+      }
+    }
+
+    function scheduleNormalize() {
+      if (!infiniteEnabled) return;
+      if (settleTimer) clearTimeout(settleTimer);
+      settleTimer = setTimeout(function () {
+        settleTimer = null;
+        if (isDown || isTouching || looping) return;
+        normalizeLoop();
+        updateUI();
+      }, 140);
+    }
+
+    function getSlideCount() {
+      return originalCount || getOriginalCards().length || 1;
+    }
+
+    function getActiveIndex() {
+      var count = getSlideCount();
+      var step = getStep();
+      if (!count || !step) return 0;
+
+      if (infiniteEnabled && setWidth > 0) {
+        var relative = ((track.scrollLeft - setWidth) % setWidth + setWidth) % setWidth;
+        return ((Math.round(relative / step) % count) + count) % count;
+      }
+
+      var cards = getOriginalCards();
+      var trackLeft = track.getBoundingClientRect().left;
+      var best = 0;
+      var bestDist = Infinity;
+      cards.forEach(function (card, i) {
+        var dist = Math.abs(card.getBoundingClientRect().left - trackLeft);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+      });
+      return best;
+    }
+
+    function setupDots() {
+      if (!dotsWrap) return;
+      dotsWrap.innerHTML = '';
+      dots = [];
+      var count = getSlideCount();
+      if (count < 2) {
+        dotsWrap.setAttribute('hidden', '');
+        return;
+      }
+      dotsWrap.removeAttribute('hidden');
+      for (var i = 0; i < count; i++) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'testimonial-section__dot' + (i === 0 ? ' is-active' : '');
+        btn.setAttribute('aria-label', 'Go to testimonial ' + (i + 1));
+        btn.setAttribute('data-ts-dot-index', String(i));
+        dotsWrap.appendChild(btn);
+        dots.push(btn);
+      }
+    }
+
+    function updateDots() {
+      if (!dots.length) return;
+      var active = getActiveIndex();
+      dots.forEach(function (dot, index) {
+        if (index === active) {
+          dot.classList.add('is-active');
+          dot.setAttribute('aria-current', 'true');
+        } else {
+          dot.classList.remove('is-active');
+          dot.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    function updateUI() {
+      var count = getSlideCount();
+      var active = getActiveIndex();
+
+      if (infiniteEnabled) {
+        if (prev) prev.disabled = count < 2;
+        if (next) next.disabled = count < 2;
+      } else {
+        if (prev) prev.disabled = active <= 0;
+        if (next) next.disabled = active >= count - 1;
+      }
+      updateDots();
+    }
+
+    function goToIndex(index) {
+      var count = getSlideCount();
+      if (!count) return;
+      index = ((index % count) + count) % count;
+
+      var cards = getOriginalCards();
+      var card = cards[index];
+      if (!card) return;
+
+      // Scroll relative to current view — works with clones + infinite
+      var delta = card.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      track.scrollBy({ left: delta, behavior: 'smooth' });
+
+      dots.forEach(function (dot, i) {
+        if (i === index) {
+          dot.classList.add('is-active');
+          dot.setAttribute('aria-current', 'true');
+        } else {
+          dot.classList.remove('is-active');
+          dot.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    function scrollByDir(dir) {
+      var count = getSlideCount();
+      var step = getStep();
+      if (count < 2 || !step) return;
+
+      // Always move one card forward/back so infinite loop feels continuous
+      track.scrollBy({ left: dir * step, behavior: 'smooth' });
+      updateDots();
+    }
+
+    if (dotsWrap) {
+      dotsWrap.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-ts-dot-index]');
+        if (!btn || !dotsWrap.contains(btn)) return;
+        e.preventDefault();
+        var index = parseInt(btn.getAttribute('data-ts-dot-index'), 10);
+        if (isNaN(index)) return;
+        goToIndex(index);
+      });
+    }
+
+    if (prev) {
+      prev.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        scrollByDir(-1);
+      });
+    }
+    if (next) {
+      next.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        scrollByDir(1);
+      });
+    }
+
+    track.addEventListener('scroll', function () {
+      if (looping) return;
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(function () {
+        scrollRaf = null;
+        updateDots();
+      });
+    }, { passive: true });
+
+    window.addEventListener('resize', function () {
+      if (infiniteEnabled) {
+        setWidth = measureSetWidth();
+        quietJump(setWidth + getActiveIndex() * getStep());
+      }
+      updateUI();
+    });
+
+    track.addEventListener('scrollend', function () {
+      if (infiniteEnabled) scheduleNormalize();
+      else updateUI();
+    });
+
+    track.addEventListener('mousedown', function (e) {
+      if (e.button !== 0) return;
+      if (e.target.closest('[data-ts-read-more]')) return;
+      isDown = true;
+      moved = false;
+      startX = e.pageX;
+      startScroll = track.scrollLeft;
+      track.classList.add('is-dragging');
+    });
+
+    function endDrag() {
+      if (!isDown) return;
+      isDown = false;
+      track.classList.remove('is-dragging');
+      if (infiniteEnabled) scheduleNormalize();
+      else updateUI();
+    }
+
+    window.addEventListener('mouseup', endDrag);
+    track.addEventListener('mouseleave', endDrag);
+
+    track.addEventListener('mousemove', function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var dx = e.pageX - startX;
+      if (Math.abs(dx) > 3) moved = true;
+      track.scrollLeft = startScroll - dx;
+    });
+
+    track.addEventListener('touchstart', function () {
+      isTouching = true;
+    }, { passive: true });
+
+    track.addEventListener('touchend', function () {
+      isTouching = false;
+      if (infiniteEnabled) scheduleNormalize();
+      else updateUI();
+    }, { passive: true });
+
+    track.addEventListener('touchcancel', function () {
+      isTouching = false;
+      if (infiniteEnabled) scheduleNormalize();
+      else updateUI();
+    }, { passive: true });
+
+    track.addEventListener('click', function (e) {
+      if (e.target.closest('[data-ts-read-more]')) return;
+      if (!moved) return;
+      e.preventDefault();
+      e.stopPropagation();
+      moved = false;
+    }, true);
+
+    track.addEventListener('dragstart', function (e) {
+      e.preventDefault();
+    });
+
+    var readMoreLabel = {{ section.settings.read_more_label | json }};
+    var readLessLabel = {{ section.settings.read_less_label | json }};
+
+    function setupReadMore() {
+      root.querySelectorAll('.testimonial-section__card:not(.is-clone) [data-ts-quote]').forEach(function (quote) {
+        var btn = quote.parentElement.querySelector('[data-ts-read-more]');
+        if (!btn) return;
+
+        quote.classList.add('is-clamped');
+        btn.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+        btn.textContent = readMoreLabel;
+
+        requestAnimationFrame(function () {
+          if (quote.scrollHeight > quote.clientHeight + 1) {
+            btn.hidden = false;
+          }
+        });
+      });
+    }
+
+    root.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-ts-read-more]');
+      if (!btn || !root.contains(btn)) return;
+      if (btn.closest('.is-clone')) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      moved = false;
+
+      var quote = btn.parentElement.querySelector('[data-ts-quote]');
+      if (!quote) return;
+
+      var expanded = quote.classList.contains('is-clamped') === false;
+      if (expanded) {
+        quote.classList.add('is-clamped');
+        btn.textContent = readMoreLabel;
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        quote.classList.remove('is-clamped');
+        btn.textContent = readLessLabel;
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    setupInfinite();
+    if (!originalCount) originalCount = getOriginalCards().length;
+    setupDots();
+    setupReadMore();
+    window.addEventListener('resize', setupReadMore);
+    updateUI();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Testimonial Slider",
+  "tag": "section",
+  "class": "section-testimonials",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Testimonials"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "What our customers are saying"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_size_tablet",
+      "min": 20,
+      "max": 56,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size (tablet)",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 20,
+      "max": 44,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size (mobile)",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Space below heading",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size (mobile)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "subheading_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Space below subheading",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Space below header",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Cards visible (desktop)",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Cards visible (laptop)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "visible_mobile",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "label": "Cards visible (mobile)",
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Slider behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "infinite_scroll",
+      "label": "Enable infinite scroll",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card corner radius",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_padding_mobile",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Card padding (mobile)",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "card_min_height",
+      "min": 180,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "label": "Card min height",
+      "default": 260
+    },
+    {
+      "type": "range",
+      "id": "card_min_height_mobile",
+      "min": 160,
+      "max": 360,
+      "step": 10,
+      "unit": "px",
+      "label": "Card min height (mobile)",
+      "default": 220
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Quote text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "quote_size",
+      "min": 13,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Quote size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "quote_size_mobile",
+      "min": 13,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Quote size (mobile)",
+      "default": 15
+    },
+    {
+      "type": "text",
+      "id": "read_more_label",
+      "label": "Read more label",
+      "default": "Read more"
+    },
+    {
+      "type": "text",
+      "id": "read_less_label",
+      "label": "Read less label",
+      "default": "Read less"
+    },
+    {
+      "type": "color",
+      "id": "read_more_color",
+      "label": "Read more color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "read_more_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Read more size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Stars"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#22c55e"
+    },
+    {
+      "type": "color",
+      "id": "star_empty_color",
+      "label": "Empty star color",
+      "default": "#d4d4d4"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Star size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "stars_spacing",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Space below stars",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Author"
+    },
+    {
+      "type": "range",
+      "id": "avatar_size",
+      "min": 32,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Avatar size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Name color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "handle_color",
+      "label": "Handle color",
+      "default": "#8a8a8a"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Name size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "handle_size",
+      "min": 11,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Handle size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "author_spacing",
+      "min": 10,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Space above author",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Arrows"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows_mobile",
+      "label": "Show arrows on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots_mobile",
+      "label": "Show dots on mobile",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 28,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "Arrow size",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg",
+      "label": "Arrow background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_border",
+      "label": "Arrow border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top (mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom (mobile)",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "range",
+          "id": "star_count",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "richtext",
+          "id": "review_text",
+          "label": "Review text",
+          "default": "<p>Just updated my website from a template to a custom design and the difference is night and day. Everything feels sharper, faster and more “me.” Even my old content looks <strong>improved</strong> somehow.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Avatar"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer name",
+          "default": "Isabella López"
+        },
+        {
+          "type": "text",
+          "id": "customer_handle",
+          "label": "Handle / username",
+          "default": "puckish_glitter_44"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial Slider",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}

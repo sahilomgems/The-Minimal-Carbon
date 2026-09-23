@@ -1,0 +1,59 @@
+<div class="header-sticky">
+	<div class="container">
+		<div class="header-center__inner logo-sticky">
+			<div class="header-logo" itemscope itemtype="http://schema.org/Organization">
+				{%- assign current_iso_code = request.locale.iso_code  | split: "-" -%}
+				{%- if request.locale.primary == true -%}
+					{%- assign url = "" -%}
+				{%- else -%}
+					{%- assign url = current_iso_code[0] -%}
+				{%- endif -%}
+				{%- if section.settings.logo -%}
+					<a href="/{{ url }}" itemprop="url" class="header-logo__link">
+						{%- if section.settings.logo_homepage and template.name == "index" -%}
+							<img class="header-logo__img"
+								src="{{ section.settings.logo_homepage | image_url:width:section.settings.logo_homepage.width,height:section.settings.logo_homepage.height }}" 
+								srcset="{{ section.settings.logo_homepage | image_url:width:section.settings.logo_homepage.width,height:section.settings.logo_homepage.height }}"
+								alt="{{ section.settings.logo_homepage.alt | default: shop.name }}"
+								width="{{ section.settings.logo_homepage.width }}"
+								height="{{ section.settings.logo_homepage.height }}"
+								itemprop="logo">
+						{%- else -%}
+							<img class="header-logo__img"
+								src="{{ section.settings.logo | image_url:width:section.settings.logo.width,height:section.settings.logo.height }}" 
+								srcset="{{ section.settings.logo | image_url:width:section.settings.logo.width,height:section.settings.logo.height }}"
+								alt="{{ section.settings.logo.alt | default: shop.name }}"
+								width="{{ section.settings.logo.width }}"
+								height="{{ section.settings.logo.height }}"
+								itemprop="logo">
+						{%- endif -%}
+					</a>
+				{%- else -%}
+					<a href="/{{ url }}" itemprop="url" class="header-logo__link header-logo__link--text">{{ shop.name }}</a>
+				{%- endif -%}
+			</div>
+			<div class="header-main">
+				{% include 'header-menu' %}
+			</div>
+
+			<div class="header-right">
+				<div class="header-page-link">
+					<div class="header-currency-slot" data-header-currency-slot></div>
+					{%- if section.settings.show_header_search -%}
+						<div class="search-toggle"><i class="icon-search"></i></div>
+						{% include 'header-search-toggle' %}
+					{%- endif -%}
+					{%- if section.settings.show_header_user -%}
+						{% include 'header-account' %}
+					{%- endif -%}
+					{%- if section.settings.show_header_wishlist -%}
+						<a class="wishlist" href="{{  section.settings.page_wishlist.url }}" data-count-wishlist><i class="icon-heart"></i><span class="count"></span></a>
+					{%- endif -%}
+					{%- if section.settings.show_header_cart -%}
+						{% include 'header-cart' %}
+					{%- endif -%}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

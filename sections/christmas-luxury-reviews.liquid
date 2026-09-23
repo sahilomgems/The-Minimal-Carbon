@@ -1,0 +1,842 @@
+{% comment %}
+  Shopify Section: Christmas Luxury Reviews
+  File: sections/christmas-luxury-reviews.liquid
+{% endcomment %}
+
+<section class="christmas-reviews-section" id="christmas-reviews-{{ section.id }}">
+  {%- if section.settings.show_snow -%}
+  <div class="snow-container" aria-hidden="true" id="snow-{{ section.id }}"></div>
+  {%- endif -%}
+  
+  {%- if section.settings.show_sleigh -%}
+  <div class="sleigh-container" aria-hidden="true">
+    <div class="sleigh-silhouette">
+      <svg width="200" height="100" viewBox="0 0 200 100" fill="none">
+        <!-- Santa Sleigh -->
+        <path d="M20 70 Q10 60 15 50 L35 50 L40 70 Z" fill="#7A0019" opacity="0.3"/>
+        <ellipse cx="25" cy="75" rx="8" ry="8" fill="#D4AF37" opacity="0.4"/>
+        <ellipse cx="45" cy="75" rx="8" ry="8" fill="#D4AF37" opacity="0.4"/>
+        <!-- Reindeer silhouettes -->
+        <circle cx="70" cy="45" r="6" fill="#0b3c2f" opacity="0.25"/>
+        <path d="M65 38 L67 32 M73 38 L75 32" stroke="#0b3c2f" stroke-width="2" opacity="0.25"/>
+        <circle cx="100" cy="42" r="6" fill="#0b3c2f" opacity="0.25"/>
+        <path d="M95 35 L97 29 M103 35 L105 29" stroke="#0b3c2f" stroke-width="2" opacity="0.25"/>
+        <!-- Gift bags -->
+        <rect x="25" y="55" width="10" height="12" fill="#D4AF37" opacity="0.3"/>
+        <rect x="38" y="52" width="8" height="15" fill="#7A0019" opacity="0.3"/>
+      </svg>
+    </div>
+  </div>
+  {%- endif -%}
+  
+  <div class="container">
+    <div class="section-header">
+      {%- if section.settings.section_title != blank -%}
+        <h2 class="section-title">
+          <span class="title-decoration">❄</span>
+          {{ section.settings.section_title }}
+          <span class="title-decoration">❄</span>
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.section_subtitle != blank -%}
+        <div class="section-subtitle">
+          {{ section.settings.section_subtitle }}
+        </div>
+      {%- endif -%}
+      <div class="gold-bells">
+        <span class="bell">🔔</span>
+        <span class="bell">🔔</span>
+        <span class="bell">🔔</span>
+      </div>
+    </div>
+    
+    <div class="reviews-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'review' -%}
+          <div class="review-card {% if section.settings.gold_hover %}gold-hover-effect{% endif %}" {{ block.shopify_attributes }}>
+            <div class="santa-bag-badge">🎁</div>
+            
+            <div class="candlelight-glow"></div>
+            
+            {%- if block.settings.reviewer_photo -%}
+              <div class="reviewer-photo">
+                <img src="{{ block.settings.reviewer_photo | img_url: '100x' }}" alt="{{ block.settings.reviewer_name }}">
+              </div>
+            {%- endif -%}
+            
+            <div class="review-header">
+              <div class="reviewer-info">
+                <h3 class="reviewer-name">{{ block.settings.reviewer_name }}</h3>
+                {%- if block.settings.country_flag != blank -%}
+                  <span class="country-flag">{{ block.settings.country_flag }}</span>
+                {%- endif -%}
+                {%- if block.settings.verified -%}
+                  <span class="verified-badge">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="7" fill="#D4AF37"/>
+                      <path d="M5 8L7 10L11 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Verified
+                  </span>
+                {%- endif -%}
+              </div>
+              
+              <div class="star-rating" data-rating="{{ block.settings.rating }}">
+                {%- for i in (1..5) -%}
+                  {%- if i <= block.settings.rating -%}
+                    <span class="star filled">★</span>
+                  {%- else -%}
+                    <span class="star">★</span>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+            
+            <div class="review-content">
+              <p>{{ block.settings.review_text }}</p>
+            </div>
+            
+            <div class="review-decorations">
+              <span class="decoration-icon">❄️</span>
+              <span class="decoration-icon">🎄</span>
+              <span class="decoration-icon">🔔</span>
+            </div>
+            
+            <div class="sparkle sparkle-1"></div>
+            <div class="sparkle sparkle-2"></div>
+            <div class="sparkle sparkle-3"></div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+#christmas-reviews-{{ section.id }} {
+  --color-christmas-red: #7A0019;
+  --color-gold: #D4AF37;
+  --color-pine-green: #0b3c2f;
+  --color-snow-white: #ffffff;
+}
+
+.christmas-reviews-section {
+  position: relative;
+  {% comment %} background: linear-gradient(180deg, #f9f5f1 0%, #ffffff 50%, #f9f5f1 100%); {% endcomment %}
+  padding: 100px 20px;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+/* Snow Animation */
+.snow-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snowflake-particle {
+  position: absolute;
+  color: rgb(204 236 255);
+  font-size: 1rem;
+  animation: snowfall linear infinite;
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 0.8; }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Sleigh Animation */
+.sleigh-container {
+  position: absolute;
+  top: 15%;
+  left: -250px;
+  width: 200px;
+  height: 100px;
+  z-index: 2;
+  animation: sleighMove 45s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes sleighMove {
+  0% {
+    left: -250px;
+  }
+  100% {
+    left: calc(100% + 250px);
+  }
+}
+
+.sleigh-silhouette {
+  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+  animation: sleighBounce 2s ease-in-out infinite;
+}
+
+@keyframes sleighBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Section Header */
+.section-header {
+  text-align: center;
+  margin-bottom: 80px;
+  animation: fadeInDown 1s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  color: var(--color-christmas-red);
+  margin: 0 0 24px 0;
+  letter-spacing: -0.02em;
+  position: relative;
+  display: inline-block;
+}
+
+.title-decoration {
+  color: var(--color-gold);
+  font-size: 0.8em;
+  animation: sparkleRotate 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes sparkleRotate {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+}
+
+.section-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--color-pine-green);
+  font-weight: 300;
+  margin: 0 auto;
+  max-width: 700px;
+  line-height: 1.8;
+}
+
+.gold-bells {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.bell {
+  font-size: 24px;
+  display: inline-block;
+  animation: bellRing 2s ease-in-out infinite;
+}
+
+.bell:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.bell:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bellRing {
+  0%, 100% { transform: rotate(0deg); }
+  10% { transform: rotate(15deg); }
+  20% { transform: rotate(-15deg); }
+  30% { transform: rotate(10deg); }
+  40% { transform: rotate(-10deg); }
+  50% { transform: rotate(0deg); }
+}
+
+/* Reviews Grid */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  animation: fadeInUp 1.2s ease-out 0.3s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Review Card */
+.review-card {
+  background: var(--color-snow-white);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 20px rgba(122, 0, 25, 0.08),
+    0 0 0 1px rgba(212, 175, 55, 0.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-christmas-red), var(--color-gold), var(--color-pine-green));
+}
+
+.review-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 12px 40px rgba(122, 0, 25, 0.15),
+    0 0 0 2px rgba(212, 175, 55, 0.3);
+}
+
+.gold-hover-effect:hover {
+  box-shadow: 
+    0 12px 40px rgba(212, 175, 55, 0.4),
+    0 0 60px rgba(212, 175, 55, 0.2);
+}
+
+/* Santa Bag Badge */
+.santa-bag-badge {
+  position: absolute;
+  top: -12px;
+  right: 24px;
+  font-size: 32px;
+  filter: drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4));
+  animation: bagBounce 2s ease-in-out infinite;
+}
+
+@keyframes bagBounce {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-8px) rotate(5deg); }
+}
+
+/* Candlelight Glow */
+.candlelight-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.review-card:hover .candlelight-glow {
+  opacity: 1;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+/* Reviewer Photo */
+.reviewer-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 20px;
+  border: 3px solid var(--color-gold);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+}
+
+.reviewer-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Review Header */
+.review-header {
+  margin-bottom: 20px;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.reviewer-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-christmas-red);
+  margin: 0;
+}
+
+.country-flag {
+  font-size: 20px;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Star Rating */
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  font-size: 20px;
+}
+
+.star {
+  color: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.star.filled {
+  color: var(--color-gold);
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+  animation: starTwinkle 2s ease-in-out infinite;
+}
+
+@keyframes starTwinkle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Review Content */
+.review-content {
+  margin: 24px 0;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #4a4a4a;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+/* Review Decorations */
+.review-decorations {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+.decoration-icon {
+  display: inline-block;
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+.decoration-icon:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.decoration-icon:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Sparkles */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.review-card:hover .sparkle {
+  animation: sparkleAnimation 1.5s ease-in-out infinite;
+}
+
+.sparkle-1 {
+  top: 20%;
+  left: 15%;
+}
+
+.sparkle-2 {
+  top: 30%;
+  right: 20%;
+  animation-delay: 0.3s;
+}
+
+.sparkle-3 {
+  bottom: 25%;
+  left: 20%;
+  animation-delay: 0.6s;
+}
+
+@keyframes sparkleAnimation {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .reviews-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  
+  .christmas-reviews-section {
+    padding: 80px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .christmas-reviews-section {
+    padding: 60px 16px;
+  }
+  
+  .section-header {
+    margin-bottom: 60px;
+  }
+  
+  .sleigh-container {
+    top: 8%;
+    animation-duration: 35s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snowflake-particle,
+  .sleigh-container,
+  .title-decoration,
+  .bell,
+  .santa-bag-badge,
+  .candlelight-glow,
+  .star.filled,
+  .decoration-icon,
+  .sparkle {
+    animation: none;
+  }
+  
+  .review-card:hover {
+    transform: translateY(-4px);
+  }
+}
+</style>
+
+<script>
+(function() {
+  const section = document.getElementById('christmas-reviews-{{ section.id }}');
+  if (!section) return;
+  
+  const snowContainer = section.querySelector('.snow-container');
+  
+  // Snow Generation
+  if (snowContainer) {
+    const snowflakeCount = 50;
+    for (let i = 0; i < snowflakeCount; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.className = 'snowflake-particle';
+      snowflake.innerHTML = '❄';
+      snowflake.style.left = Math.random() * 100 + '%';
+      snowflake.style.animationDuration = (12 + Math.random() * 8) + 's';
+      snowflake.style.animationDelay = Math.random() * 8 + 's';
+      snowflake.style.fontSize = (0.8 + Math.random() * 0.8) + 'rem';
+      snowContainer.appendChild(snowflake);
+    }
+    
+    // Mouse interaction with snow
+    section.addEventListener('mousemove', function(e) {
+      const snowflakes = snowContainer.querySelectorAll('.snowflake-particle');
+      const rect = section.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      
+      snowflakes.forEach(flake => {
+        const flakeRect = flake.getBoundingClientRect();
+        const flakeX = flakeRect.left - rect.left;
+        const distance = Math.abs(mouseX - flakeX);
+        
+        if (distance < 100) {
+          const push = (mouseX > flakeX ? -1 : 1) * (100 - distance) / 10;
+          flake.style.transform = `translateX(${push}px)`;
+        }
+      });
+    });
+  }
+  
+  // Sleigh scroll interaction
+  const sleighContainer = section.querySelector('.sleigh-container');
+  if (sleighContainer) {
+    let lastScrollY = window.scrollY;
+    
+    window.addEventListener('scroll', function() {
+      const currentScrollY = window.scrollY;
+      const scrollSpeed = Math.abs(currentScrollY - lastScrollY);
+      
+      if (scrollSpeed > 5) {
+        const currentDuration = parseFloat(window.getComputedStyle(sleighContainer).animationDuration);
+        sleighContainer.style.animationDuration = Math.max(35, currentDuration + 5) + 's';
+      }
+      
+      lastScrollY = currentScrollY;
+    });
+  }
+  
+  // Card entrance animation on scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+        }, index * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  const cards = section.querySelectorAll('.review-card');
+  cards.forEach(card => {
+    card.style.opacity = '0';
+    observer.observe(card);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Christmas Reviews",
+  "tag": "section",
+  "class": "section-christmas-reviews",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "richtext",
+      "id": "section_subtitle",
+      "label": "Section Subtitle",
+      "default": "<p>Trusted by thousands of customers worldwide for luxury gifts that create unforgettable memories</p>"
+    },
+    {
+      "type": "range",
+      "id": "reviews_count",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "label": "Number of Reviews",
+      "default": 6,
+      "info": "Note: Add review blocks below to display"
+    },
+    {
+      "type": "header",
+      "content": "Animation Effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sleigh",
+      "label": "Activate Sleigh Animation",
+      "default": true,
+      "info": "Santa's sleigh moves across the background"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_snow",
+      "label": "Activate Snow Animation",
+      "default": true,
+      "info": "Falling snowflakes throughout section"
+    },
+    {
+      "type": "checkbox",
+      "id": "gold_hover",
+      "label": "Show Gold Shine Hover",
+      "default": true,
+      "info": "Golden glow effect on card hover"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": "Reviewer Name",
+          "default": "Sarah Anderson"
+        },
+        {
+          "type": "text",
+          "id": "country_flag",
+          "label": "Country Flag",
+          "default": "🇺🇸",
+          "info": "Use emoji flag (optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "reviewer_photo",
+          "label": "Reviewer Photo (Optional)"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified Purchase",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Star Rating",
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Text",
+          "default": "The craftsmanship is absolutely stunning! This piece exceeded all my expectations. Perfect Christmas gift that brought tears of joy."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Christmas Reviews",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Sarah Anderson",
+            "country_flag": "🇺🇸",
+            "verified": true,
+            "rating": 5,
+            "review_text": "The craftsmanship is absolutely stunning! This piece exceeded all my expectations. Perfect Christmas gift that brought tears of joy."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "James Mitchell",
+            "country_flag": "🇬🇧",
+            "verified": true,
+            "rating": 5,
+            "review_text": "Luxury at its finest. The attention to detail is remarkable. My wife was speechless when she opened this gift on Christmas morning!"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Emma Thompson",
+            "country_flag": "🇨🇦",
+            "verified": true,
+            "rating": 5,
+            "review_text": "Beautiful packaging and the quality is exceptional. Worth every penny for such a meaningful holiday gift. Highly recommend!"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Michael Chen",
+            "country_flag": "🇦🇺",
+            "verified": true,
+            "rating": 5,
+            "review_text": "Impeccable service and a truly luxurious product. The gold detailing is exquisite. Made our Christmas celebration extra special."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Isabella Rodriguez",
+            "country_flag": "🇪🇸",
+            "verified": true,
+            "rating": 5,
+            "review_text": "Simply magnificent! The elegance and quality speak for themselves. This will be a treasured heirloom for generations."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "David Schmidt",
+            "country_flag": "🇩🇪",
+            "verified": true,
+            "rating": 5,
+            "review_text": "Outstanding craftsmanship and beautiful presentation. The perfect gift to show how much you care. Five stars all the way!"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

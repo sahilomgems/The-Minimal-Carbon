@@ -1,0 +1,293 @@
+{% doc %}
+  @prompt
+    1. Hero Section Prompt
+    
+    Create a Black Friday hero banner for a luxury jewelry website.
+    Use a black background with subtle gold sparkles or particle animation.
+    Text:
+    
+    Large heading: “BLACK FRIDAY SALE”
+    
+    Subtext: “Flat 40% OFF on Best Selling Items & 30% OFF on Old Cut Collection.”
+    Add two gold buttons side by side:
+    
+    Button 1: “Shop Best Sellers” → link /collections/best-selling
+    
+    Button 2: “Shop Old Cuts” → link /collections/old-cut
+    Center align everything vertically and horizontally.
+    Font color: white and gold (#d4af37).
+    Make it mobile responsive and elegant.
+    
+    🧭 2. Scrolling Marquee Prompt
+    
+    Create a horizontal scrolling marquee bar with black background and gold text.
+    The text should continuously scroll and repeat like this:
+    “Black Friday Sale 🔥 | Old Cut Collection Sale 💎 | Customize Stud Offer ✨ | Ready To Ship Deals 🛍”
+    Font color: gold (#d4af37), font size: 16px.
+    Add a subtle glowing animation on hover.
+    
+    💎 3. Best Selling Items Section Prompt
+    
+    Create a Best Selling Items section for a jewelry store.
+    Title: “Best Selling Items”
+    Below it, display a 4-column grid (responsive) with product cards.
+    Each card includes:
+    
+    Product image (sample placeholder)
+    
+    Product title
+    
+    A subtle box shadow and hover zoom-in effect
+    
+    Button: “View All” (gold button at center below grid).
+    Background: pure black, text white, accent color gold (#d4af37).
+    Add soft padding around section (60px top and bottom).
+    
+    💍 4. Product Offer Grid Prompt
+    
+    Create a 2x2 product offer grid like a promotional showcase.
+    Each block shows:
+    
+    Jewelry image on dark black background
+    
+    A red corner badge like “Flat 40% OFF”
+    
+    Category name in gold text (Customize Stud, Solitaire Ring, Old Cut Collection, Ready To Ship)
+    
+    “Shop Now” button in gold with hover black background.
+    Layout: 2x2 grid on desktop, 1x1 on mobile.
+    Maintain high-end luxury feel (black + gold + minimal shadows).
+    
+    ⭐ 5. Customer Reviews Carousel Prompt
+    
+    Create a customer reviews carousel in luxury style.
+    Each card includes:
+    
+    Customer photo
+    
+    Name
+    
+    , 1. Hero Section Prompt
+    
+    Create a Black Friday hero banner for a luxury jewelry website.
+    Use a black background with subtle gold sparkles or particle animation.
+    Text:
+    
+    Large heading: “BLACK FRIDAY SALE”
+    
+    Subtext: “Flat 40% OFF on Best Selling Items & 30% OFF on Old Cut Collection.”
+    Add two gold buttons side by side:
+    
+    Button 1: “Shop Best Sellers” → link /collections/best-selling
+    
+    Button 2: “Shop Old Cuts” → link /collections/old-cut
+    Center align everything vertically and horizontally.
+    Font color: white and gold (#d4af37).
+    Make it mobile responsive and elegant.
+    
+    🧭 2. Scrolling Marquee Prompt
+    
+    Create a horizontal scrolling marquee bar with black background and gold text.
+    The text should continuously scroll and repeat like this:
+    “Black Friday Sale 🔥 | Old Cut Collection Sale 💎 | Customize Stud Offer ✨ | Ready To Ship Deals 🛍”
+    Font color: gold (#d4af37), font size: 16px.
+    Add a subtle glowing animation on hover.
+    
+    💎 3. Best Selling Items Section Prompt
+    
+    Create a Best Selling Items section for a jewelry store.
+    Title: “Best Selling Items”
+    Below it, display a 4-column grid (responsive) with product cards.
+    Each card includes:
+    
+    Product image (sample placeholder)
+    
+    Product title
+    
+    A subtle box shadow and hover zoom-in effect
+    
+    Button: “View All” (gold button at center below grid).
+    Background: pure black, text white, accent color gold (#d4af37).
+    Add soft padding around section (60px top and bottom).
+    
+    💍 4. Product Offer Grid Prompt
+    
+    Create a 2x2 product offer grid like a promotional showcase.
+    Each block shows:
+    
+    Jewelry image on dark black background
+    
+    A red corner badge like “Flat 40% OFF”
+    
+    Category name in gold text (Customize Stud, Solitaire Ring, Old Cut Collection, Ready To Ship)
+    
+    “Shop Now” button in gold with hover black background.
+    Layout: 2x2 grid on desktop, 1x1 on mobile.
+    Maintain high-end luxury feel (black + gold + minimal shadows).
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-marquee-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding }}px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-marquee-track-{{ ai_gen_id }} {
+    display: flex;
+    width: fit-content;
+    animation: ai-marquee-scroll-{{ ai_gen_id }} {{ block.settings.scroll_speed }}s linear infinite;
+  }
+
+  .ai-marquee-content-{{ ai_gen_id }} {
+    display: flex;
+    white-space: nowrap;
+    padding-right: 50px;
+  }
+
+  .ai-marquee-item-{{ ai_gen_id }} {
+    font-size: {{ block.settings.font_size }}px;
+    color: {{ block.settings.text_color }};
+    font-weight: {{ block.settings.font_weight }};
+    letter-spacing: 1px;
+    transition: text-shadow 0.3s ease;
+  }
+
+  .ai-marquee-{{ ai_gen_id }}:hover .ai-marquee-item-{{ ai_gen_id }} {
+    text-shadow: 0 0 10px {{ block.settings.glow_color }},
+                 0 0 20px {{ block.settings.glow_color }},
+                 0 0 30px {{ block.settings.glow_color }};
+  }
+
+  @keyframes ai-marquee-scroll-{{ ai_gen_id }} {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-marquee-item-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.875 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-marquee-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-marquee-track-{{ ai_gen_id }}">
+    <div class="ai-marquee-content-{{ ai_gen_id }}">
+      <span class="ai-marquee-item-{{ ai_gen_id }}">{{ block.settings.marquee_text }}</span>
+    </div>
+    <div class="ai-marquee-content-{{ ai_gen_id }}" aria-hidden="true">
+      <span class="ai-marquee-item-{{ ai_gen_id }}">{{ block.settings.marquee_text }}</span>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Scrolling marquee",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "marquee_text",
+      "label": "Marquee text",
+      "default": "Black Friday Sale 🔥 | Old Cut Collection Sale 💎 | Customize Stud Offer ✨ | Ready To Ship Deals 🛍"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "label": "Scroll speed",
+      "default": 30,
+      "info": "Lower number = faster scroll"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling marquee"
+    }
+  ]
+}
+{% endschema %}
