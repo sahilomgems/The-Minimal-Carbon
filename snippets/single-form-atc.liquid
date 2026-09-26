@@ -74,7 +74,8 @@
 													style="background:url('{{ variant_img }}');background-size: cover;background-position: center;"
 													class="{% if option_disabled %}disabled{% endif %} {{ value | downcase | replace: ' ', '' }}">
 
-													{% if product.title contains 'Ring' or product.title contains 'Band' %}
+													{%- assign value_down = value | downcase -%}
+													{% if product.title contains 'Ring' or product.title contains 'Band' or value_down contains 'gold' or value_down contains 'silver' or value_down contains 'platinum' or value_down contains 'sterling' or value_down contains 'rhodium' or value_down contains 'vermeil' %}
 														{%- assign first_word = value | split: ' ' | first -%}
 
 														<!-- Short version (first word) -->
@@ -107,11 +108,21 @@
 									{% comment %} {%- assign lower_value = value | downcase -%} {% endcomment %}
 									{%- assign lower_value = value | downcase | replace: ' ', '' -%}
 									{%- assign num = value | split: ')' | first | strip -%}
+									{%- assign metal_swatch_image = '' -%}
+									{%- if lower_value contains 'rose' and section.settings.metal_swatch_rose != blank -%}
+										{%- assign metal_swatch_image = section.settings.metal_swatch_rose | image_url: width: 120 -%}
+									{%- elsif lower_value contains 'yellow' and section.settings.metal_swatch_yellow != blank -%}
+										{%- assign metal_swatch_image = section.settings.metal_swatch_yellow | image_url: width: 120 -%}
+									{%- elsif section.settings.metal_swatch_silver != blank -%}
+										{%- if lower_value contains 'silver' or lower_value contains 'sterling' or lower_value contains '935' or lower_value contains 'white' or lower_value contains 'platinum' or lower_value contains 'rhodium' -%}
+											{%- assign metal_swatch_image = section.settings.metal_swatch_silver | image_url: width: 120 -%}
+										{%- endif -%}
+									{%- endif -%}
 									<label for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}"
 										data-{{ type }}="{{ value }}"
 										title="{{ value | strip | escape }}"
-										style="background:url('{{ variant_img }}');background-size: cover;background-position: center;"
-										class="{% if option_disabled %}disabled{% endif %} SizeSwatch {{ value | downcase | replace: ' ', '' }} {% if lower_value contains 'mm' %} HasLowerMm{% endif %} {% if num == '1' or num == '2' or num == '3' or num == '4' or num == '5' or num == '6' or num == '7' or num == '8' or num == '9'%}BigMain{% endif %}">
+										style="background:url('{{ variant_img }}');background-size: cover;background-position: center;{% if metal_swatch_image != blank %}--metal-image:url('{{ metal_swatch_image }}');{% endif %}"
+										class="{% if option_disabled %}disabled{% endif %} SizeSwatch {{ value | downcase | replace: ' ', '' }} {% if lower_value contains 'mm' %} HasLowerMm{% endif %} {% if num == '1' or num == '2' or num == '3' or num == '4' or num == '5' or num == '6' or num == '7' or num == '8' or num == '9'%}BigMain{% endif %}{% if metal_swatch_image != blank %} has-metal-image{% endif %}">
 
 										{% comment %} {%- if value contains "PT " -%}
 											{%- assign words = value | split: ' ' -%}
@@ -144,7 +155,7 @@
 											{{ value }}
 
 										{%- endif -%} {% endcomment %}
-										{% if product.title contains 'Ring' or product.title contains 'Band' or product.title contains 'Bracelet' or product.title contains 'Pendant' or product.title contains 'Earrings' or product.title contains 'Stud' or product.title contains 'Earring' %}
+										{% if product.title contains 'Ring' or product.title contains 'Band' or product.title contains 'Bracelet' or product.title contains 'Pendant' or product.title contains 'Earrings' or product.title contains 'Stud' or product.title contains 'Earring' or lower_value contains 'gold' or lower_value contains 'silver' or lower_value contains '935' or lower_value contains 'platinum' or lower_value contains 'sterling' or lower_value contains 'rhodium' or lower_value contains 'vermeil' %}
 											{%- assign first_word = value | split: ' ' | first -%}
 
 											<!-- Short version (first word) -->
@@ -342,7 +353,6 @@
 					</p>
 				{% endif %}
 			{% comment %} end terms and conditions checkbox {% endcomment %}
-			{{ form | payment_button }}
 		{% endif %}
 	</div>
 	{% endform %}

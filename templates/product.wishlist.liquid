@@ -249,7 +249,8 @@
 															style="background:url('{{ variant_img }}');background-size: cover;background-position: center;"
 															class="{% if option_disabled %}disabled{% endif %} {{ value | downcase | replace: ' ', '' }}">
 
-															{% if product.title contains 'Ring' or product.title contains 'Band' %}
+															{%- assign value_down = value | downcase -%}
+															{% if product.title contains 'Ring' or product.title contains 'Band' or value_down contains 'gold' or value_down contains 'silver' or value_down contains 'platinum' or value_down contains 'sterling' or value_down contains 'rhodium' or value_down contains 'vermeil' %}
 																{%- assign first_word = value | split: ' ' | first -%}
 
 																<!-- Short version (first word) -->
@@ -287,7 +288,8 @@
 												style="background:url('{{ variant_img }}');background-size: cover;background-position: center;"
 												class="{% if option_disabled %}disabled{% endif %} SizeSwatch {{ value | downcase | replace: ' ', '' }}">
 
-												{% if product.title contains 'Ring' or product.title contains 'Band' %}
+												{%- assign value_down = value | downcase -%}
+												{% if product.title contains 'Ring' or product.title contains 'Band' or value_down contains 'gold' or value_down contains 'silver' or value_down contains 'platinum' or value_down contains 'sterling' or value_down contains 'rhodium' or value_down contains 'vermeil' %}
 													{%- assign first_word = value | split: ' ' | first -%}
 
 													<!-- Short version (first word) -->

@@ -224,16 +224,6 @@
 								</div>
 							</div>
 						{%- endif -%}
-						{% comment %} terms and conditions checkbox {% endcomment %}
-							{% if settings.show_terms_conditions %}
-								<p class="ajaxcart_terms_conditions">
-									<input style="float:none; vertical-align: middle;" type="checkbox" class="agree_terms_conditions" />
-									<label style="display:inline; float:none" for="agree">
-										{{ settings.content_terms_conditions }}
-									</label>
-								</p>
-							{% endif %}
-						{% comment %} end terms and conditions checkbox {% endcomment %}
 						<div class="cart-modal__funcs">
 							<button class="btn cart-modal__btn cart-modal__btn--viewcart" type="submit">
 								{{ 'cart.general.viewcart' | t }}
@@ -470,16 +460,6 @@
 				</div>
 			</div>
 		{%- endif -%}
-		{% comment %} terms and conditions checkbox {% endcomment %}
-			{% if settings.show_terms_conditions %}
-				<p class="ajaxcart_terms_conditions">
-					<input style="float:none; vertical-align: middle;" type="checkbox" class="agree_terms_conditions" />
-					<label style="display:inline; float:none" for="agree">
-						{{ settings.content_terms_conditions }}
-					</label>
-				</p>
-			{% endif %}
-		{% comment %} end terms and conditions checkbox {% endcomment %}
 		<div class="ajaxcart__footer-buttons">
 			<div class="button-cart">
 				<button class="btn cart-modal__btn cart-modal__btn--checkout" type="submit" name="checkout">

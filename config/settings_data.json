@@ -188,8 +188,7 @@
         "type": "search-breadcrumb",
         "settings": {
           "enable": true,
-          "bgimage": true,
-          "image": "shopify://shop_images/overlay-header_7ed1daa6-0e5e-4fcd-98b8-b77c7fa20f8c.jpg"
+          "bgimage": true
         }
       },
       "blog-breadcrumb": {
@@ -4988,11 +4987,6 @@
       "testimonials_section_RcAqtN"
     ],
     "blocks": {
-      "11212335281082087862": {
-        "type": "shopify://apps/sk-advanced-form-builder/blocks/app/f3e35b58-5874-4ef2-8e03-c92cda6e49eb",
-        "disabled": false,
-        "settings": {}
-      },
       "14060646107696862457": {
         "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
         "disabled": false,
@@ -5005,11 +4999,6 @@
       },
       "2200952712151285029": {
         "type": "shopify://apps/microsoft-clarity/blocks/brandAgents_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
-        "disabled": false,
-        "settings": {}
-      },
-      "3720565183479497137": {
-        "type": "shopify://apps/globo-product-options/blocks/app-embed-block/fdc9fad5-1a0f-4bd4-9c8a-1af6a6eef6b8",
         "disabled": false,
         "settings": {}
       },
@@ -5026,6 +5015,11 @@
       "12439146293631897289": {
         "type": "shopify://apps/blockify-fraud-filter/blocks/app_embed/2e3e0ba5-0e70-447a-9ec5-3bf76b5ef12e",
         "disabled": false,
+        "settings": {}
+      },
+      "11212335281082087862": {
+        "type": "shopify://apps/sk-contact-form-builder/blocks/app/f3e35b58-5874-4ef2-8e03-c92cda6e49eb",
+        "disabled": true,
         "settings": {}
       }
     }

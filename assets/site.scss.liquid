@@ -2052,7 +2052,9 @@ main.designMode_active{
 	}
 }
 .header-logo__link {
-	display: block;
+	display: inline-block;
+	width: fit-content;
+	max-width: 100%;
 }
 .header-logo__link--text {
 	color: $header-color;
@@ -16889,4 +16891,20 @@ label.SizeSwatch.HasLowerMm {
 	.mm-nav__links-wrapper .megamenu-products {
 		margin-bottom: 20px;
 	}
+}
+label.SizeSwatch.has-metal-image{
+	background-image: var(--metal-image) !important;
+	background-size: cover !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+body.drawer--open .header-currency-slot,
+body.drawer--open .buckscc-currency-box,
+body.drawer--open .hxoSelectTheme,
+body.drawer--open #tidio-chat,
+body.drawer--open #tidio-chat-code,
+body.drawer--open iframe#tidio-chat-iframe {
+	display: none !important;
+	visibility: hidden !important;
+	pointer-events: none !important;
 }
